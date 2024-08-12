@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: VidOrbit
+  banner:
+    location: classpath:logo.txt
+
+server:
+  port: 8080
