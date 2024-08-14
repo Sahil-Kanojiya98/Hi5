@@ -9,5 +9,10 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/VidOrbit
 
+  security:
+    user:
+      name: sahil
+      password: admin
+
 server:
   port: 8080
