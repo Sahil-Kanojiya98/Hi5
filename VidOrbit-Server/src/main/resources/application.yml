@@ -1,8 +1,13 @@
 spring:
   application:
     name: VidOrbit
+
   banner:
     location: classpath:logo.txt
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/VidOrbit
 
 server:
   port: 8080
