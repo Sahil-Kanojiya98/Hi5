@@ -22,7 +22,7 @@ public class Reaction {
     @DBRef(lazy = true)
     private User user;
 
-    private ReactionType reactionType; // like, dislike
+    private ReactionType reactionType;      // like, dislike
     private LocalDateTime createdAt;
 
 }

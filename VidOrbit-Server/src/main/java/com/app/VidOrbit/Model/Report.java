@@ -25,7 +25,7 @@ public class Report {
     private Comment comment;
 
     private String reason;
-    private String status; // pending, reviewed, resolved
+    private String status;   // pending, reviewed, resolved
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

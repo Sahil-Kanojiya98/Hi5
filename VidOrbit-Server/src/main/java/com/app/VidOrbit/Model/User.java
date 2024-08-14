@@ -19,12 +19,14 @@ public class User {
 
     private String username;
     private String email;
-    private String password; // Hashed
+    private String password;
     private String profilePictureUrl;
     private String bio;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String status; // active, banned, etc.
+
+    //pro subscription
 
     @DBRef(lazy = true)
     private Channel channel;

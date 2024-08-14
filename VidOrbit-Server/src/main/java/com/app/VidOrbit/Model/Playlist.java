@@ -25,7 +25,7 @@ public class Playlist {
 
     private String title;
     private String description;
-    private String privacy; // public, private, unlisted
+    private String privacy;    // public, private, unlisted
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

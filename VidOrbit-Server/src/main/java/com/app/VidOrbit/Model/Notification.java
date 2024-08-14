@@ -18,7 +18,7 @@ public class Notification {
     @DBRef(lazy = true)
     private User user;
 
-    private String type; // new video, comment, reply, etc.
+    private String type; // New Video From Subscribed Channel, Comment, Reply, etc
 
     private String content;
 

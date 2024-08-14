@@ -16,10 +16,13 @@ public class Video {
 
     @Id
     private String id;
+
     @DBRef(lazy = true)
     private User user;
+
     @DBRef(lazy = true)
     private Channel channel;
+
     private String title;
     private String description;
     private String videoUrl;

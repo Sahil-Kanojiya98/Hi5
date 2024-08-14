@@ -18,7 +18,7 @@ public class Ad {
     private Advertiser advertiser;
     private String title;
     private String contentUrl;
-    private String targetAudience; // Demographics, interests
+    private String targetAudience;
     private double budget;
     private LocalDateTime createdAt;
 }
