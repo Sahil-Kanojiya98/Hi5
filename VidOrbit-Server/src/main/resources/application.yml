@@ -16,3 +16,14 @@ spring:
 
 server:
   port: 8080
+
+#supported units  -- miliseconds seconds minutes hours days
+vidorbit:
+  token:
+    access:
+      secret: H2zMNUhuL4lOxe1VorcWJTB36b23ZrPnA3PrLQD7YDw=
+      expiration: 15 seconds
+    refresh:
+      secret: CCLBhOPYmEl2AnhGBEmE8vCYDkuoKTX5UEaWuW6zRsU=
+      rotation_threshold: 30 seconds
+      expiration: 1 minute

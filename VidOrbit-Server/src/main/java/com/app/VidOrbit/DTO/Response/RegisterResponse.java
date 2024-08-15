@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Builder
 public class RegisterResponse {
 
-    private String token;
+    private String accessToken;
+    private String refreshToken;
     private LocalDateTime createdAt;
 
 }

@@ -9,9 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthResponse {
+public class AuthTokenRefereshResponse {
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String refreshToken;
 
     private String accessToken;
-    private String refreshToken;
 
 }

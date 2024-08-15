@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -52,22 +53,32 @@ public class User {
     private Channel channel;
 
     @DBRef(lazy = true)
-    private List<Subscription> subscribedChannels;
+    @Builder.Default
+    private List<Subscription> subscribedChannels=new LinkedList<>();
 
     @DBRef(lazy = true)
-    private List<Video> history;
+    @Builder.Default
+    private List<Video> history=new LinkedList<>();
 
     @DBRef(lazy = true)
-    private List<Playlist> savedPlaylists;
+    @Builder.Default
+    private List<Playlist> savedPlaylists=new LinkedList<>();
 
     @DBRef(lazy = true)
-    private List<Video> likedVideos;
+    @Builder.Default
+    private List<Video> likedVideos=new LinkedList<>();
 
     @DBRef(lazy = true)
-    private List<Subscription> subscriptions;
+    @Builder.Default
+    private List<Subscription> subscriptions=new LinkedList<>();
 
     @DBRef(lazy = true)
-    private List<Report> reportHistory;
+    @Builder.Default
+    private List<Report> reportHistory=new LinkedList<>();
+
+    @DBRef(lazy = true)
+    @Builder.Default
+    private List<RefreshToken> refreshToken=new LinkedList<>();
 
 }
 
