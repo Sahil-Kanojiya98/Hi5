@@ -15,4 +15,5 @@ public enum ReactionType {
     public String toString() {
         return displayName;
     }
+
 }

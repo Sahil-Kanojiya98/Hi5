@@ -3,16 +3,18 @@ package com.app.VidOrbit.Controller;
 import com.app.VidOrbit.Security.UserDetailsImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class DummyController {
 
-
     @GetMapping("/hello")
     public String hello(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         System.out.println(userDetails);
+        System.out.println("userDetails.getUsername() = " + userDetails.getUsername());
+        System.out.println("userDetails.getPassword() = " + userDetails.getPassword());
+        System.out.println("userDetails.getAuthorities() = " + userDetails.getAuthorities());
+        System.out.println("userDetails.getUser() = " + userDetails.getUser());
         return "hello world user";
     }
 

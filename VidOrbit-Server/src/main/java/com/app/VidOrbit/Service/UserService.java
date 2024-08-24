@@ -1,6 +1,5 @@
 package com.app.VidOrbit.Service;
 
-import com.app.VidOrbit.Exceptions.UserNotFoundException;
 import com.app.VidOrbit.Model.User;
 
 public interface UserService {

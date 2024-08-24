@@ -6,8 +6,8 @@ import com.app.VidOrbit.DTO.Request.RegisterRequest;
 import com.app.VidOrbit.DTO.Response.AuthResponse;
 import com.app.VidOrbit.DTO.Response.AuthTokenRefereshResponse;
 import com.app.VidOrbit.DTO.Response.RegisterResponse;
-import com.app.VidOrbit.Exceptions.UserNotFoundException;
-import com.app.VidOrbit.Exceptions.UsernameAlreadyExistsException;
+import com.app.VidOrbit.Exceptions.EntityNotFoundException;
+import com.app.VidOrbit.Exceptions.EntityAlreadyExistsException;
 import com.app.VidOrbit.Model.User;
 import com.app.VidOrbit.Repository.UserRepository;
 import com.app.VidOrbit.Security.AuthenticationTokenServiceImpl;
@@ -35,9 +35,9 @@ public class AuthServiceImpl implements AuthService {
     private RefreshTokenService refreshTokenService;
 
     @Override
-    public RegisterResponse registerUser(RegisterRequest registerRequest) throws UsernameAlreadyExistsException {
+    public RegisterResponse registerUser(RegisterRequest registerRequest) throws EntityAlreadyExistsException {
         if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-            throw new UsernameAlreadyExistsException("Username already taken!");
+            throw new EntityAlreadyExistsException("Username already taken!");
         }
         User user = User.builder()
                 .email(registerRequest.getEmail())
@@ -54,11 +54,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse authenticateUser(AuthRequest authRequest) throws UserNotFoundException {
+    public AuthResponse authenticateUser(AuthRequest authRequest) throws EntityNotFoundException {
         User user = userRepository.findByEmail(authRequest.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("user not found!"));
+                .orElseThrow(() -> new EntityNotFoundException("user not found!"));
         if (!bCryptPasswordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
-            throw new UsernameAlreadyExistsException("Invalid username or password");
+            throw new EntityAlreadyExistsException("Invalid username or password");
         } else {
             String accessToken = jwtService.generateToken(user.getEmail());
             String refreshToken = refreshTokenService.generateToken(user.getEmail());

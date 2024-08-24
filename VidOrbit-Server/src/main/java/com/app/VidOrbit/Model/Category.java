@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Category {
+
     EXPLORE("Explore"),
     TRENDING("Trending"),
     SHOPPING("Shopping"),
@@ -25,4 +26,5 @@ public enum Category {
     public String toString() {
         return displayName;
     }
+
 }

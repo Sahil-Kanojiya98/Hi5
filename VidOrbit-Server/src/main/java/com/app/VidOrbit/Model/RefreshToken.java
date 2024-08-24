@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.util.Date;
 
 @Data
@@ -22,6 +24,7 @@ public class RefreshToken {
     @Indexed(unique = true)
     private String token;
 
+    @Field("expiry_date")
     private Date expiryDate;
 
     private String username;

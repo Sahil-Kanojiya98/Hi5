@@ -54,6 +54,7 @@ public class User {
 
     @DBRef(lazy = true)
     @Builder.Default
+    @Field("subscribed_channels")
     private List<Subscription> subscribedChannels=new LinkedList<>();
 
     @DBRef(lazy = true)
@@ -62,10 +63,12 @@ public class User {
 
     @DBRef(lazy = true)
     @Builder.Default
+    @Field("saved_playlists")
     private List<Playlist> savedPlaylists=new LinkedList<>();
 
     @DBRef(lazy = true)
     @Builder.Default
+    @Field("liked_videos")
     private List<Video> likedVideos=new LinkedList<>();
 
     @DBRef(lazy = true)
@@ -74,10 +77,12 @@ public class User {
 
     @DBRef(lazy = true)
     @Builder.Default
+    @Field("report_history")
     private List<Report> reportHistory=new LinkedList<>();
 
     @DBRef(lazy = true)
     @Builder.Default
+    @Field("refresh_token")
     private List<RefreshToken> refreshToken=new LinkedList<>();
 
 }

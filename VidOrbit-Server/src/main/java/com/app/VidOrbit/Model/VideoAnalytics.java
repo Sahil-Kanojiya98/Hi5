@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +22,8 @@ public class VideoAnalytics {
     private int likes;
     private int dislikes;
     private int comments;
+
+    @Field("watch_time")
     private int watchTime;
 
 }
