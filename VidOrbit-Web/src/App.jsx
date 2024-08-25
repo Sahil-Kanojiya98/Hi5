@@ -1,18 +1,24 @@
-import { Button, Container } from "@chakra-ui/react";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
-import UserPage from "./pages/UserPage";
-import PostPage from "./pages/PostPage";
-import Header from "./components/Header";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import RegistrationPage from "./pages/RegistrationPage";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
-    <Container maxWidth={"620px"}>
-      <Header/>
-      <Routes>
-        <Route path="/:username" element={<UserPage />} />
-        <Route path="/:username/post/:pid" element={<PostPage />} />
-      </Routes>
-    </Container>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegistrationPage />} />
+    </Routes>
   );
 }
 

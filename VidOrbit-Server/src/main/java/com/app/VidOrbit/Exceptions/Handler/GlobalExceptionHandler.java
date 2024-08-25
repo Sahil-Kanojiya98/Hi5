@@ -2,17 +2,14 @@ package com.app.VidOrbit.Exceptions.Handler;
 
 import com.app.VidOrbit.DTO.Response.ErrorResponse;
 import com.app.VidOrbit.Exceptions.*;
-
 import io.jsonwebtoken.ClaimJwtException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +26,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             InvalidUsernameOrPasswordException.class,
-            FileUploadException.class,
             ResourceNotFoundException.class,
             EntityNotFoundException.class
     })
@@ -48,12 +44,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnauthorizedAccessException(RuntimeException ex) {
         logger.error("Unauthorized Access: {}", ex.getMessage(), ex);
         return new ResponseEntity<>(ErrorResponse.builder().error("Unauthorized: " + ex.getMessage()).build(), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(UnsupportedMediaTypeException.class)
-    public ResponseEntity<ErrorResponse> handleUnsupportedMediaException(RuntimeException ex) {
-        logger.error("Unsupported MediaType : {}", ex.getMessage(), ex);
-        return new ResponseEntity<>(ErrorResponse.builder().error("Cause : " + ex.getMessage()).build(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
     @ExceptionHandler(Exception.class)
