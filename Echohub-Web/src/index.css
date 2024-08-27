@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "TechnoGrazer";
+  src: url("./fonts/TechnoGrazerRegular-DYdaW.ttf") format("truetype"),
+    url("./fonts/TechnoGrazerRegular-AR0mL.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Ramus";
+  src: url("/path/to/fonts/RamusBoldItalic-3zB16.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "BebasNeue";
+  src: url("/src/assets/fonts/BebasNeue-Regular.ttf") format("truetype"),
+    url("/src/assets/fonts/BebasNeue-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}

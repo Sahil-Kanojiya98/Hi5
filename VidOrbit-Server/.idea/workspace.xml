@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6a23437f-e774-47b2-905c-0909b8494b09" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/developer-tools.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Config/CacheConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Controller/AuthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Controller/DummyController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Request/AuthRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Request/AuthTokenRefereshRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Request/CreateChannelRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Request/RegisterRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Response/AuthResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Response/AuthTokenRefereshResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Response/CreateChannelResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Response/ErrorResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Response/MessageResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/DTO/Response/RegisterResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Exceptions/EntityAlreadyExistsException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Exceptions/EntityNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Exceptions/Handler/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Exceptions/InvalidOrExpiredTokenException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Exceptions/InvalidUsernameOrPasswordException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Exceptions/ResourceNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Exceptions/TokenNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Filter/AuthTokenFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Model/RefreshToken.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Model/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Repository/RefreshTokenRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Security/Abstract/AbstractTokenService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Security/Abstract/TokenService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Security/AuthEntryPointHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Security/AuthenticationTokenServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Security/RefreshTokenService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Security/UserDetailsImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Security/UserDetailsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Service/AuthService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Service/Impl/AuthServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Service/Impl/UserServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/Utility/Conversion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/VidOrbit/VidOrbitApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/logo.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/app/VidOrbit/VidOrbitApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Config/CacheConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Config/SecurityConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Controller/AuthController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Controller/ChannelController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Controller/DummyController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Controller/StreamController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Controller/UserController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Controller/VideoController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Request/AuthRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Request/AuthTokenRefereshRequest$AuthTokenRefereshRequestBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Request/AuthTokenRefereshRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Request/CreateChannelRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Request/RegisterRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Request/UpdateChannelRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/AuthResponse$AuthResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/AuthResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/AuthTokenRefereshResponse$AuthTokenRefereshResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/AuthTokenRefereshResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/CreateChannelResponse$CreateChannelResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/CreateChannelResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/ErrorResponse$ErrorResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/ErrorResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/MessageResponse$MessageResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/MessageResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/RegisterResponse$RegisterResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/RegisterResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/UpdateChannelResponse$UpdateChannelResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/DTO/Response/UpdateChannelResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/EntityAlreadyExistsException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/EntityNotFoundException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/FileUploadException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/Handler/GlobalExceptionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/InvalidOrExpiredTokenException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/InvalidUsernameOrPasswordException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/ResourceNotFoundException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/TokenNotFoundException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Exceptions/UnsupportedMediaTypeException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Filter/AuthTokenFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Category.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Channel$ChannelBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Channel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Comment$CommentBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Comment.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Notification.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Playlist$PlaylistBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Playlist.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Reaction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/ReactionType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/RefreshToken$RefreshTokenBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/RefreshToken.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Report.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Subscription.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Tag.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/User$UserBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Video$VideoBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/Video.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Model/VideoAnalytics.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/ChannelRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/CommentRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/LikeRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/NotificationRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/PlaylistRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/RefreshTokenRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/ReportRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/SubscriptionRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/TagRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/UserRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/VideoAnalyticsRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Repository/VideoRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Security/Abstract/AbstractTokenService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Security/Abstract/TokenService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Security/AuthEntryPointHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Security/AuthenticationTokenServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Security/RefreshTokenService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Security/UserDetailsImpl$UserDetailsImplBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Security/UserDetailsImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Security/UserDetailsServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Service/AuthService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Service/ChannelService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Service/Impl/AuthServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Service/Impl/ChannelServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Service/Impl/UserServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Service/Impl/VideoServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Service/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Service/VideoService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Utility/Conversion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Utility/FileType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Utility/FileUpload$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Utility/FileUpload$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Utility/FileUpload.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/Utility/VideoProcessing.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/app/VidOrbit/VidOrbitApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/logo.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/app/VidOrbit/VidOrbitApplicationTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/eslint.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/postcss.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/src/App.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/src/components/PrivateRoute.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/src/main.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/src/pages/HomePage.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/src/pages/LoginPage.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/src/pages/RegistrationPage.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/tailwind.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../VidOrbit-Web/vite.config.js" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="HTML File" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2kWLorjCx1uhXO7FFByg6N5Fcgo" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+    <option name="sortByType" value="true" />
+    <option name="sortKey" value="BY_TYPE" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.VidOrbitApplication.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Maven.VidOrbit [compile].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/sahil/Desktop/Minor Project  VidOrbit",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.app.VidOrbit.Service" />
+      <recent name="com.app.VidOrbit.Exceptions" />
+      <recent name="com.app.VidOrbit.Utility" />
+      <recent name="com.app.VidOrbit.Controller" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\sahil\Desktop\Minor Project  VidOrbit\VidOrbit-Server\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\sahil\Desktop\Minor Project  VidOrbit\VidOrbit-Server\target\classes\static\images" />
+      <recent name="C:\Users\sahil\Desktop\Minor Project  VidOrbit\VidOrbit-Server\src\main\resources\static\images" />
+      <recent name="C:\Users\sahil\Desktop\Minor Project  VidOrbit\VidOrbit-Server\src\main\resources\static\" />
+      <recent name="C:\Users\sahil\Desktop\Minor Project  VidOrbit\VidOrbit-Server\src\main\resources\static\images\channel" />
+      <recent name="C:\Users\sahil\Desktop\Minor Project  VidOrbit\VidOrbit-Server\src\main\resources" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6a23437f-e774-47b2-905c-0909b8494b09" name="Changes" comment="" />
+      <created>1723394563759</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1723394563759</updated>
+    </task>
+    <servers />
+  </component>
+</project>
