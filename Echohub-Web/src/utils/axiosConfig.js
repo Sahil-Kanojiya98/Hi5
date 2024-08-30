@@ -33,8 +33,12 @@ axiosInstance.interceptors.response.use(
           });
 
           const { accessToken, refreshToken } = refreshResponse.data;
+          console.log("set access token:"+ accessToken);
           setAccessToken(accessToken);
-          await setRefreshToken({ id: 'refreshToken', token: refreshToken });
+          if(refreshToken){
+            console.log("set refresh token"+refreshToken)
+            await setRefreshToken({ id: 'refreshToken', token: refreshToken });
+          }
 
           config.headers['Authorization'] = `Bearer ${accessToken}`;
           return axiosInstance(config);

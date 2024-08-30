@@ -1,6 +1,6 @@
 spring:
   application:
-    name: VidOrbit
+    name: Echohub
 
   banner:
     location: classpath:logo.txt
@@ -31,8 +31,12 @@ vidorbit:
   token:
     access:
       secret: H2zMNUhuL4lOxe1VorcWJTB36b23ZrPnA3PrLQD7YDw=
-      expiration: 5 minute
+      expiration: 30 minutes
     refresh:
       secret: CCLBhOPYmEl2AnhGBEmE8vCYDkuoKTX5UEaWuW6zRsU=
-      rotation_threshold: 7 minute
-      expiration: 10 minute
+      rotation_threshold: 15 minutes
+      expiration: 60 minutes
+
+#logging:
+#  level:
+#    root: DEBUG

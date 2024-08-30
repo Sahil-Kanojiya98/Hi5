@@ -6,7 +6,7 @@ public class Conversion {
         String[] parts = timeString.split(" ");
         double time = Double.parseDouble(parts[0]);
         String unit = parts[1].toLowerCase();
-
+        System.out.println("time string :"+timeString);
         switch (unit) {
             case "day":
             case "days":

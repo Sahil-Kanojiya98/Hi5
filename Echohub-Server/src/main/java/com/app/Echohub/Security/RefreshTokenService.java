@@ -229,6 +229,7 @@ public class RefreshTokenService extends AbstractTokenService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(extractUserName(refreshToken));
         AuthTokenRefereshResponse response = new AuthTokenRefereshResponse();
         if (validateToken(refreshToken, userDetails.getUsername())) {
+            System.out.println("user name "+userDetails.getUsername());
             if (isTokenExpiringSoon(refreshToken)) {
                 System.out.println("expirable "+refreshToken);
                 User user = userService.getUserByEmail(userDetails.getUsername());
@@ -257,8 +258,12 @@ public class RefreshTokenService extends AbstractTokenService {
 
     private boolean isTokenExpiringSoon(String token) {
         Date expirationDate = extractExpiration(token);
+        System.out.println(expirationDate);
         Date now = new Date();
+        System.out.println(now);
         long timeUntilExpiration = expirationDate.getTime() - now.getTime();
+        System.out.println(timeUntilExpiration <= rotationThreshold);
+        System.out.println(timeUntilExpiration +"         "+ rotationThreshold);
         return timeUntilExpiration <= rotationThreshold;
     }
 }

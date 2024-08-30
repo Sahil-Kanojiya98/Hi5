@@ -33,6 +33,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthTokenRefereshResponse> rotateToken(@RequestBody AuthTokenRefereshRequest refereshRequest) {
+        System.out.println("refereshRequest :"+refereshRequest);
         AuthTokenRefereshResponse response = authService.rotateToken(refereshRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

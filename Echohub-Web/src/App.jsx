@@ -46,6 +46,7 @@ function App() {
           }
         />
         <Route path="/manager" element={<TokenManager />} />
+        
       </Routes>
       	{/* <RightPanel/> */}
       </div>

@@ -10,8 +10,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -33,12 +35,18 @@ public class User {
     @Indexed(unique = true)
     private String email;
 
+    @JsonIgnore
     private String password;
 
     @Field("profile_picture_url")
     private String profilePictureUrl;
 
+    @Field("cover_picture_url")
+    private String coverPictureUrl;
+
     private String bio;
+
+    private String link;
 
     @Field("created_at")
     @CreatedDate
@@ -48,15 +56,25 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    private String status; // active, banned, etc.
-
-    //pro subscription
+    private String status;
 
     @DBRef(lazy = true)
     @Builder.Default
     @Field("refresh_token")
     @JsonIgnore
     private List<RefreshToken> refreshToken=new LinkedList<>();
+
+    @Builder.Default
+    private Set<String> followers=new HashSet<>();
+
+    @Builder.Default
+    private Set<String> followings=new HashSet<>();
+
+    @Builder.Default
+    private Set<String> posts=new HashSet<>();
+
+    @Builder.Default
+    private Set<String> savedPosts=new HashSet<>();
 
 }
 

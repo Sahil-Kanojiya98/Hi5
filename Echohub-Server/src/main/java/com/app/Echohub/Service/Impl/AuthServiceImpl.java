@@ -96,9 +96,12 @@ public class AuthServiceImpl implements AuthService {
         System.out.println("refresh tokens :"+user.getRefreshToken());
         user.getRefreshToken().removeIf(t -> t.getToken().equals(refreshToken));
         if (token.isPresent()) {
+            System.out.println("removing refresh: "+refreshToken);
             refreshTokenRepository.deleteByToken(refreshToken);
         }
         userRepository.save(user);
         return "Refresh token removed successfully";
     }
+
+
 }
