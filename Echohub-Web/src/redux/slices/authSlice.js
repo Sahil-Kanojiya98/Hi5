@@ -17,9 +17,17 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.isInitializing = false;
       state.user = null;
+    },
+    updateUser: (state, action) => {
+      if (state.user) {
+        state.user = {
+          ...state.user,
+          ...action.payload
+        };
+      }
     }
   },
 });
 
-export const { addAuth , rmAuth } = authSlice.actions;
+export const { addAuth , rmAuth , updateUser } = authSlice.actions;
 export default authSlice.reducer;

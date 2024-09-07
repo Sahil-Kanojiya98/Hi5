@@ -7,7 +7,6 @@ import { getRefreshToken, removeRefreshToken } from "../utils/indexedDB";
 
 const useLogout = () => {
   const dispatch = useDispatch();
-
   const logout = useCallback(async () => {
     try {
       const refreshToken = (await getRefreshToken("refreshToken"))?.token;
@@ -23,7 +22,7 @@ const useLogout = () => {
       console.error("Logout failed:", error);
     } finally {
       removeAccessToken();
-      removeRefreshToken("refreshToken");
+      await removeRefreshToken("refreshToken");
       dispatch(rmAuth());
     }
   }, [dispatch]);

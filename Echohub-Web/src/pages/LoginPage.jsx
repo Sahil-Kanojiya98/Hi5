@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Echohub from "../components/logo/Echohub";
 import { MdOutlineMail, MdPassword } from "react-icons/md";
 import useLogin from "../hooks/useLogin";
@@ -12,6 +12,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState("");
+  const navigate = useNavigate();
 
   const loginSchema = Yup.object().shape({
     password: Yup.string().required("Password is required"),
@@ -39,6 +40,7 @@ const LoginPage = () => {
       //     },
       //   });
       // }
+      ( (error==null && error=="") ? navigate("/home") : null )
     } catch (err) {
       setValidationError(err.message);
     }

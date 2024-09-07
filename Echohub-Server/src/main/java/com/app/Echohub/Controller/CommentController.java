@@ -34,31 +34,32 @@ public class CommentController {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{comment_id}")
-    public ResponseEntity<String> deletePost(
-            @PathVariable("comment_id") String comment_id,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-        commentService.deleteComment(userDetails.getUser(),comment_id);
-        return new ResponseEntity<>("comment deleted successfully",HttpStatus.OK);
-    }
-
-    @PostMapping("/like/{comment_id}")
-    public ResponseEntity<String> likePost(
-            @PathVariable("comment_id") String comment_id,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-        commentService.likeComment(userDetails.getUser(),comment_id);
-        return new ResponseEntity<>("post liked",HttpStatus.OK);
-    }
-
-    @PostMapping("/unlike/{comment_id}")
-    public ResponseEntity<String> unlikePost(
-            @PathVariable("comment_id") String comment_id,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-        commentService.unlikeComment(userDetails.getUser(),comment_id);
-        return new ResponseEntity<>("post unliked",HttpStatus.OK);
-    }
+//    @DeleteMapping("/{comment_id}")
+//    public ResponseEntity<String> deletePost(
+//            @PathVariable("comment_id") String comment_id,
+//            @AuthenticationPrincipal UserDetailsImpl userDetails
+//    ){
+//        commentService.deleteComment(userDetails.getUser(),comment_id);
+//        return new ResponseEntity<>("comment deleted successfully",HttpStatus.OK);
+//    }
+//
+//
+//    @PostMapping("/like/{comment_id}")
+//    public ResponseEntity<String> likePost(
+//            @PathVariable("comment_id") String comment_id,
+//            @AuthenticationPrincipal UserDetailsImpl userDetails
+//    ){
+//        commentService.likeComment(userDetails.getUser(),comment_id);
+//        return new ResponseEntity<>("post liked",HttpStatus.OK);
+//    }
+//
+//    @PostMapping("/unlike/{comment_id}")
+//    public ResponseEntity<String> unlikePost(
+//            @PathVariable("comment_id") String comment_id,
+//            @AuthenticationPrincipal UserDetailsImpl userDetails
+//    ){
+//        commentService.unlikeComment(userDetails.getUser(),comment_id);
+//        return new ResponseEntity<>("post unliked",HttpStatus.OK);
+//    }
 
 }

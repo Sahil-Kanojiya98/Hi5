@@ -1,15 +1,17 @@
 package com.app.Echohub.Controller;
 
+
+import com.app.Echohub.DTO.ImageUpdateResponseDTO;
+import com.app.Echohub.DTO.PostResponseDTO;
 import com.app.Echohub.DTO.Request.LogoutRequest;
 import com.app.Echohub.DTO.Request.UpdateUserRequest;
-import com.app.Echohub.Exceptions.EntityNotFoundException;
+import com.app.Echohub.DTO.UserDescResponse;
+import com.app.Echohub.DTO.UserProfileDTO;
 import com.app.Echohub.Model.Post;
-import com.app.Echohub.Model.RefreshToken;
 import com.app.Echohub.Model.User;
 import com.app.Echohub.Repository.UserRepository;
 import com.app.Echohub.Security.UserDetailsImpl;
 import com.app.Echohub.Service.AuthService;
-import com.app.Echohub.Service.PostService;
 import com.app.Echohub.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,12 +34,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PostService postService;
-
     @GetMapping("/get-me")
-    public User getMe(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userDetails.getUser();
+    public ResponseEntity<UserDescResponse> getMe(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
+        UserDescResponse response=UserDescResponse
+                .builder()
+                .id(user.getId())
+                .fullname(user.getFullname())
+                .profilePictureUrl(user.getProfilePictureUrl())
+                .username(user.getUsername())
+                .build();
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PostMapping("/logout")
@@ -47,90 +53,50 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{user_id}")
-    public ResponseEntity<User> getUser(@PathVariable("user_id") String user_id){
-        User user = userRepository.findById(user_id).orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        return new ResponseEntity<>(user,HttpStatus.OK);
-    }
-
-    @GetMapping("/username/{username}")
-    public ResponseEntity<User> getUserByUserName(@PathVariable("username") String username){
-        System.out.println(username);
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        return new ResponseEntity<>(user,HttpStatus.OK);
-    }
-
-    @GetMapping("/followers/{user_id}")
-    public ResponseEntity<List<User>> getFollowers(@PathVariable("user_id") String user_id) {
-        User user = userRepository.findById(user_id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        List<User> followers = userRepository.findAllById(user.getFollowers());
-        return new ResponseEntity<>(followers, HttpStatus.OK);
-    }
-
-    @GetMapping("/followings/{user_id}")
-    public ResponseEntity<List<User>> getFollowings(@PathVariable("user_id") String user_id) {
-        User user = userRepository.findById(user_id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        List<User> followings = userRepository.findAllById(user.getFollowings());
-        return new ResponseEntity<>(followings, HttpStatus.OK);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserProfileDTO> getUser(@PathVariable("userId") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        UserProfileDTO response=userService.getProfile(userId,userDetails.getUser().getId());
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PostMapping("/follow/{user_id}")
     public ResponseEntity<String> followUser(@PathVariable("user_id") String user_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User currentUser = userDetails.getUser();
-        User userToFollow = userRepository.findById(user_id)
-                .orElseThrow(() -> new EntityNotFoundException("User to follow not found!"));
-        if (currentUser.getId().equals(userToFollow.getId())) {
-            return new ResponseEntity<>("You cannot follow yourself.", HttpStatus.BAD_REQUEST);
-        }
-        currentUser.getFollowings().add(userToFollow.getId());
-        userToFollow.getFollowers().add(currentUser.getId());
-        userRepository.save(currentUser);
-        userRepository.save(userToFollow);
-        //send notifications
-        return new ResponseEntity<>("User followed successfully.", HttpStatus.OK);
+        String message=userService.follow(user_id,userDetails.getUser());
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     @PostMapping("/unfollow/{user_id}")
     public ResponseEntity<String> unfollowUser(@PathVariable("user_id") String user_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User currentUser = userDetails.getUser();
-        User userToUnfollow = userRepository.findById(user_id)
-                .orElseThrow(() -> new EntityNotFoundException("User to unfollow not found!"));
-        if (currentUser.getId().equals(userToUnfollow.getId())) {
-            return new ResponseEntity<>("You cannot unfollow yourself.", HttpStatus.BAD_REQUEST);
-        }
-        if (!currentUser.getFollowings().contains(userToUnfollow.getId())) {
-            return new ResponseEntity<>("You are not following this user.", HttpStatus.BAD_REQUEST);
-        }
-        currentUser.getFollowings().remove(userToUnfollow.getId());
-        userRepository.save(currentUser);
-        userToUnfollow.getFollowers().remove(currentUser.getId());
-        userRepository.save(userToUnfollow);
-        //send notifications
-        return new ResponseEntity<>("User unfollowed successfully.", HttpStatus.OK);
+        String message=userService.unfollow(user_id,userDetails.getUser());
+        return new ResponseEntity<>(message,HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<User> updateUser(@RequestBody UpdateUserRequest updateUserRequest,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        System.out.println(updateUserRequest);
         User user=userService.updateUser(userDetails.getUser(), updateUserRequest);
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
-    @PutMapping("/update-images")
-    public ResponseEntity<User> updateUserImages(
+    @PostMapping("/update-images")
+    public ResponseEntity<ImageUpdateResponseDTO> updateUserImages(
             @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture,
             @RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture,
             @AuthenticationPrincipal UserDetailsImpl userDetails
             ) throws RuntimeException {
-        User user = userService.updateUserImages(userDetails.getUser(), profilePicture, coverPicture);
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        ImageUpdateResponseDTO response = userService.updateUserImages(userDetails.getUser(), profilePicture, coverPicture);
+        System.out.println(response);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @GetMapping("/saved-posts")
-    public ResponseEntity<List<Post>> getSavedPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<Post> savedPosts=userService.getAllSavedPosts(userDetails.getUser());
-        return new ResponseEntity<>(savedPosts,HttpStatus.OK);
+    public ResponseEntity<List<PostResponseDTO>> getSavedPosts(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        System.out.println("this is me");
+        List<PostResponseDTO> savedPosts = userService.getAllSavedPosts(userDetails.getUser(), page, pageSize);
+        return new ResponseEntity<>(savedPosts, HttpStatus.OK);
     }
 
     @PostMapping("/saved-posts/{post_id}")
@@ -151,10 +117,41 @@ public class UserController {
         return new ResponseEntity<>("post removed successfully!",HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public List<User> searchUsers(@RequestParam String pattern) {
-        return userService.searchUsers(pattern);
+//    @GetMapping("/search")
+//    public List<User> searchUsers(@RequestParam String pattern) {
+//        return userService.searchUsers(pattern);
+//    }
+
+    @GetMapping("/suggest")
+    public ResponseEntity<List<UserDescResponse>> suggestUsers(){
+        List<UserDescResponse> users=userService.suggest();
+        return new ResponseEntity<>(users,HttpStatus.OK);
     }
+
+
+
+
+
+
+
+
+
+//    @GetMapping("/followers/{user_id}")
+//    public ResponseEntity<List<User>> getFollowers(@PathVariable("user_id") String user_id) {
+//        User user = userRepository.findById(user_id)
+//                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+//        List<User> followers = userRepository.findAllById(user.getFollowers());
+//        return new ResponseEntity<>(followers, HttpStatus.OK);
+//    }
+
+
+//    @GetMapping("/followings/{user_id}")
+//    public ResponseEntity<List<User>> getFollowings(@PathVariable("user_id") String user_id) {
+//        User user = userRepository.findById(user_id)
+//                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
+//        List<User> followings = userRepository.findAllById(user.getFollowings());
+//        return new ResponseEntity<>(followings, HttpStatus.OK);
+//    }
 
 
 }

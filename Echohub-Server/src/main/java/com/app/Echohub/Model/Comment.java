@@ -28,10 +28,9 @@ public class Comment {
     @Indexed
     private String postId;
 
-    @DBRef
     @Field("user_id")
     @Indexed
-    private User user;
+    private String user;
 
     private String content;
 
@@ -39,12 +38,8 @@ public class Comment {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @Field("likes_count")
-    private int likesCount = 0;
-
     @DBRef
     @Builder.Default
     @JsonIgnore
     private Set<String> likes = new HashSet<>();
-
 }

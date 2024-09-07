@@ -15,10 +15,10 @@ const useSignUp = () => {
     setError(null);
     try {
       const response = await axiosInstance.post("/auth/register", {
-        email,
-        username,
-        fullName,
-        password,
+        "email":email,
+        "username":username,
+        "fullname":fullName,
+        "password":password,
       });
       const { accessToken, refreshToken } = response.data;
 

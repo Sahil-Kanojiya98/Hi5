@@ -26,7 +26,6 @@ public class Post {
     private String id;
 
     @DBRef
-    @Field("user_id")
     @Indexed
     private User user;
 
@@ -44,22 +43,21 @@ public class Post {
 
     @Field("modified_at")
     @LastModifiedDate
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
-    @Field("likes_count")
-    private int likesCount = 0;
-
-    @DBRef(lazy = true)
     @Builder.Default
     @JsonIgnore
     private Set<String> likes = new HashSet<>();
-
-    @Field("comments_count")
-    private int commentsCount = 0;
 
     @DBRef(lazy = true)
     @Builder.Default
     @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
+
+    @Field("saved_by_users")
+    @Builder.Default
+    @JsonIgnore
+    private Set<String> savedByUsers = new HashSet<>();
 
 }

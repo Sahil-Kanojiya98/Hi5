@@ -1,26 +1,28 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy } from "react";
 import { Route, Navigate, Routes } from "react-router-dom";
 import AuthGuard from "./guards/AuthGuard";
 import GuestGuard from "./guards/GuestGuard";
+import { useSelector } from "react-redux";
+import SavedPostsPage from "./pages/SavedPostsPage";
 
-// import TokenManager from "./components/TokenManager";
-// import LoginPage from "./pages/LoginPage";
-// import SignUpPage from "./pages/SignUpPage";
-// import HomePage from "./pages/HomePage";
-
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
-const TokenManager = lazy(() => import('./components/TokenManager'));
-
+const TokenManager = lazy(() => import("./components/TokenManager"));
+const Sidebar = lazy(() => import("./components/SideBar"));
+const RightPanel = lazy(() => import("./components/RightPanel"));
 
 function App() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  console.log("isAuthenticated: " + isAuthenticated);
 
   return (
-    <div className='flex max-w-6xl max-w-7xl mx-auto'>
-      {/* <Sidebar/> */}
+    <div className="flex max-w-6xl max-w-7xl mx-auto">
+      {isAuthenticated && <Sidebar />}
       <Routes>
-      <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/manager" element={<TokenManager />} />
+        <Route path="/" element={<Navigate to="/home" />} />
         <Route
           path="/login"
           element={
@@ -45,11 +47,30 @@ function App() {
             </AuthGuard>
           }
         />
-        <Route path="/manager" element={<TokenManager />} />
-        
+        <Route
+          path="/profile/:id"
+          element={
+            <AuthGuard>
+              <ProfilePage />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/saved"
+          element={
+            <AuthGuard>
+              <SavedPostsPage />
+            </AuthGuard>
+          }
+        />
+        {/* <Route path="*" element={
+          <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
+            <p className="text-center text-2xl mt-4">404 Not Found</p>
+          </div>
+          } /> */}
       </Routes>
-      	{/* <RightPanel/> */}
-      </div>
+      {isAuthenticated && <RightPanel />}
+    </div>
   );
 }
 

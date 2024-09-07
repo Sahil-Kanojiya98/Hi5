@@ -1,5 +1,6 @@
 package com.app.Echohub.Service.Impl;
 
+import com.app.Echohub.DTO.PostResponseDTO;
 import com.app.Echohub.Exceptions.EntityNotFoundException;
 import com.app.Echohub.Model.Post;
 import com.app.Echohub.Model.User;
@@ -9,6 +10,7 @@ import com.app.Echohub.Service.PostService;
 import com.app.Echohub.Utility.FileStorage;
 import com.app.Echohub.Utility.enums.FileType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,8 +28,11 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @Override
-    public Post makePost(User user, String content, MultipartFile imageFile, MultipartFile videoFile) {
+    public String makePost(User user, String content, MultipartFile imageFile, MultipartFile videoFile) {
         String imageUrl = null;
         String videoUrl = null;
         try{
@@ -49,18 +54,13 @@ public class PostServiceImpl implements PostService {
         System.out.println(post);
         user.getPosts().add(PersistedPost.getId());
         userRepository.save(user);
-        return PersistedPost;
+//        messagingTemplate.convertAndSendToUser();
+        return PersistedPost.getId();
     }
 
     @Override
-    public Post getPost(String id) {
-        return postRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("post not found"));
-    }
-
-    @Override
-    public List<Post> getAllPost(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("user not found"));
-        return postRepository.findAllById(user.getPosts());
+    public List<PostResponseDTO> findRandomPosts(User user,int number) {
+        return postRepository.findRandomPostsWithUserDetails(user.getId(),number);
     }
 
     @Override
@@ -74,15 +74,14 @@ public class PostServiceImpl implements PostService {
             System.out.println(user);
             postRepository.delete(post);
             userRepository.save(user);
+            System.out.println("ended deletion");
         }
     }
-
 
     @Override
     public void likePost(User user, String postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("post not found!"));
         if (!post.getLikes().contains(user.getId())){
-            post.setLikesCount(post.getLikesCount()+1);
             post.getLikes().add(user.getId());
             postRepository.save(post);
         }else{
@@ -94,7 +93,6 @@ public class PostServiceImpl implements PostService {
     public void unlikePost(User user, String postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("post not found!"));
         if (post.getLikes().contains(user.getId())){
-            post.setLikesCount(post.getLikesCount()-1);
             post.getLikes().remove(user.getId());
             postRepository.save(post);
         }

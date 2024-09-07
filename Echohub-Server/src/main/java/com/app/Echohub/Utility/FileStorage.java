@@ -21,10 +21,15 @@ public class FileStorage {
     static {
         try {
             Resource resource = new ClassPathResource("");
-            baseDirectory = Paths.get(resource.getURI()).resolve("static");
-            if (!Files.exists(baseDirectory)) {
-                Files.createDirectories(baseDirectory);
+            Path dirToStatic = Paths.get(resource.getURI()).resolve("static");
+            if (!Files.exists(dirToStatic)) {
+                Files.createDirectories(dirToStatic);
             }
+            Path dirToImage = dirToStatic.resolve("resource");
+            if (!Files.exists(dirToImage)) {
+                Files.createDirectories(dirToImage);
+            }
+            baseDirectory=dirToImage;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -45,7 +50,8 @@ public class FileStorage {
         String filename = UUID.randomUUID().toString() + extension;
         Path destinationFile = directory.resolve(filename);
         file.transferTo(destinationFile);
-        return fileType.getDirectory()+"/"+filename;
+        System.out.println("filename :"+"/resource/"+fileType.getDirectory()+"/"+filename);
+        return "/resource/"+fileType.getDirectory()+"/"+filename;
     }
 
 }

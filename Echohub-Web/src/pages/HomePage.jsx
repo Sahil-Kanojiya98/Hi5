@@ -1,32 +1,47 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Button } from "@mui/material";
-import useLogout from "../hooks/useLogout";
-import axiosInstance from "../utils/axiosConfig";
+import { useState } from "react";
+import Echohub from "../components/logo/Echohub";
+import CreatePost from "../components/CreatePost";
+import Posts from "../components/Posts";
 
 function HomePage() {
-  const user = useSelector((state) => state.auth.user);
-  console.table(user);
-  const logout = useLogout();
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  const [fetch , setFetch] = useState(null);
-  const handleFetch = async () => {
-    const result=await axiosInstance.get("/hello");
-    if(result.status === 200){
-      setFetch(`Hello, ${result.data}!`);
-    }
-  }
+  const [feedType, setFeedType] = useState("forYou");
 
   return (
-    <div>
-      home page
-      <Button onClick={handleLogout}>logout</Button>
-      {fetch}
-      <Button onClick={handleFetch}>fetch me</Button>
-    </div>
+    <>
+      <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen ">
+        <div className="flex w-full border-b border-gray-700">
+          <div
+            className={
+              "flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
+            }
+            onClick={() => setFeedType("forYou")}
+          >
+            For you
+            {feedType === "forYou" && (
+              <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
+            )}
+          </div>
+          <div
+            className={
+              "flex justify-center flex-4 pt-3 transition duration-300 cursor-pointer relative"
+            }
+          >
+            <Echohub classNames={"md:hidden text-sm"} />
+          </div>
+          <div
+            className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
+            onClick={() => setFeedType("following")}
+          >
+            Following
+            {feedType === "following" && (
+              <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
+            )}
+          </div>
+        </div>
+         <CreatePost />
+         <Posts feedType={feedType} />
+      </div>
+    </>
   );
 }
 

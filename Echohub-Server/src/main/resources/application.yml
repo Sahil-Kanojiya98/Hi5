@@ -40,3 +40,8 @@ vidorbit:
 #logging:
 #  level:
 #    root: DEBUG
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.mongodb.driver: DEBUG

@@ -54,9 +54,8 @@ public class User {
 
     @Field("modified_at")
     @LastModifiedDate
+    @JsonIgnore
     private LocalDateTime updatedAt;
-
-    private String status;
 
     @DBRef(lazy = true)
     @Builder.Default
@@ -65,15 +64,20 @@ public class User {
     private List<RefreshToken> refreshToken=new LinkedList<>();
 
     @Builder.Default
+    @JsonIgnore
     private Set<String> followers=new HashSet<>();
 
     @Builder.Default
+    @JsonIgnore
     private Set<String> followings=new HashSet<>();
 
     @Builder.Default
+    @JsonIgnore
     private Set<String> posts=new HashSet<>();
 
+    @Field("saved_posts")
     @Builder.Default
+    @JsonIgnore
     private Set<String> savedPosts=new HashSet<>();
 
 }
