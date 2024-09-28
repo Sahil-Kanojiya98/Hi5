@@ -1,5 +1,6 @@
 package com.app.Echohub.Service.Impl;
 
+import com.app.Echohub.DTO.CommentResponseDTO;
 import com.app.Echohub.DTO.Request.CommentRequest;
 import com.app.Echohub.Exceptions.EntityNotFoundException;
 import com.app.Echohub.Model.Comment;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -28,63 +31,73 @@ public class CommentServiceImpl implements CommentService {
     private UserRepository userRepository;
 
     @Override
-    public Set<Comment> getPostComments(String postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post not found!"));
-        return post.getComments();
-    }
-
-    @Override
     public Comment makePostComments(User user, String postId, CommentRequest commentRequest) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post not found!"));
         Comment comment=Comment
                 .builder()
                 .content(commentRequest.getContent())
-                .user(user.getId())
+                .user(user)
                 .postId(post.getId())
                 .build();
         Comment persistedComment = commentRepository.save(comment);
-        post.getComments().add(comment);
+        post.getComments().add(persistedComment.getId());
+        System.out.println(post+"   "+persistedComment);
         postRepository.save(post);
         return persistedComment;
     }
 
-//    @Override
-//    public void deleteComment(User user,String commentId) throws AccessDeniedException {
-//        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new EntityNotFoundException("comment not found"));
-//        Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> new EntityNotFoundException("post not found to delete comment"));
-//        String commentedUserId = comment.getUser();
-//        if (commentedUserId.equals(user.getId())){
-//            post.getComments().remove(comment);
-//            commentRepository.delete(comment);
-//            postRepository.save(post);
-//        }else{
-//            throw new AccessDeniedException("you can not delete this post");
-//        }
-//    }
+    @Override
+    public List<CommentResponseDTO> getComment(String postId, int page, int pageSize, User user) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("post not found"));
+        Set<String> commentIds = post.getComments();
+        if (commentIds.isEmpty()) {
+            return new LinkedList<>(); // Return empty if no comments
+        }
+        int skip = page * pageSize;
+        return commentRepository.findCommentsByIds(commentIds, skip, pageSize,user.getId());
+    }
 
-//    @Override
-//    public void likeComment(User user, String commentId) {
-//        Comment comment=commentRepository.findById(commentId).orElseThrow(()->new EntityNotFoundException("comment not found"));
-//        if (!comment.getLikes().contains(user.getId())){
-//            comment.setLikesCount(comment.getLikesCount()+1);
-//            comment.getLikes().add(user.getId());
-//            commentRepository.save(comment);
-//        }else{
-//            throw new IllegalStateException("already liked");
-//        }
-//    }
-//
-//    @Override
-//    public void unlikeComment(User user, String commentId) {
-//        Comment comment=commentRepository.findById(commentId).orElseThrow(()->new EntityNotFoundException("comment not found"));
-//        if (comment.getLikes().contains(user.getId())){
-//            comment.setLikesCount(comment.getLikesCount()-1);
-//            comment.getLikes().remove(user.getId());
-//            commentRepository.save(comment);
-//        }
-//        else {
-//            throw new IllegalStateException("not liked to unlike");
-//        }
-//    }
+
+    @Override
+    public void deleteComment(User user,String commentId) throws AccessDeniedException {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new EntityNotFoundException("comment not found"));
+        Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> new EntityNotFoundException("post not found to delete comment"));
+        String commentedUserId = comment.getUser().getId();
+        System.out.println(comment);
+        System.out.println(user);
+        if (commentedUserId.equals(user.getId())){
+            post.getComments().remove(comment.getId());
+            commentRepository.delete(comment);
+            postRepository.save(post);
+        }else{
+            throw new AccessDeniedException("you can not delete this post");
+        }
+    }
+
+    @Override
+    public void likeComment(User user, String commentId) {
+        Comment comment=commentRepository.findById(commentId).orElseThrow(()->new EntityNotFoundException("comment not found"));
+        System.out.println("comment:+===================="+comment);
+        if (!comment.getLikes().contains(user.getId())){
+            comment.getLikes().add(user.getId());
+            System.out.println(comment.getLikes());
+            commentRepository.save(comment);
+        }else{
+            throw new IllegalStateException("already liked");
+        }
+    }
+
+    @Override
+    public void unlikeComment(User user, String commentId) {
+        Comment comment=commentRepository.findById(commentId).orElseThrow(()->new EntityNotFoundException("comment not found"));
+        if (comment.getLikes().contains(user.getId())){
+            comment.getLikes().remove(user.getId());
+            commentRepository.save(comment);
+        }
+        else {
+            throw new IllegalStateException("not previously liked to unlike");
+        }
+    }
 
 }

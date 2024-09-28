@@ -14,7 +14,7 @@ function SavedPostsPage() {
   };
 
   return (
-    <div className="flex-[4_4_0] mr-auto min-h-screen ">
+    <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen ">
       <div className="sticky top-0 z-10 border-b border-gray-700 p-3 px-6 bg-black">
         <div className="flex w-full items-center justify-between">
           <p className="text-xl font-semibold text-white">Saved Posts</p>

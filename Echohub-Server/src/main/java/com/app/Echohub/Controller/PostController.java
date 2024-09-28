@@ -1,14 +1,13 @@
 package com.app.Echohub.Controller;
 
 import com.app.Echohub.DTO.PostResponseDTO;
-import com.app.Echohub.Model.Post;
 import com.app.Echohub.Model.User;
 import com.app.Echohub.Repository.PostRepository;
 import com.app.Echohub.Repository.UserRepository;
 import com.app.Echohub.Security.UserDetailsImpl;
 import com.app.Echohub.Service.PostService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -74,6 +73,7 @@ public class PostController {
                 skip,
                 pageSize
         );
+        System.out.println(posts);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
@@ -103,7 +103,6 @@ public class PostController {
         postService.unlikePost(userDetails.getUser(),post_id);
         return new ResponseEntity<>("post unliked",HttpStatus.OK);
     }
-
 
 
 

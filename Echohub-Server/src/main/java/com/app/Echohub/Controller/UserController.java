@@ -14,6 +14,7 @@ import com.app.Echohub.Security.UserDetailsImpl;
 import com.app.Echohub.Service.AuthService;
 import com.app.Echohub.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -117,20 +118,20 @@ public class UserController {
         return new ResponseEntity<>("post removed successfully!",HttpStatus.OK);
     }
 
-//    @GetMapping("/search")
-//    public List<User> searchUsers(@RequestParam String pattern) {
-//        return userService.searchUsers(pattern);
-//    }
+
+    @GetMapping("/search")
+    public Page<User> search(@RequestParam String pattern,
+                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size) {
+        return userService.searchUsers(pattern, page, size);
+    }
+
 
     @GetMapping("/suggest")
     public ResponseEntity<List<UserDescResponse>> suggestUsers(){
         List<UserDescResponse> users=userService.suggest();
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
-
-
-
-
 
 
 

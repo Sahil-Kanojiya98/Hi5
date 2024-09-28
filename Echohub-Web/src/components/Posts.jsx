@@ -4,7 +4,7 @@ import Post from "./Post";
 import PostSkeleton from "./skeletons/PostSkeleton";
 import axiosInstance from "../utils/axiosConfig";
 
-const Posts = ({ feedType, userId, isMyPost , reduceCount }) => {
+const Posts = ({ feedType, userId, isMyPost, reduceCount }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
@@ -68,7 +68,7 @@ const Posts = ({ feedType, userId, isMyPost , reduceCount }) => {
   };
 
   return (
-    <>
+    <div>
       {isLoading && posts.length === 0 && (
         <div className="flex flex-col justify-center">
           <PostSkeleton />
@@ -78,7 +78,7 @@ const Posts = ({ feedType, userId, isMyPost , reduceCount }) => {
       )}
       {error && <p className="text-center my-4 text-red-500">{error}</p>}
       {!isLoading && posts.length === 0 && (
-        <p className="text-center my-4">No posts in this tab. Switch 👻</p>
+        <p className="text-center">No posts in this tab. Switch 👻</p>
       )}
       {!isLoading && posts.length > 0 && (
         <InfiniteScroll
@@ -93,14 +93,19 @@ const Posts = ({ feedType, userId, isMyPost , reduceCount }) => {
               <PostSkeleton />
             </>
           }
-          endMessage={<p className="text-center my-4">No more posts</p>}
+          endMessage={<p className="text-center">No more posts</p>}
         >
           {posts.map((post) => (
-            <Post key={post.id} post={post} isMyPost={isMyPost} removePost={removePost} />
+            <Post
+              key={post.id}
+              post={post}
+              isMyPost={isMyPost}
+              removePost={removePost}
+            />
           ))}
         </InfiniteScroll>
       )}
-    </>
+    </div>
   );
 };
 

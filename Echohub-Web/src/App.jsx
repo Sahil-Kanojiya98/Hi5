@@ -4,6 +4,7 @@ import AuthGuard from "./guards/AuthGuard";
 import GuestGuard from "./guards/GuestGuard";
 import { useSelector } from "react-redux";
 import SavedPostsPage from "./pages/SavedPostsPage";
+import SearchPage from "./pages/SearchPage";
 
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -63,11 +64,19 @@ function App() {
             </AuthGuard>
           }
         />
-        {/* <Route path="*" element={
+        <Route
+          path="/search"
+          element={
+            <AuthGuard>
+              <SearchPage />
+            </AuthGuard>
+          }
+        />
+        <Route path="*" element={
           <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
             <p className="text-center text-2xl mt-4">404 Not Found</p>
           </div>
-          } /> */}
+          } />
       </Routes>
       {isAuthenticated && <RightPanel />}
     </div>

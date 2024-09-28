@@ -10,7 +10,6 @@ import com.app.Echohub.Service.PostService;
 import com.app.Echohub.Utility.FileStorage;
 import com.app.Echohub.Utility.enums.FileType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +26,6 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
 
     @Override
     public String makePost(User user, String content, MultipartFile imageFile, MultipartFile videoFile) {
@@ -54,7 +50,6 @@ public class PostServiceImpl implements PostService {
         System.out.println(post);
         user.getPosts().add(PersistedPost.getId());
         userRepository.save(user);
-//        messagingTemplate.convertAndSendToUser();
         return PersistedPost.getId();
     }
 

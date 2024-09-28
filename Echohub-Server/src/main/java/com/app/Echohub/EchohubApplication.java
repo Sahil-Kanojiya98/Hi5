@@ -9,9 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableCaching
 @EnableAsync
 public class EchohubApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(EchohubApplication.class, args);
 	}
-
 }

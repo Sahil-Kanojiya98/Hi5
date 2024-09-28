@@ -16,6 +16,9 @@ import com.app.Echohub.Service.UserService;
 import com.app.Echohub.Utility.FileStorage;
 import com.app.Echohub.Utility.enums.FileType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -198,4 +201,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found!"));
         return userRepository.findUserProfileById(userId,myid);
     }
+
+    @Override
+    public Page<User> searchUsers(String pattern, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.searchByPattern(pattern, pageable);
+    }
+
 }

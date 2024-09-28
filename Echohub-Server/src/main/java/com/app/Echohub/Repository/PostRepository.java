@@ -22,6 +22,7 @@ public interface PostRepository  extends MongoRepository<Post, String> {
                     "'video_url': 1, " +
                     "'created_at': 1, " +
                     "'likesCount': { $size: '$likes' }, " +
+                    "'commentsCount': { $size: '$comments' }, " +
                     "'isLiked': { $cond: { if: { $in: [?0, '$likes'] }, then: true, else: false } }, " +
                     "'isSaved': { $cond: { if: { $in: [?0, '$saved_by_users'] }, then: true, else: false } }, " +
                     "'userID': '$user_details._id', " +
@@ -44,6 +45,7 @@ public interface PostRepository  extends MongoRepository<Post, String> {
                     "'video_url': 1, " +
                     "'created_at': 1, " +
                     "'likesCount': { $size: '$likes' }, " +
+                    "'commentsCount': { $size: '$comments' }, " +
                     "'isLiked': { $cond: { if: { $in: [?0, '$likes'] }, then: true, else: false } }, " +
                     "'isSaved': { $cond: { if: { $in: [?0, '$saved_by_users'] }, then: true, else: false } }, " +
                     "'userID': '$user_details._id', " +
@@ -70,6 +72,7 @@ public interface PostRepository  extends MongoRepository<Post, String> {
                     "'video_url': 1, " +
                     "'created_at': 1, " +
                     "'likesCount': { $size: '$likes' }, " +
+                    "'commentsCount': { $size: '$comments' }, " +
                     "'isLiked': { $cond: { if: { $in: [?0, '$likes'] }, then: true, else: false } }, " +
                     "'isSaved': { $cond: { if: { $in: [?0, '$saved_by_users'] }, then: true, else: false } }, " +
                     "'userID': '$user_details._id', " +

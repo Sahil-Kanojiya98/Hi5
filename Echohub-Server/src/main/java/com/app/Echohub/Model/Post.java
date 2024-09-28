@@ -50,10 +50,9 @@ public class Post {
     @JsonIgnore
     private Set<String> likes = new HashSet<>();
 
-    @DBRef(lazy = true)
     @Builder.Default
     @JsonIgnore
-    private Set<Comment> comments = new HashSet<>();
+    private Set<String> comments = new HashSet<>();
 
     @Field("saved_by_users")
     @Builder.Default

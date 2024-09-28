@@ -24,7 +24,6 @@ public class CacheConfig {
         return cacheManager;
     }
 
-//    @CacheEvict(value = "users", key = "#id")   in update delete of records  --- cache
+//    @CacheEvict(value = "users", key = "#id")   in set del --- cache
 //    @Cacheable(value = "users", key = "#id")    in get
-
 }

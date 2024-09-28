@@ -4,11 +4,12 @@ import com.app.Echohub.DTO.UserDescResponse;
 import com.app.Echohub.DTO.UserProfileDTO;
 import com.app.Echohub.Model.Post;
 import com.app.Echohub.Model.User;
+
+import org.springframework.data.domain.Page;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-
-import javax.swing.text.Document;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,5 +48,9 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 //    @Query("{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }")
 //    List<User> searchByPattern(String pattern);
+
+    @Query(value = "{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }",
+            fields = "{ 'id': '$_id', 'username': 1, 'fullname': 1, 'profile_picture_url': 1 }")
+    Page<User> searchByPattern(String pattern, Pageable pageable);
 
 }
