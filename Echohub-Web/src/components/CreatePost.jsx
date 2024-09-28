@@ -1,11 +1,8 @@
 import { useRef, useState, useEffect } from "react";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { IoClose, IoCloseSharp } from "react-icons/io5";
 import { CiImageOn, CiVideoOn } from "react-icons/ci";
 import axiosInstance from "../utils/axiosConfig";
-import { updateUser } from "../redux/slices/authSlice";
-import _ from "lodash";
 
 const CreatePost = () => {
   const authUser = useSelector((state) => state.auth.user);
@@ -14,9 +11,6 @@ const CreatePost = () => {
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
   const fileRef = useRef(null);
-
-  const dispatch = useDispatch();
-
   const [isPending, setIsPending] = useState(false);
   const [isError, setIsError] = useState(null);
 

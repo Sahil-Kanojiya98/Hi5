@@ -12,15 +12,16 @@ import LoadingSpinner from "./LoadingSpinner";
 import TimeAgo from "./TimeAgo";
 import axiosInstance from "../utils/axiosConfig";
 import CommentDialog from "./CommentDialog";
-import { remove } from "lodash";
+import PropTypes from "prop-types";
 
-const Post = ({ post , isMyPost , removePost }) => {
+const Post = ({ post, isMyPost, removePost }) => {
   console.log(post);
-  console.log("isMyPost"+isMyPost)
+  console.log("isMyPost: " + isMyPost);
 
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [likesCount, setLikesCount] = useState(post.likesCount);
+
   const [commentsCount, setCommentsCount] = useState(post.commentsCount);
 
   const [isLiking, setIsLiking] = useState(false);
@@ -193,7 +194,12 @@ const Post = ({ post , isMyPost , removePost }) => {
             </span>
           </div>
           {isCommentDialogOpen && (
-            <CommentDialog postId={post.id} onClose={closeCommentDialog} isOpen={isCommentDialogOpen} />
+            <CommentDialog
+              postId={post.id}
+              onClose={closeCommentDialog}
+              isOpen={isCommentDialogOpen}
+              setCommentsCount={setCommentsCount}
+            />
           )}
           <div
             onClick={handleSavePost}
@@ -211,6 +217,27 @@ const Post = ({ post , isMyPost , removePost }) => {
       </div>
     </div>
   );
+};
+
+// Define PropTypes for Post component
+Post.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    userID: PropTypes.string.isRequired,
+    profilePictureUrl: PropTypes.string,
+    fullname: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string,
+    videoUrl: PropTypes.string,
+    isLiked: PropTypes.bool.isRequired,
+    isSaved: PropTypes.bool.isRequired,
+    likesCount: PropTypes.number.isRequired,
+    commentsCount: PropTypes.number.isRequired,
+  }).isRequired,
+  isMyPost: PropTypes.bool.isRequired,
+  removePost: PropTypes.func.isRequired,
 };
 
 export default Post;

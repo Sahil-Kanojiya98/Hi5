@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import RightPanelSkeleton from "./skeletons/RightPanelSkeleton";
-import LoadingSpinner from "./LoadingSpinner";
 import axiosInstance from "../utils/axiosConfig";
 
 const RightPanel = () => {

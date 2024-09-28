@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import { lazy } from "react";
 import { Route, Navigate, Routes } from "react-router-dom";
 import AuthGuard from "./guards/AuthGuard";
 import GuestGuard from "./guards/GuestGuard";
@@ -19,7 +19,7 @@ function App() {
   console.log("isAuthenticated: " + isAuthenticated);
 
   return (
-    <div className="flex max-w-6xl max-w-7xl mx-auto">
+    <div className="flex max-w-6xl  mx-auto">
       {isAuthenticated && <Sidebar />}
       <Routes>
         <Route path="/manager" element={<TokenManager />} />

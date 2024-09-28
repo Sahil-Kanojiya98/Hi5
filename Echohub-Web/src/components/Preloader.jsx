@@ -1,4 +1,3 @@
-import React from "react";
 import Echohub from "./logo/Echohub";
 
 function Preloader() {

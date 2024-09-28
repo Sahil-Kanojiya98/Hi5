@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import axiosInstance from "../utils/axiosConfig";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../redux/slices/authSlice";
-import { useNavigate } from "react-router-dom";
 
 const EditProfileModal = ({ authUser }) => {
   const [formData, setFormData] = useState({
@@ -38,7 +38,6 @@ const EditProfileModal = ({ authUser }) => {
   };
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,12 +45,10 @@ const EditProfileModal = ({ authUser }) => {
     setError(null);
     try {
       const response = await axiosInstance.put("/user", formData);
-      console.log(response.data);
       const { id, username, fullname, profilePictureUrl } = response.data;
       dispatch(updateUser({ id, username, fullname, profilePictureUrl }));
       setIsModelOpen(false);
     } catch (err) {
-      console.log(err);
       setError(err.response?.data || "An error occurred");
     } finally {
       setLoading(false);
@@ -153,6 +150,16 @@ const EditProfileModal = ({ authUser }) => {
       </dialog>
     </>
   );
+};
+
+EditProfileModal.propTypes = {
+  authUser: PropTypes.shape({
+    fullName: PropTypes.string,
+    username: PropTypes.string,
+    email: PropTypes.string,
+    bio: PropTypes.string,
+    link: PropTypes.string,
+  }),
 };
 
 export default EditProfileModal;
