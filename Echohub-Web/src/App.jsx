@@ -19,7 +19,7 @@ function App() {
   console.log("isAuthenticated: " + isAuthenticated);
 
   return (
-    <div className="flex max-w-6xl  mx-auto">
+    <div className="flex max-w-6xl mx-auto">
       {isAuthenticated && <Sidebar />}
       <Routes>
         <Route path="/manager" element={<TokenManager />} />
@@ -72,11 +72,14 @@ function App() {
             </AuthGuard>
           }
         />
-        <Route path="*" element={
-          <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
-            <p className="text-center text-2xl mt-4">404 Not Found</p>
-          </div>
-          } />
+        <Route
+          path="*"
+          element={
+            <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
+              <p className="text-center text-2xl mt-4">404 Not Found</p>
+            </div>
+          }
+        />
       </Routes>
       {isAuthenticated && <RightPanel />}
     </div>

@@ -69,7 +69,6 @@ const TokenManager = () => {
   return (
     <div>
       <h1>Token Manager</h1>
-
       <div>
         <h2>Refresh Token</h2>
         <input
@@ -82,7 +81,6 @@ const TokenManager = () => {
         <button onClick={handleRemoveRefreshToken}>Remove Refresh Token</button>
         <p>Current Refresh Token: {refreshToken || "None"}</p>
       </div>
-
       <div>
         <h2>Access Token</h2>
         <input

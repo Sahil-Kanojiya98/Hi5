@@ -66,7 +66,7 @@ function SearchPage() {
   };
 
   return (
-    <div className="flex-[4_4_0] mr-auto border-r border-black min-h-screen bg-black">
+    <div className="flex-[4_4_0] mr-auto border-r border-black bg-black min-h-[calc(100vh+1px)] ">
       <div className="sticky top-0 z-10 border-b border-[#212121] p-4 bg-black">
         <div className="flex items-center justify-between">
           <p className="text-xl font-semibold text-white">Search Users</p>

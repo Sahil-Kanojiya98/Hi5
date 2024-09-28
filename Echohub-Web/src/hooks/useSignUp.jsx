@@ -15,19 +15,16 @@ const useSignUp = () => {
     setError(null);
     try {
       const response = await axiosInstance.post("/auth/register", {
-        "email":email,
-        "username":username,
-        "fullname":fullName,
-        "password":password,
+        email: email,
+        username: username,
+        fullname: fullName,
+        password: password,
       });
       const { accessToken, refreshToken } = response.data;
-
       setAccessToken(accessToken);
       await setRefreshToken({ id: "refreshToken", token: refreshToken });
-
       const userResponse = await axiosInstance.get("/user/get-me");
       const userData = userResponse.data;
-
       dispatch(
         addAuth({
           isAuthenticated: true,
@@ -37,7 +34,6 @@ const useSignUp = () => {
     } catch (err) {
       console.log(err?.response?.data);
       setError(err?.response?.data || "Sign up failed");
-
       removeAccessToken();
       removeRefreshToken("refreshToken");
       dispatch(rmAuth());

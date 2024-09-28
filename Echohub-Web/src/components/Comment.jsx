@@ -4,7 +4,7 @@ import { FaHeart, FaTrash } from "react-icons/fa";
 import axiosInstance from "../utils/axiosConfig";
 import TimeAgo from "./TimeAgo";
 
-const Comment = ({ comment, authUser , setCommentsCount , deleteComment }) => {
+const Comment = ({ comment, authUser, setCommentsCount, deleteComment }) => {
   const [isLiked, setIsLiked] = useState(comment.likedFlag);
   const [likeCount, setLikeCount] = useState(comment.likeCount);
 
@@ -26,7 +26,7 @@ const Comment = ({ comment, authUser , setCommentsCount , deleteComment }) => {
   const handleDelete = async () => {
     try {
       await axiosInstance.delete(`/comment/${comment.commentId}`);
-      setCommentsCount((prev) => prev - 1); // Update comment count in parent component (Post) when comment is deleted.
+      setCommentsCount((prev) => prev - 1);
       deleteComment(comment.commentId);
     } catch (error) {
       console.error("Failed to delete comment:", error);
@@ -50,7 +50,9 @@ const Comment = ({ comment, authUser , setCommentsCount , deleteComment }) => {
             </div>
           </div>
           <div className="flex flex-col md:flex-row">
-            <span className="font-bold text-sm md:w-28 lg:w-36 truncate">{comment.userFullName}</span>
+            <span className="font-bold text-sm md:w-28 lg:w-36 truncate">
+              {comment.userFullName}
+            </span>
             <span className="text-gray-600 text-sm pl-2 md:w-28 lg:w-36 truncate">
               @{comment.userName}
             </span>
@@ -113,5 +115,3 @@ Comment.propTypes = {
 };
 
 export default Comment;
-
-

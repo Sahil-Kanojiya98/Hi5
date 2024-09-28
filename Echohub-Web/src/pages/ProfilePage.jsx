@@ -103,7 +103,6 @@ const ProfilePage = () => {
     console.log(coverImg, profileImg);
     console.log(coverImg instanceof File);
     console.log(profileImg instanceof File);
-
     if (coverImg) formData.append("coverPicture", coverImg);
     if (profileImg) formData.append("profilePicture", profileImg);
     try {
@@ -117,7 +116,6 @@ const ProfilePage = () => {
         }
       );
       console.log("Images updated:", response.data);
-
       if (response.data.profilePictureUrl) {
         const updatedUserProfile = {
           ...user,
@@ -125,13 +123,11 @@ const ProfilePage = () => {
           coverPictureUrl: response.data.coverPictureUrl,
         };
         setUser(updatedUserProfile);
-
         const updatedAuthUserProfile = {
           ...authUser,
           profilePictureUrl: response.data.profilePictureUrl,
         };
         dispatch(updateUser(updatedAuthUserProfile));
-
         setCoverImg(null);
         setProfileImg(null);
       }
@@ -143,17 +139,17 @@ const ProfilePage = () => {
   };
 
   const reduceCount = () => {
-    setPostsCount((prev)=>{
-      if(prev>0){
+    setPostsCount((prev) => {
+      if (prev > 0) {
         return prev - 1;
-      }else{
+      } else {
         return prev;
       }
     });
   };
 
   return (
-    <div className="flex-[4_4_0] border-r mr-auto border-gray-700 min-h-screen">
+    <div className="flex-[4_4_0] border-r mr-auto border-gray-700 min-h-[calc(100vh+1px)] ">
       {isLoading && <ProfileHeaderSkeleton />}
       {!isLoading && !user && (
         <p className="text-center text-lg mt-4">User not found</p>

@@ -1,11 +1,12 @@
 // AuthProvider.js
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addAuth, rmAuth } from "../redux/slices/authSlice";
 import axiosInstance from "../utils/axiosConfig";
 import { getAccessToken, removeAccessToken } from "../utils/localStorage";
 import { getRefreshToken, removeRefreshToken } from "../utils/indexedDB";
+import PropTypes from 'prop-types';
 
 function AuthProvider({ children }) {
   const dispatch = useDispatch();
@@ -50,5 +51,9 @@ function AuthProvider({ children }) {
   }, [dispatch]);
   return <>{children}</>;
 }
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default AuthProvider;

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Post from "./Post";
 import PostSkeleton from "./skeletons/PostSkeleton";
 import axiosInstance from "../utils/axiosConfig";
+import PropTypes from "prop-types";
 
 const Posts = ({ feedType, userId, isMyPost, reduceCount }) => {
   const [posts, setPosts] = useState([]);
@@ -107,6 +108,18 @@ const Posts = ({ feedType, userId, isMyPost, reduceCount }) => {
       )}
     </div>
   );
+};
+
+Posts.propTypes = {
+  feedType: PropTypes.string.isRequired,
+  userId: PropTypes.string,
+  isMyPost: PropTypes.bool,
+  reduceCount: PropTypes.func,
+};
+
+Posts.defaultProps = {
+  userId: null,
+  isMyPost: false,
 };
 
 export default Posts;

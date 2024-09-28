@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import useLogout from "../hooks/useLogout";
 
 const Sidebar = () => {
-
   const authUser = useSelector((state) => state.auth.user);
   const logout = useLogout();
   const navigate = useNavigate();
@@ -63,7 +62,13 @@ const Sidebar = () => {
           >
             <div className="avatar hidden md:inline-flex">
               <div className="w-8 rounded-full">
-                <img src={(authUser?.profilePictureUrl?"http://localhost:8080"+authUser?.profilePictureUrl:"/avatar.png")} />
+                <img
+                  src={
+                    authUser?.profilePictureUrl
+                      ? "http://localhost:8080" + authUser?.profilePictureUrl
+                      : "/avatar.png"
+                  }
+                />
               </div>
             </div>
             <div className="flex justify-between flex-1  items-center">
@@ -77,7 +82,7 @@ const Sidebar = () => {
               </div>
               <BiLogOut
                 className="w-5 h-5 scale-125 cursor-pointer"
-                onClick={async(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
                   await logout();
                   navigate("/login");

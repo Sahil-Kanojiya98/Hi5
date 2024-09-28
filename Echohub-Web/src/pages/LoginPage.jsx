@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Echohub from "../components/logo/Echohub";
 import { MdOutlineMail, MdPassword } from "react-icons/md";
 import useLogin from "../hooks/useLogin";
 import * as Yup from "yup";
-import { toast } from "react-toastify";
-import { FaCheckCircle } from "react-icons/fa";
+// import { toast } from "react-toastify";
+// import { FaCheckCircle } from "react-icons/fa";
 
 const LoginPage = () => {
   const { login, isLoading, error } = useLogin();
@@ -40,7 +40,7 @@ const LoginPage = () => {
       //     },
       //   });
       // }
-      ( (error==null && error=="") ? navigate("/home") : null )
+      error == null && error == "" ? navigate("/home") : null;
     } catch (err) {
       setValidationError(err.message);
     }
@@ -54,7 +54,9 @@ const LoginPage = () => {
           onSubmit={handleSubmit}
         >
           <Echohub />
-          <h1 className="text-4xl font-extrabold text-white mb-4">Let's go.</h1>
+          <h1 className="text-4xl font-extrabold text-white mb-4">
+            Let&apos;s go.
+          </h1>
           <label className="input input-bordered rounded flex items-center gap-2">
             <MdOutlineMail />
             <input
@@ -79,7 +81,6 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-
           {validationError && <p className="text-red-500">{validationError}</p>}
           <button
             type="submit"

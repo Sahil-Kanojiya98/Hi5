@@ -1,36 +1,42 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { MdOutlineMail, MdPassword, MdDriveFileRenameOutline } from 'react-icons/md';
-import { FaUser } from 'react-icons/fa';
-import Echohub from '../components/logo/Echohub';
-import useSignUp from '../hooks/useSignUp';
-import * as Yup from 'yup';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  MdOutlineMail,
+  MdPassword,
+  MdDriveFileRenameOutline,
+} from "react-icons/md";
+import { FaUser } from "react-icons/fa";
+import Echohub from "../components/logo/Echohub";
+import useSignUp from "../hooks/useSignUp";
+import * as Yup from "yup";
 
 const SignUpPage = () => {
   const { signUp, isLoading, error } = useSignUp();
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [password, setPassword] = useState('');
-  const [validationError, setValidationError] = useState('');
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
+  const [validationError, setValidationError] = useState("");
 
   const signUpSchema = Yup.object().shape({
-    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-    fullName: Yup.string().required('Full Name is required'),
-    username: Yup.string().required('Username is required'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+    fullName: Yup.string().required("Full Name is required"),
+    username: Yup.string().required("Username is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       await signUpSchema.validate(
-        {  password,  fullName, username ,  email },
+        { password, fullName, username, email },
         { abortEarly: true }
       );
       signUp(email, username, fullName, password);
-      setValidationError(''); 
+      setValidationError("");
     } catch (err) {
       setValidationError(err.message);
     }
@@ -53,7 +59,7 @@ const SignUpPage = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
           </label>
-          
+
           <div className="flex gap-4 flex-wrap">
             <label className="input input-bordered rounded flex items-center gap-2 flex-1">
               <FaUser />
@@ -66,7 +72,7 @@ const SignUpPage = () => {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </label>
-            
+
             <label className="input input-bordered rounded flex items-center gap-2 flex-1">
               <MdDriveFileRenameOutline />
               <input
@@ -79,7 +85,7 @@ const SignUpPage = () => {
               />
             </label>
           </div>
-          
+
           <label className="input input-bordered rounded flex items-center gap-2">
             <MdPassword />
             <input
@@ -93,14 +99,14 @@ const SignUpPage = () => {
           </label>
 
           {validationError && <p className="text-red-500">{validationError}</p>}
-          
-          <button 
+
+          <button
             className="btn text-lg rounded-full btn-primary text-white"
             disabled={isLoading}
           >
             {isLoading ? "Loading..." : "Sign up"}
           </button>
-          
+
           {error && <p className="text-red-500 text-center">{error}</p>}
         </form>
         <div className="flex flex-col lg:w-fit gap-2 mt-4">

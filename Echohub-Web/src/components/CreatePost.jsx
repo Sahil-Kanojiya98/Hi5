@@ -45,10 +45,9 @@ const CreatePost = () => {
       });
       console.log("Post created:", response.data);
       console.log("updated user");
-
       setText("");
       setFile(null);
-      setFileURL(null); 
+      setFileURL(null);
       fileRef.current.value = null;
     } catch (error) {
       setIsError(error);

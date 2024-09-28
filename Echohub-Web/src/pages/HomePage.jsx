@@ -8,7 +8,7 @@ function HomePage() {
 
   return (
     <>
-      <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen ">
+      <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-[calc(100vh+1px)] ">
         <div className="flex w-full border-b border-gray-700">
           <div
             className={
@@ -38,8 +38,8 @@ function HomePage() {
             )}
           </div>
         </div>
-         <CreatePost />
-         <Posts feedType={feedType} />
+        <CreatePost />
+        <Posts feedType={feedType} isMyPost={false} />
       </div>
     </>
   );

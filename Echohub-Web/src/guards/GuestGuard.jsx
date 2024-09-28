@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from 'prop-types';
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import Preloader from "../components/Preloader";
@@ -11,6 +11,10 @@ const GuestGuard = ({ children }) => {
     return <Preloader/>;
   }
   return !isAuthenticated ? children : <Navigate to="/home" />;
+};
+
+GuestGuard.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default GuestGuard;

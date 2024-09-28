@@ -11,11 +11,11 @@ const useLogout = () => {
     try {
       const refreshToken = (await getRefreshToken("refreshToken"))?.token;
       console.log(refreshToken);
-      if (refreshToken){
+      if (refreshToken) {
         await axiosInstance.post("/user/logout", {
           refreshToken,
         });
-      }else{
+      } else {
         throw new Error("refreshToken not found");
       }
     } catch (error) {

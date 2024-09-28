@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 import axiosInstance from "../utils/axiosConfig";
 import { useDispatch } from "react-redux";
@@ -63,7 +63,6 @@ const EditProfileModal = ({ authUser }) => {
       >
         Edit profile
       </button>
-
       <dialog id="edit_profile_modal" className="modal" open={isModelOpen}>
         <div className="modal-box border rounded-md border-gray-700 shadow-md">
           <h3 className="font-bold text-lg my-3">Update Profile</h3>
