@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class DummyController {
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/hello")
     public String hello(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         System.out.println(userDetails);
@@ -25,6 +26,13 @@ public class DummyController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hello-admin")
     public String hello_admin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        System.out.println(userDetails);
+        return "hello world admin";
+    }
+
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @GetMapping("/hello-super-admin")
+    public String hello_super_admin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         System.out.println(userDetails);
         return "hello world admin";
     }

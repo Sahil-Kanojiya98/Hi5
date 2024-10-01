@@ -7,7 +7,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 function SearchPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [users, setUsers] = useState([]); // Keep previously loaded users
+  const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -66,7 +66,7 @@ function SearchPage() {
   };
 
   return (
-    <div className="flex-[4_4_0] mr-auto border-r border-black bg-black min-h-[calc(100vh+1px)] ">
+    <div className="flex-[4_4_0] mr-auto border-r border-[#374151] bg-black min-h-[calc(100vh+1px)] ">
       <div className="sticky top-0 z-10 border-b border-[#212121] p-4 bg-black">
         <div className="flex items-center justify-between">
           <p className="text-xl font-semibold text-white">Search Users</p>

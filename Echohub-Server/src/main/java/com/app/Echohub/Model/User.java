@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -80,5 +81,9 @@ public class User {
     @JsonIgnore
     private Set<String> savedPosts=new HashSet<>();
 
-}
+    @JsonIgnore
+    @Builder.Default
+    @Field("roles")
+    private Set<String> roles = new HashSet<>();
 
+}

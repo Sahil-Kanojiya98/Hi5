@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -36,6 +34,9 @@ public class PostResponseDTO {
     @Field("isLiked")
     @JsonProperty("isLiked")
     private boolean isLiked;
+    @Field("isReported")
+    @JsonProperty("isReported")
+    private boolean isReported;
     @Field("isSaved")
     @JsonProperty("isSaved")
     private boolean isSaved;

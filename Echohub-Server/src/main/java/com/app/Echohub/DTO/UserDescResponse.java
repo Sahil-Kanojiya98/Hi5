@@ -3,6 +3,8 @@ package com.app.Echohub.DTO;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,5 +17,5 @@ public class UserDescResponse {
     private String fullname;
     @Field("profile_picture_url")
     private String profilePictureUrl;
-
+    private Set<String> roles;
 }

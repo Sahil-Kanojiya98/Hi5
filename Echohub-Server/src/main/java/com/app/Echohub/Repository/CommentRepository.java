@@ -46,12 +46,11 @@ public interface CommentRepository extends MongoRepository<Comment, String> {
                     "    'userFullName': '$user_details.fullname', " +
                     "    'userProfilePicture': '$user_details.profile_picture_url' " +
                     "} }",
-            "{ '$sort': { 'created_at': -1 } }",  // Sort by created_at in descending order
+            "{ '$sort': { 'created_at': -1 } }",
             "{ '$skip': ?1 }",
             "{ '$limit': ?2 }"
     })
     List<CommentResponseDTO> findCommentsByIds(Set<String> commentIds, int skip, int limit, String userId);
-
 
 }
 

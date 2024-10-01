@@ -12,9 +12,6 @@ public interface PostService {
 
     List<PostResponseDTO> findRandomPosts(User user,int number);
 
-//    Post getPost(String id);
-//    List<Post> getAllPost(String userId);
-
     void deletePost(User user, String postId);
 
     void likePost(User user, String postId);

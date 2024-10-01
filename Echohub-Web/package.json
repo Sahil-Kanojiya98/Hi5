@@ -31,6 +31,7 @@
     "react-router-dom": "^6.26.1",
     "react-toastify": "^10.0.5",
     "redux": "^5.0.1",
+    "use-debounce": "^10.0.3",
     "vidorbit": "file:",
     "vidorbit-web": "file:",
     "yup": "^1.4.0"

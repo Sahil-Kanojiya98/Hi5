@@ -28,9 +28,7 @@ public interface UserService {
 
     void removeSavedPost(User user, String postId);
 
-//    List<User> searchUsers(String pattern);
-
-      List<UserDescResponse> suggest();
+    List<UserDescResponse> suggest();
 
     String follow(String userId, User user);
 
@@ -39,4 +37,5 @@ public interface UserService {
     UserProfileDTO getProfile(String userId, String myid);
 
     Page<User> searchUsers(String pattern, int page, int size);
+
 }

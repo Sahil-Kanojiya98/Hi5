@@ -1,13 +1,11 @@
 package com.app.Echohub.Controller;
 
-
 import com.app.Echohub.DTO.ImageUpdateResponseDTO;
 import com.app.Echohub.DTO.PostResponseDTO;
 import com.app.Echohub.DTO.Request.LogoutRequest;
 import com.app.Echohub.DTO.Request.UpdateUserRequest;
 import com.app.Echohub.DTO.UserDescResponse;
 import com.app.Echohub.DTO.UserProfileDTO;
-import com.app.Echohub.Model.Post;
 import com.app.Echohub.Model.User;
 import com.app.Echohub.Repository.UserRepository;
 import com.app.Echohub.Security.UserDetailsImpl;
@@ -44,6 +42,7 @@ public class UserController {
                 .fullname(user.getFullname())
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .username(user.getUsername())
+                .roles(user.getRoles())
                 .build();
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
@@ -126,33 +125,10 @@ public class UserController {
         return userService.searchUsers(pattern, page, size);
     }
 
-
     @GetMapping("/suggest")
     public ResponseEntity<List<UserDescResponse>> suggestUsers(){
         List<UserDescResponse> users=userService.suggest();
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
-
-
-
-
-
-//    @GetMapping("/followers/{user_id}")
-//    public ResponseEntity<List<User>> getFollowers(@PathVariable("user_id") String user_id) {
-//        User user = userRepository.findById(user_id)
-//                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
-//        List<User> followers = userRepository.findAllById(user.getFollowers());
-//        return new ResponseEntity<>(followers, HttpStatus.OK);
-//    }
-
-
-//    @GetMapping("/followings/{user_id}")
-//    public ResponseEntity<List<User>> getFollowings(@PathVariable("user_id") String user_id) {
-//        User user = userRepository.findById(user_id)
-//                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
-//        List<User> followings = userRepository.findAllById(user.getFollowings());
-//        return new ResponseEntity<>(followings, HttpStatus.OK);
-//    }
-
 
 }

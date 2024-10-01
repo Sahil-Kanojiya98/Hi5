@@ -4,8 +4,7 @@ import Echohub from "../components/logo/Echohub";
 import { MdOutlineMail, MdPassword } from "react-icons/md";
 import useLogin from "../hooks/useLogin";
 import * as Yup from "yup";
-// import { toast } from "react-toastify";
-// import { FaCheckCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const LoginPage = () => {
   const { login, isLoading, error } = useLogin();
@@ -13,6 +12,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState("");
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
   const loginSchema = Yup.object().shape({
     password: Yup.string().required("Password is required"),
@@ -21,28 +21,22 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await loginSchema.validate({ password, email }, { abortEarly: true });
       await login(email, password);
+      if (error) {
+        throw new Error(error);
+      }
       setValidationError("");
-      // if(error===null || error==="" ){
-      //   toast("Login successfull", {
-      //     autoClose: 1500,
-      //     style: {
-      //       borderRadius: "20px",
-      //       backgroundColor: "#fff",
-      //       color: "#000",
-      //       minWidth: "fit-content",
-      //       minHeight: "fit-content",
-      //       textAlign: "center",
-      //       padding: "8px 16px",
-      //     },
-      //   });
-      // }
-      error == null && error == "" ? navigate("/home") : null;
+      if (user) {
+        if (user.roles.includes("ROLE_ADMIN")) {
+          navigate("/admin");
+        } else {
+          navigate("/home");
+        }
+      }
     } catch (err) {
-      setValidationError(err.message);
+      setValidationError(err.message || "Login failed");
     }
   };
 
@@ -86,6 +80,7 @@ const LoginPage = () => {
             type="submit"
             className="btn rounded-full btn-primary text-white text-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-500"
             aria-label="Login"
+            disabled={isLoading} 
           >
             {isLoading ? "Loading..." : "Login"}
           </button>

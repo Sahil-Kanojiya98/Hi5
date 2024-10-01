@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import RightPanelSkeleton from "./skeletons/RightPanelSkeleton";
 import axiosInstance from "../utils/axiosConfig";
 
-const RightPanel = () => {
+const RightPanel = ({ authUser }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [suggestedUsers, setSuggestedUsers] = useState([]);
 
   useEffect(() => {
+    if (authUser.roles.includes("ROLE_ADMIN")) {
+      setIsLoading(false); // Directly set loading to false if it's admin
+      return;
+    }
     const fetchSuggestedUsers = async () => {
       try {
         const response = await axiosInstance.get("/user/suggest");
@@ -20,10 +25,15 @@ const RightPanel = () => {
       }
     };
     fetchSuggestedUsers();
-  }, []);
+  }, [authUser.roles]);
 
-  if (!isLoading && suggestedUsers?.length === 0)
+  if (authUser.roles.includes("ROLE_ADMIN")) {
+    return null;
+  }
+
+  if (!isLoading && suggestedUsers?.length === 0) {
     return <div className="md:w-72 w-0"></div>;
+  }
 
   return (
     <div className="hidden lg:block my-3 mx-3 w-72">
@@ -82,6 +92,16 @@ const RightPanel = () => {
       </div>
     </div>
   );
+};
+
+RightPanel.propTypes = {
+  authUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    fullname: PropTypes.string,
+    username: PropTypes.string,
+    roles: PropTypes.arrayOf(PropTypes.string).isRequired,
+    profilePictureUrl: PropTypes.string,
+  }),
 };
 
 export default RightPanel;

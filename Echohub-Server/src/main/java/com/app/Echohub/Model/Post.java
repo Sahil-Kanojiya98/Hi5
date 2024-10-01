@@ -54,6 +54,11 @@ public class Post {
     @JsonIgnore
     private Set<String> comments = new HashSet<>();
 
+    @Field("reported_by_users")
+    @Builder.Default
+    @JsonIgnore
+    private Set<String> reportedBy = new HashSet<>();
+
     @Field("saved_by_users")
     @Builder.Default
     @JsonIgnore

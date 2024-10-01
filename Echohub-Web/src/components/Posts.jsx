@@ -4,13 +4,15 @@ import Post from "./Post";
 import PostSkeleton from "./skeletons/PostSkeleton";
 import axiosInstance from "../utils/axiosConfig";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-const Posts = ({ feedType, userId, isMyPost, reduceCount }) => {
+const Posts = ({ feedType, userId = null, isMyPost = false, reduceCount }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
   const [error, setError] = useState(null);
+  const authUser = useSelector((state) => state.auth.user);
 
   const getPostEndpoint = () => {
     switch (feedType) {
@@ -63,13 +65,13 @@ const Posts = ({ feedType, userId, isMyPost, reduceCount }) => {
   };
 
   const removePost = (id) => {
-    console.log("removign post");
+    console.log("removing post");
     setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
     reduceCount();
   };
 
   return (
-    <div>
+    <div className="mt-3">
       {isLoading && posts.length === 0 && (
         <div className="flex flex-col justify-center">
           <PostSkeleton />
@@ -98,10 +100,12 @@ const Posts = ({ feedType, userId, isMyPost, reduceCount }) => {
         >
           {posts.map((post) => (
             <Post
+              authUserId={authUser.id}
               key={post.id}
               post={post}
               isMyPost={isMyPost}
               removePost={removePost}
+              authUser={authUser}
             />
           ))}
         </InfiniteScroll>
@@ -115,11 +119,6 @@ Posts.propTypes = {
   userId: PropTypes.string,
   isMyPost: PropTypes.bool,
   reduceCount: PropTypes.func,
-};
-
-Posts.defaultProps = {
-  userId: null,
-  isMyPost: false,
 };
 
 export default Posts;

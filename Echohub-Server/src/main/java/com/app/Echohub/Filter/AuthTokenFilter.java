@@ -5,8 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,16 +29,19 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         logger.debug("request started");
 //        fetches authorization header
+        System.out.println(0);
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String userName = null;
 
+        System.out.println(1);
 //        if bearer is valid then extract username
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             userName = authTokenService.extractUserName(token);
         }
 
+        System.out.println(2);
 //        if token is valid then set the authentication
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
@@ -51,6 +52,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             }
         }
 
+        System.out.println("3");
 //        continue
         filterChain.doFilter(request, response);
     }

@@ -8,7 +8,7 @@ function HomePage() {
 
   return (
     <>
-      <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-[calc(100vh+1px)] ">
+      <div className="flex-1 mr-auto border-r border-gray-700 min-h-[calc(100vh+1px)]">
         <div className="flex w-full border-b border-gray-700">
           <div
             className={
@@ -44,5 +44,4 @@ function HomePage() {
     </>
   );
 }
-
 export default HomePage;

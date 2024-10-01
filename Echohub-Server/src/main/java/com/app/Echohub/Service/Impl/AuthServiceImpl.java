@@ -56,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
                 .fullname(registerRequest.getFullname())
                 .password(bCryptPasswordEncoder.encode(registerRequest.getPassword()))
                 .build();
+        user.getRoles().add("ROLE_USER");
         userRepository.save(user);
         String accessToken = jwtService.generateToken(user.getEmail());
         String refreshToken = refreshTokenService.generateToken(user.getEmail());

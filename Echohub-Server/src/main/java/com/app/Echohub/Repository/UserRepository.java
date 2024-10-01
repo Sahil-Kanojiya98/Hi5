@@ -49,7 +49,11 @@ public interface UserRepository extends MongoRepository<User, String> {
 //    @Query("{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }")
 //    List<User> searchByPattern(String pattern);
 
-    @Query(value = "{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }",
+//    @Query(value = "{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }",
+//            fields = "{ 'id': '$_id', 'username': 1, 'fullname': 1, 'profile_picture_url': 1 }")
+//    Page<User> searchByPattern(String pattern, Pageable pageable);
+
+    @Query(value = "{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ], 'roles': { '$in': ['ROLE_USER'] } }",
             fields = "{ 'id': '$_id', 'username': 1, 'fullname': 1, 'profile_picture_url': 1 }")
     Page<User> searchByPattern(String pattern, Pageable pageable);
 

@@ -26,7 +26,6 @@ const TokenManager = () => {
         console.error("Failed to load tokens:", error);
       }
     };
-
     loadTokens();
   }, []);
 

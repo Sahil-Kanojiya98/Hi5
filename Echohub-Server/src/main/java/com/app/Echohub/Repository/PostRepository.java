@@ -1,5 +1,6 @@
 package com.app.Echohub.Repository;
 
+import com.app.Echohub.DTO.PostReportPartialDTO;
 import com.app.Echohub.DTO.PostResponseDTO;
 import com.app.Echohub.Model.Post;
 import org.bson.types.ObjectId;
@@ -25,6 +26,7 @@ public interface PostRepository  extends MongoRepository<Post, String> {
                     "'commentsCount': { $size: '$comments' }, " +
                     "'isLiked': { $cond: { if: { $in: [?0, '$likes'] }, then: true, else: false } }, " +
                     "'isSaved': { $cond: { if: { $in: [?0, '$saved_by_users'] }, then: true, else: false } }, " +
+                    "'isReported': { $cond: { if: { $in: [?0, '$reported_by_users'] }, then: true, else: false } }" +
                     "'userID': '$user_details._id', " +
                     "'username': '$user_details.username', " +
                     "'fullname': '$user_details.fullname', " +
@@ -48,6 +50,7 @@ public interface PostRepository  extends MongoRepository<Post, String> {
                     "'commentsCount': { $size: '$comments' }, " +
                     "'isLiked': { $cond: { if: { $in: [?0, '$likes'] }, then: true, else: false } }, " +
                     "'isSaved': { $cond: { if: { $in: [?0, '$saved_by_users'] }, then: true, else: false } }, " +
+                    "'isReported': { $cond: { if: { $in: [?0, '$reported_by_users'] }, then: true, else: false } }" +
                     "'userID': '$user_details._id', " +
                     "'username': '$user_details.username', " +
                     "'fullname': '$user_details.fullname', " +
@@ -75,6 +78,7 @@ public interface PostRepository  extends MongoRepository<Post, String> {
                     "'commentsCount': { $size: '$comments' }, " +
                     "'isLiked': { $cond: { if: { $in: [?0, '$likes'] }, then: true, else: false } }, " +
                     "'isSaved': { $cond: { if: { $in: [?0, '$saved_by_users'] }, then: true, else: false } }, " +
+                    "'isReported': { $cond: { if: { $in: [?0, '$reported_by_users'] }, then: true, else: false } }" +
                     "'userID': '$user_details._id', " +
                     "'username': '$user_details.username', " +
                     "'fullname': '$user_details.fullname', " +
@@ -86,5 +90,23 @@ public interface PostRepository  extends MongoRepository<Post, String> {
     List<PostResponseDTO> findSavedPostsWithPagination(
             String currentUserId, Set<String> postIds, int skip, int limit
     );
+
+    @Aggregation(pipeline = {
+            "{ $match: { '_id': ?0 } }",  // Filter for the specific post by its ID
+            "{ $lookup: { from: 'users', localField: 'user.$id', foreignField: '_id', as: 'user_details' } }", // Join with users collection
+            "{ $unwind: '$user_details' }", // Unwind user_details array
+            "{ $project: { " +
+                    "'id': '$_id', " +
+                    "'content': 1, " +
+                    "'image_url': 1, " +
+                    "'video_url': 1, " +
+                    "'created_at': 1, " +
+                    "'userID': '$user_details._id', " +
+                    "'username': '$user_details.username', " +
+                    "'fullname': '$user_details.fullname', " +
+                    "'profilePictureUrl': '$user_details.profile_picture_url' " +
+                    "} }"
+    })
+    PostReportPartialDTO findPostByIdWithUserDetails(String postId);
 
 }

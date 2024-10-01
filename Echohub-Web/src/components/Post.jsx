@@ -13,15 +13,18 @@ import TimeAgo from "./TimeAgo";
 import axiosInstance from "../utils/axiosConfig";
 import CommentDialog from "./CommentDialog";
 import PropTypes from "prop-types";
+import ReportDialog from "./ReportDialog";
+import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 
-const Post = ({ post, isMyPost, removePost }) => {
+const Post = ({ post, isMyPost, removePost, authUser }) => {
   console.log(post);
   console.log("isMyPost: " + isMyPost);
 
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
-  const [likesCount, setLikesCount] = useState(post.likesCount);
+  const [isReported, setIsReported] = useState(post.isReported);
 
+  const [likesCount, setLikesCount] = useState(post.likesCount);
   const [commentsCount, setCommentsCount] = useState(post.commentsCount);
 
   const [isLiking, setIsLiking] = useState(false);
@@ -38,15 +41,25 @@ const Post = ({ post, isMyPost, removePost }) => {
     setIsCommentDialogOpen(false);
   };
 
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+
+  const openReportDialog = () => {
+    if (!isReported) {
+      setIsReportDialogOpen(true);
+    }
+  };
+
+  const closeReportDialog = () => {
+    setIsReportDialogOpen(false);
+  };
+
   const handleLikePost = useCallback(async () => {
     if (isLiking) return;
-
     setIsLiking(true);
     try {
       const endpoint = isLiked
         ? `/post/unlike/${post.id}`
         : `/post/like/${post.id}`;
-
       const response = await axiosInstance.post(endpoint);
       console.log(response.data);
       setIsLiked(!isLiked);
@@ -60,13 +73,11 @@ const Post = ({ post, isMyPost, removePost }) => {
 
   const handleSavePost = useCallback(async () => {
     if (isSaving) return;
-
     setIsSaving(true);
     try {
       const endpoint = isSaved
         ? `/user/saved-posts/${post.id}`
         : `/user/saved-posts/${post.id}`;
-
       const method = isSaved ? "delete" : "post";
       const response = await axiosInstance[method](endpoint);
       console.log(response.data);
@@ -94,7 +105,7 @@ const Post = ({ post, isMyPost, removePost }) => {
   };
 
   return (
-    <div className="flex gap-2 items-start p-4 border-b border-gray-700">
+    <div className="flex gap-1 items-start p-4 border-b border-gray-700">
       <div className="avatar">
         <Link
           to={`/profile/${post.userID}`}
@@ -102,8 +113,10 @@ const Post = ({ post, isMyPost, removePost }) => {
         >
           <img
             src={
-              post.profilePictureUrl
-                ? `http://localhost:8080${post.profilePictureUrl}`
+              post.profilePictureUrl || (isMyPost && authUser.profilePictureUrl)
+                ? isMyPost
+                  ? `http://localhost:8080${authUser.profilePictureUrl}`
+                  : `http://localhost:8080${post.profilePictureUrl}`
                 : "/avatar.png"
             }
             alt="Profile"
@@ -126,6 +139,28 @@ const Post = ({ post, isMyPost, removePost }) => {
                 <LoadingSpinner size="sm" width="20px" height="20px" />
               )}
             </span>
+          )}
+          {authUser?.id !== post.userID && (
+            <span
+              onClick={openReportDialog}
+              className="cursor-pointer hover:text-blue-500 flex items-center"
+            >
+              <ReportGmailerrorredIcon
+                className={
+                  "mr-2 hover:text-red-500 " +
+                  (isReported ? "text-red-500" : null)
+                }
+              />
+            </span>
+          )}
+          {isReportDialogOpen && (
+            <ReportDialog
+              setIsReported={setIsReported}
+              postId={post.id}
+              onClose={closeReportDialog}
+              isOpen={isReportDialogOpen}
+              setCommentsCount={setIsReportDialogOpen}
+            />
           )}
         </div>
         <span className="text-gray-700 flex gap-1 text-sm mt-1">
@@ -232,12 +267,20 @@ Post.propTypes = {
     imageUrl: PropTypes.string,
     videoUrl: PropTypes.string,
     isLiked: PropTypes.bool.isRequired,
+    isReported: PropTypes.bool.isRequired,
     isSaved: PropTypes.bool.isRequired,
     likesCount: PropTypes.number.isRequired,
     commentsCount: PropTypes.number.isRequired,
   }).isRequired,
   isMyPost: PropTypes.bool.isRequired,
   removePost: PropTypes.func.isRequired,
+  authUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    fullname: PropTypes.string.isRequired,
+    profilePictureUrl: PropTypes.string.isRequired,
+    roles: PropTypes.arrayOf(PropTypes.string),
+  }),
 };
 
 export default Post;
