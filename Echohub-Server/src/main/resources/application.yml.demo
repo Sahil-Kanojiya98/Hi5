@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: Echohub
+
+  banner:
+    location: classpath:logo.txt
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/dbname
+  security:
+    user:
+      name: user
+      password: pass
+
+  doc:
+    swagger-ui:
+      path: /swagger-ui.html
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+server:
+  port: 8080
+
+#supported units  -- miliseconds seconds minutes hours days
+vidorbit:
+  token:
+    access:
+      secret: secret
+      expiration: 30 minutes
+    refresh:
+      secret: secret
+      rotation_threshold: 15 minutes
+      expiration: 60 minutes
+
+#logging:
+#  level:
+#    root: DEBUG
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.mongodb.driver: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: shutdown
+  endpoint:
+    shutdown:
+      enabled: true

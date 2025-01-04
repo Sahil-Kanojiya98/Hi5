@@ -1,8 +1,8 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
-@font-face {
+/* @font-face {
   font-family: "TechnoGrazer";
   src: url("./fonts/TechnoGrazerRegular-DYdaW.ttf") format("truetype"),
     url("./fonts/TechnoGrazerRegular-AR0mL.otf") format("opentype");
@@ -23,4 +23,4 @@
     url("/src/assets/fonts/BebasNeue-Regular.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
-}
+} */

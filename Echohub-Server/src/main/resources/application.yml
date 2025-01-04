@@ -27,30 +27,30 @@ server:
   port: 8080
 
 #supported units  -- miliseconds seconds minutes hours days
-vidorbit:
-  token:
-    access:
-      secret: H2zMNUhuL4lOxe1VorcWJTB36b23ZrPnA3PrLQD7YDw=
-      expiration: 30 minutes
-    refresh:
-      secret: CCLBhOPYmEl2AnhGBEmE8vCYDkuoKTX5UEaWuW6zRsU=
-      rotation_threshold: 15 minutes
-      expiration: 60 minutes
+#vidorbit:
+#  token:
+#    access:
+#      secret: H2zMNUhuL4lOxe1VorcWJTB36b23ZrPnA3PrLQD7YDw=
+#      expiration: 30 minutes
+#    refresh:
+#      secret: CCLBhOPYmEl2AnhGBEmE8vCYDkuoKTX5UEaWuW6zRsU=
+#      rotation_threshold: 15 minutes
+#      expiration: 60 minutes
 
 #logging:
 #  level:
 #    root: DEBUG
 
-logging:
-  level:
-    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
-    org.mongodb.driver: DEBUG
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: shutdown
-  endpoint:
-    shutdown:
-      enabled: true
+#logging:
+#  level:
+#    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+#    org.mongodb.driver: DEBUG
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: shutdown
+#  endpoint:
+#    shutdown:
+#      enabled: true

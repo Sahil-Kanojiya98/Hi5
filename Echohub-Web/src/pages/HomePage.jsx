@@ -1,47 +1,47 @@
-import { useState } from "react";
-import Echohub from "../components/logo/Echohub";
-import CreatePost from "../components/CreatePost";
-import Posts from "../components/Posts";
+// import { useState } from "react";
+// import Echohub from "../components/logo/Echohub";
+// import CreatePost from "../components/CreatePost";
+// import Posts from "../components/Posts";
 
-function HomePage() {
-  const [feedType, setFeedType] = useState("forYou");
+// function HomePage() {
+//   const [feedType, setFeedType] = useState("forYou");
 
-  return (
-    <>
-      <div className="flex-1 mr-auto border-r border-gray-700 min-h-[calc(100vh+1px)]">
-        <div className="flex w-full border-b border-gray-700">
-          <div
-            className={
-              "flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
-            }
-            onClick={() => setFeedType("forYou")}
-          >
-            For you
-            {feedType === "forYou" && (
-              <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
-            )}
-          </div>
-          <div
-            className={
-              "flex justify-center flex-4 pt-3 transition duration-300 cursor-pointer relative"
-            }
-          >
-            <Echohub classNames={"md:hidden text-sm"} />
-          </div>
-          <div
-            className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
-            onClick={() => setFeedType("following")}
-          >
-            Following
-            {feedType === "following" && (
-              <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
-            )}
-          </div>
-        </div>
-        <CreatePost />
-        <Posts feedType={feedType} isMyPost={false} />
-      </div>
-    </>
-  );
-}
-export default HomePage;
+//   return (
+//     <>
+//       <div className="flex-1 mr-auto border-r border-gray-700 min-h-[calc(100vh+1px)]">
+//         <div className="flex w-full border-b border-gray-700">
+//           <div
+//             className={
+//               "flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
+//             }
+//             onClick={() => setFeedType("forYou")}
+//           >
+//             For you
+//             {feedType === "forYou" && (
+//               <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
+//             )}
+//           </div>
+//           <div
+//             className={
+//               "flex justify-center flex-4 pt-3 transition duration-300 cursor-pointer relative"
+//             }
+//           >
+//             <Echohub classNames={"md:hidden text-sm"} />
+//           </div>
+//           <div
+//             className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
+//             onClick={() => setFeedType("following")}
+//           >
+//             Following
+//             {feedType === "following" && (
+//               <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
+//             )}
+//           </div>
+//         </div>
+//         <CreatePost />
+//         <Posts feedType={feedType} isMyPost={false} />
+//       </div>
+//     </>
+//   );
+// }
+// export default HomePage;
