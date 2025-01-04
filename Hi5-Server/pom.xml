@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.app</groupId>
-	<artifactId>Echohub</artifactId>
+	<artifactId>Hi5</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Echohub</name>
+	<name>Hi5</name>
 	<description>A modern social media platform for sharing posts, stories, and engaging in real-time interactions.</description>
 	<url/>
 	<licenses>

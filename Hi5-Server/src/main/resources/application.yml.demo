@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Echohub
+    name: Hi5
 
   banner:
     location: classpath:logo.txt
