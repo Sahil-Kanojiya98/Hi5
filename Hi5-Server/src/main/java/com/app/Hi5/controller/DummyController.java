@@ -1,14 +1,44 @@
-//package com.app.Echohub.controller;
+package com.app.Hi5.controller;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+
+@Slf4j
+@RestController
+@RequestMapping("/api/dummy")
+public class DummyController {
+
+    @GetMapping
+    public String dummy() {
+        log.info("Dummy endpoint called.");
+        return "Hello World";
+    }
+
+//    @GetMapping("/hello")
+//    public ProblemDetail hello(){
+//        return ProblemDetail.forStatusAndDetail(
+//                HttpStatus.BAD_REQUEST,
+//                "custom error"
+//        );
+//    }
 //
-//import com.app.Echohub.security.UserDetailsImpl;
-//import org.springframework.security.access.prepost.PreAuthorize;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.web.bind.annotation.*;
+//    @Autowired
+//    OtpService otpService;
 //
-//@RestController
-//@RequestMapping("/api")
-//public class DummyController {
+//    @Autowired
+//    OtpRepository otpRepository;
 //
+//    @PostMapping("/otp")
+//    public String otpGenerate(){
+//        return otpService.generateOtp("sahilkanojiya1000@gmail.com");
+//    }
+//
+//    @GetMapping("/getotp")
+//    public Otp get(@RequestParam("otp") String otp,@RequestParam("email") String email){
+//        return otpRepository.findByOtpAndEmail(otp,email).orElse(new Otp());
+//    }
+
 //    @PreAuthorize("hasRole('USER')")
 //    @GetMapping("/hello")
 //    public String hello(@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -33,5 +63,5 @@
 //        System.out.println(userDetails);
 //        return "hello world admin";
 //    }
-//
-//}
+
+}

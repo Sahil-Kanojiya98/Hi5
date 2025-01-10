@@ -1,6 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* @tailwind base;
 @tailwind components;
-@tailwind utilities; */
+@tailwind utilities;
+
+
+:root {
+  --background-color-light: #ffffff;
+  --background-color-dark: #1a1a1a;
+  --text-color-light: #000000;
+  --text-color-dark: #ffffff;
+}
+
+[data-theme="light"] {
+  --background-color: var(--background-color-light);
+  --text-color: var(--text-color-light);
+}
+
+[data-theme="dark"] {
+  --background-color: var(--background-color-dark);
+  --text-color: var(--text-color-dark);
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* @font-face {
+  font-family: 'Agdasima';
+  src: url('/fonts/Agdasima/Agdasima-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Agdasima';
+  src: url('/fonts/Agdasima/Agdasima-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+} */
+
 
 /* @font-face {
   font-family: "TechnoGrazer";

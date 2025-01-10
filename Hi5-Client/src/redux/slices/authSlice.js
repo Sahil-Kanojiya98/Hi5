@@ -1,33 +1,29 @@
-// import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { getToken } from "../../utils/localStorage";
 
-// const authSlice = createSlice({
-//   name: "auth",
-//   initialState: {
-//     isInitializing: true,
-//     isAuthenticated: false,
-//     user: null,
-//   },
-//   reducers: {
-//     addAuth: (state, action) => {
-//       state.isAuthenticated = action.payload.isAuthenticated;
-//       state.isInitializing = false;
-//       state.user = action.payload.user;
-//     },
-//     rmAuth: (state) => {
-//       state.isAuthenticated = false;
-//       state.isInitializing = false;
-//       state.user = null;
-//     },
-//     updateUser: (state, action) => {
-//       if (state.user) {
-//         state.user = {
-//           ...state.user,
-//           ...action.payload,
-//         };
-//       }
-//     },
-//   },
-// });
+const initialState = {
+  token: getToken() || null,
+  isAuthenticated: false,
+  isInitializing: true,
+};
 
-// export const { addAuth, rmAuth, updateUser } = authSlice.actions;
-// export default authSlice.reducer;
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    setAuth : (state, action) => {
+      state.token = action.payload.token;
+      state.isAuthenticated = action.payload.isAuthenticated;
+      state.isInitializing = action.payload.isInitializing;
+    },
+    removeAuth : (state) => {
+      state.token = null;
+      state.isAuthenticated = false;
+      state.isInitializing = false;
+    },
+  },
+});
+
+export const { setAuth, removeAuth } = authSlice.actions;
+
+export default authSlice.reducer;

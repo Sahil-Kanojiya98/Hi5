@@ -3,54 +3,101 @@ spring:
     name: Hi5
 
   banner:
-    location: classpath:logo.txt
+    location: classpath:Hi5_banner.txt
 
   data:
     mongodb:
       uri: mongodb://localhost:27017/dbname
+
+  # JMS
+  mail:
+    host: smtp.gmail.com     # another value if another email provider used
+    port: 587                # port
+    username: email             #your email
+    password: app password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  #        debug: true
+
   security:
-    user:
-      name: user
-      password: pass
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: id
+            client-secret: secret
+            redirect-uri: "{baseUrl}/oauth2/callback/github"
+            scope:
+              - read:user
+              - user:email
+          google:
+            clientId: id
+            clientSecret: secret
+            redirectUri: "{baseUrl}/oauth2/callback/google"
+            scope:
+              - email
+              - profile
 
   doc:
     swagger-ui:
       path: /swagger-ui.html
 
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 1024MB
-      max-request-size: 1024MB
+  #  servlet:
+  #    multipart:
+  #      enabled: true
+  #      max-file-size: 1024MB
+  #      max-request-size: 1024MB
 
 server:
   port: 8080
 
-#supported units  -- miliseconds seconds minutes hours days
-vidorbit:
+oauth2:
+  error-redirect-url: http://localhost:3000/error
+  login-redirect-url: http://localhost:3000/login/oauth2?token=
+  signup-redirect-url: http://localhost:3000/signup/oauth2?token=
+
+#Auth Token
+token:
+  secret: secret
+  expiration: 60 minutes           # supported units  -- miliseconds seconds minutes hours days
+
+identification:
   token:
-    access:
-      secret: secret
-      expiration: 30 minutes
-    refresh:
-      secret: secret
-      rotation_threshold: 15 minutes
-      expiration: 60 minutes
+    secret: secret
+    expiration: 10 minutes           # supported units  -- miliseconds seconds minutes hours days
 
-#logging:
-#  level:
-#    root: DEBUG
+# register-verification login-2FA-verification forget-pass-verification otp
+otp:
+  expiration-time: 5 minutes       #supported units  -- miliseconds seconds minutes hours days
 
+# accepted values: TRACE DEBUG INFO WARN ERROR FATAL
 logging:
   level:
-    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
-    org.mongodb.driver: DEBUG
+    root: INFO
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: shutdown
-  endpoint:
-    shutdown:
-      enabled: true
+#    com:
+#      app:
+#        Hi5: INFO
+#    org:
+#      springframework:
+#        security: DEBUG
+#        data:
+#          mongodb:
+#            core:
+#                MongoTemplate: DEBUG
+#      mongodb:
+#        driver: DEBUG
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: shutdown
+#  endpoint:
+#    shutdown:
+#      enabled: true

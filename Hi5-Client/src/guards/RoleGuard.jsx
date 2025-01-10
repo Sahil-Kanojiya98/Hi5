@@ -1,27 +1,31 @@
-// import { useSelector } from 'react-redux'; 
-// import { Navigate } from 'react-router-dom';
-// import PropTypes from 'prop-types';
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-// const RoleGuard = ({ requiredRoles, children }) => {
-  
-//   const user  = useSelector((state) => state.auth.user);
+const RoleGuard = ({ requiredRole, children }) => {
+  console.log("RoleGuard");
 
-//   console.log("user roles:"+JSON.stringify(user.roles))
-//   console.log("required roles:"+JSON.stringify(requiredRoles))
+  const user = useSelector((state) => state.user.profile);
 
-//   const hasRequiredRole = user?.roles.some(role => requiredRoles.includes(role));
+  console.log("RoleGuard user :" + JSON.stringify(user));
+  console.log("RoleGuard requiredRole :" + requiredRole);
 
-//   console.log("required roles"+hasRequiredRole)
-//   if (!hasRequiredRole) {
-//     return <Navigate to="/404" />; 
-//   }
+  console.log("user role:" + user.role);
+  const hasRequiredRole = user.role === requiredRole;
 
-//   return children;
-// };
+  console.log(user.role + ":==:" + requiredRole);
 
-// RoleGuard.propTypes = {
-//   requiredRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
-//   children: PropTypes.node.isRequired,
-// };
+  if (!hasRequiredRole) {
+    console.log("not have requiredRole redirecting to: /*");
+    return <Navigate to="/*" />;
+  }
 
-// export default RoleGuard;
+  return children;
+};
+
+RoleGuard.propTypes = {
+  requiredRole: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+export default RoleGuard;

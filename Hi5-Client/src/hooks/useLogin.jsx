@@ -1,51 +1,112 @@
-// import { useState } from "react";
-// import { setAccessToken, removeAccessToken } from "../utils/localStorage";
-// import { setRefreshToken, removeRefreshToken } from "../utils/indexedDB";
-// import { useDispatch } from "react-redux";
-// import axiosInstance from "../utils/axiosConfig";
-// import { addAuth, rmAuth } from "../redux/slices/authSlice";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setAuth } from "../redux/slices/authSlice";
+import { setToken } from "../utils/localStorage";
+import { login, loginVerifyOTP } from "../services/api";
 
-// const useLogin = () => {
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [error, setError] = useState(null);
-//   const dispatch = useDispatch();
+const useLogin = () => {
+  const [step, setStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("email");
+  const [identificationToken, setIdentificationToken] = useState(null);
+  const dispatch = useDispatch();
 
-//   const login = async (email, password) => {
-//     setIsLoading(true);
-//     setError(null);
-//     try {
-//       const response = await axiosInstance.post("/auth/login", {
-//         email,
-//         password,
-//       });
-//       const { accessToken, refreshToken } = response.data;
-//       setAccessToken(accessToken);
-//       await setRefreshToken({ id: "refreshToken", token: refreshToken });
-//       console.log(response);
-//       const userResponse = await axiosInstance.get("/user/get-me");
-//       const userData = userResponse.data;
-//       console.log(userData);
-//       dispatch(
-//         addAuth({
-//           isAuthenticated: true,
-//           user: userData,
-//         })
-//       );
-//     } catch (err) {
-//       setError(err.response?.data || "Login failed");
-//       removeAccessToken();
-//       removeRefreshToken("refreshToken");
-//       dispatch(rmAuth());
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
+  const submitStepData = async (values) => {
+    if (step === 0) {
+      setIsLoading(true);
+      try {
+        console.log("Form Value email:", values.email);
+        console.log("Form Value username:", values.username);
+        console.log("Form Value password:", values.password);
+        if (selectedTab == "email") {
+          const response = await login({
+            email: values.email.toLowerCase(),
+            password: values.password,
+          });
 
-//   return {
-//     login,
-//     isLoading,
-//     error,
-//   };
-// };
+          if (response.data?.authToken) {
+            setToken(response.data?.authToken);
+            dispatch(
+              setAuth({
+                isAuthenticated: false,
+                isInitializing: false,
+                token: response.data?.authToken,
+              })
+            );
+          } else {
+            setIdentificationToken(response.data?.identificationToken);
+            setStep(1);
+          }
+          setError(null);
+        } else if (selectedTab == "username") {
+          const response = await login({
+            username: values.username,
+            password: values.password,
+          });
 
-// export default useLogin;
+          if (response.data?.authToken) {
+            setToken(response.data?.authToken);
+            dispatch(
+              setAuth({
+                isAuthenticated: false,
+                isInitializing: false,
+                token: response.data?.authToken,
+              })
+            );
+          } else {
+            setIdentificationToken(response.data?.identificationToken);
+            setStep(1);
+          }
+          setError(null);
+        }
+      } catch (err) {
+        console.log("Error " + err);
+        setError(
+          err?.response?.data?.message ||
+            "Something went wrong, please try again."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    } else if (step === 1) {
+      setIsLoading(true);
+      try {
+        console.log("Form Value OTP:", values.otp);
+        const response = await loginVerifyOTP(values.otp, identificationToken);
+
+        setToken(response.data.authToken);
+        dispatch(
+          setAuth({
+            isAuthenticated: false,
+            isInitializing: false,
+            token: response.data.authToken,
+          })
+        );
+
+        setError(null);
+      } catch (err) {
+        console.log("Error " + err);
+        setError(
+          err?.response?.data?.message ||
+            "Something went wrong, please try again."
+        );
+
+        setStep(2);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  return {
+    step,
+    isLoading,
+    error,
+    submitStepData,
+    selectedTab,
+    setSelectedTab,
+  };
+};
+
+export default useLogin;

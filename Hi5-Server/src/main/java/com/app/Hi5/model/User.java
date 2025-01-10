@@ -1,89 +1,97 @@
-//package com.app.Echohub.model;
-//
-//import com.fasterxml.jackson.annotation.JsonIgnore;
-//import lombok.*;
-//import org.springframework.data.annotation.CreatedDate;
-//import org.springframework.data.annotation.Id;
-//import org.springframework.data.annotation.LastModifiedDate;
-//import org.springframework.data.mongodb.core.index.Indexed;
-//import org.springframework.data.mongodb.core.mapping.Document;
-//import org.springframework.data.mongodb.core.mapping.DBRef;
-//import org.springframework.data.mongodb.core.mapping.Field;
-//
-//import java.time.LocalDateTime;
-//import java.util.HashSet;
-//import java.util.LinkedList;
-//import java.util.List;
-//import java.util.Set;
-//
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Getter
-//@Setter
-//@Builder
-//@Document(collection = "users")
-//public class User {
-//
-//    @Id
-//    private String id;
-//
-//    @Indexed(unique = true)
-//    private String username;
-//
-//    private String fullname;
-//
-//    @Indexed(unique = true)
-//    private String email;
-//
-//    @JsonIgnore
-//    private String password;
-//
-//    @Field("profile_picture_url")
-//    private String profilePictureUrl;
-//
-//    @Field("cover_picture_url")
-//    private String coverPictureUrl;
-//
-//    private String bio;
-//
-//    private String link;
-//
-//    @Field("created_at")
-//    @CreatedDate
-//    private LocalDateTime createdAt;
-//
-//    @Field("modified_at")
-//    @LastModifiedDate
-//    @JsonIgnore
-//    private LocalDateTime updatedAt;
-//
-//    @DBRef(lazy = true)
-//    @Builder.Default
-//    @Field("refresh_token")
-//    @JsonIgnore
-//    private List<RefreshToken> refreshToken=new LinkedList<>();
-//
-//    @Builder.Default
-//    @JsonIgnore
-//    private Set<String> followers=new HashSet<>();
-//
-//    @Builder.Default
-//    @JsonIgnore
-//    private Set<String> followings=new HashSet<>();
-//
-//    @Builder.Default
-//    @JsonIgnore
-//    private Set<String> posts=new HashSet<>();
-//
-//    @Field("saved_posts")
-//    @Builder.Default
-//    @JsonIgnore
-//    private Set<String> savedPosts=new HashSet<>();
-//
-//    @JsonIgnore
-//    @Builder.Default
-//    @Field("roles")
-//    private Set<String> roles = new HashSet<>();
-//
-//}
+package com.app.Hi5.model;
+
+import com.app.Hi5.model.Enum.Gender;
+import com.app.Hi5.model.Enum.IdentityProvider;
+import com.app.Hi5.model.Enum.Role;
+import lombok.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Document(collection = "user")
+public class User {
+
+    //  Primary Details
+    @Id
+    private ObjectId id;
+
+    @Field("email")
+    @Indexed(unique = true)
+    private String email;
+
+    @Field("password")
+    private String password;
+
+    @Field("username")
+    @Indexed(unique = true)
+    private String username;
+
+    @Field("identity_provider")
+    private IdentityProvider identityProvider;
+
+    @Field("account_created_at")
+    @CreatedDate
+    private Date accountCreatedAt;
+
+    @Field("two_factor_authentication")
+    private Boolean twoFactorAuthentication;
+
+    //  Access Grants (Role)
+    @Field("role")
+    private Role role;
+
+    @Field("ban_until")
+    private Date banUntil;
+
+    @Field("active")
+    private Boolean isActive;
+
+    //  User Details
+    @Field("fullname")
+    private String fullname;
+
+    @Field("bio")
+    private String bio;
+
+    @Field("date_of_birth")
+    private Date dateOfBirth;
+
+    @Field("gender")
+    private Gender gender;
+
+    @Field("profile_image_url")
+    private String profileImageUrl;
+
+    @Field(value = "cover_image_url")
+    private String coverImageUrl;
+
+
+//      User Activity Data
+    @Field("followers")
+    @Builder.Default
+    private Set<String> followerIds = new HashSet<>();
+
+    @Field("followings")
+    @Builder.Default
+    private Set<String> followingIds = new HashSet<>();
+
+    @Field("posts")
+    @Builder.Default
+    private Set<String> postIds = new HashSet<>();
+
+    @Field("saved_posts")
+    @Builder.Default
+    private Set<String> savedPostIds = new HashSet<>();
+
+}

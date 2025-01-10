@@ -1,99 +1,82 @@
-// import { useState, useEffect } from "react";
-// import {
-//   setRefreshToken,
-//   getRefreshToken,
-//   removeRefreshToken,
-// } from "../utils/indexedDB";
-// import {
-//   setAccessToken,
-//   getAccessToken,
-//   removeAccessToken,
-// } from "../utils/localStorage";
+import { useState, useEffect } from "react";
+import { setToken, getToken, removeToken } from "../utils/localStorage";
 
-// const TokenManager = () => {
-//   const [refreshToken, setRefreshTokenState] = useState(null);
-//   const [accessToken, setAccessTokenState] = useState(null);
-//   const [newRefreshToken, setNewRefreshToken] = useState("");
-//   const [newAccessToken, setNewAccessToken] = useState("");
+const TokenManager = () => {
+  console.log("TokenManager");
 
-//   useEffect(() => {
-//     const loadTokens = async () => {
-//       try {
-//         const storedRefreshToken = await getRefreshToken("refreshToken");
-//         setRefreshTokenState(storedRefreshToken?.token || null);
-//         setAccessTokenState(getAccessToken());
-//       } catch (error) {
-//         console.error("Failed to load tokens:", error);
-//       }
-//     };
-//     loadTokens();
-//   }, []);
+  const [token, setTokenState] = useState(null);
+  const [newToken, setNewToken] = useState("");
 
-//   const handleSetRefreshToken = async () => {
-//     try {
-//       await setRefreshToken({ id: "refreshToken", token: newRefreshToken });
-//       setRefreshTokenState(newRefreshToken);
-//     } catch (error) {
-//       console.error("Failed to set refresh token:", error);
-//     }
-//   };
+  useEffect(() => {
+    const loadAccessToken = () => {
+      try {
+        const storedToken = getToken();
+        setTokenState(storedToken || null);
+      } catch (error) {
+        console.error("Failed to load token:", error);
+      }
+    };
+    loadAccessToken();
+  }, []);
 
-//   const handleSetAccessToken = () => {
-//     try {
-//       setAccessToken(newAccessToken);
-//       setAccessTokenState(newAccessToken);
-//     } catch (error) {
-//       console.error("Failed to set access token:", error);
-//     }
-//   };
+  const handlesetToken = () => {
+    try {
+      setToken(newToken);
+      setTokenState(newToken);
+      setNewToken("");
+    } catch (error) {
+      console.error("Failed to set access token:", error);
+    }
+  };
 
-//   const handleRemoveRefreshToken = async () => {
-//     try {
-//       await removeRefreshToken("refreshToken");
-//       setRefreshTokenState(null);
-//     } catch (error) {
-//       console.error("Failed to remove refresh token:", error);
-//     }
-//   };
+  const handleremoveToken = () => {
+    try {
+      removeToken();
+      setTokenState(null);
+    } catch (error) {
+      console.error("Failed to remove access token:", error);
+    }
+  };
 
-//   const handleRemoveAccessToken = () => {
-//     try {
-//       removeAccessToken();
-//       setAccessTokenState(null);
-//     } catch (error) {
-//       console.error("Failed to remove access token:", error);
-//     }
-//   };
+  return (
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg border border-gray-200">
+      <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+        Token Manager
+      </h1>
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4">
+          Access Token
+        </h2>
+        <div className="flex gap-4 mb-4">
+          <input
+            type="text"
+            value={newToken}
+            onChange={(e) => setNewToken(e.target.value)}
+            placeholder="Enter new access token"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onClick={handlesetToken}
+            className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+          >
+            Set Access Token
+          </button>
+        </div>
+        <div className="text-right">
+          <button
+            onClick={handleremoveToken}
+            className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+          >
+            Remove Access Token
+          </button>
+        </div>
+      </div>
+      <p className="text-gray-700 text-sm">
+        Current Access Token:{" "}
+        <span className="font-semibold text-gray-800">{token || "None"}</span>
+      </p>
+    </div>
+  );
+};
 
-//   return (
-//     <div>
-//       <h1>Token Manager</h1>
-//       <div>
-//         <h2>Refresh Token</h2>
-//         <input
-//           type="text"
-//           value={newRefreshToken}
-//           onChange={(e) => setNewRefreshToken(e.target.value)}
-//           placeholder="Enter new refresh token"
-//         />
-//         <button onClick={handleSetRefreshToken}>Set Refresh Token</button>
-//         <button onClick={handleRemoveRefreshToken}>Remove Refresh Token</button>
-//         <p>Current Refresh Token: {refreshToken || "None"}</p>
-//       </div>
-//       <div>
-//         <h2>Access Token</h2>
-//         <input
-//           type="text"
-//           value={newAccessToken}
-//           onChange={(e) => setNewAccessToken(e.target.value)}
-//           placeholder="Enter new access token"
-//         />
-//         <button onClick={handleSetAccessToken}>Set Access Token</button>
-//         <button onClick={handleRemoveAccessToken}>Remove Access Token</button>
-//         <p>Current Access Token: {accessToken || "None"}</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TokenManager;
+export default TokenManager;

@@ -1,13 +1,12 @@
-//package com.app.Echohub.service;
-//
-//import com.app.Echohub.dto.PostResponseDTO;
-//import com.app.Echohub.model.User;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import java.util.List;
-//
-//public interface PostService {
-//
+package com.app.Hi5.service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+public class PostService {
+
 //    String makePost(User user, String content, MultipartFile imageFile, MultipartFile videoFile);
 //
 //    List<PostResponseDTO> findRandomPosts(User user,int number);
@@ -17,5 +16,5 @@
 //    void likePost(User user, String postId);
 //
 //    void unlikePost(User user, String postId);
-//
-//}
+
+}

@@ -1,58 +1,31 @@
-//package com.app.Echohub.controller;
-//
-//import com.app.Echohub.dto.ImageUpdateResponseDTO;
-//import com.app.Echohub.dto.PostResponseDTO;
-//import com.app.Echohub.dto.request.LogoutRequest;
-//import com.app.Echohub.dto.request.UpdateUserRequest;
-//import com.app.Echohub.dto.UserDescResponse;
-//import com.app.Echohub.dto.UserProfileDTO;
-//import com.app.Echohub.model.User;
-//import com.app.Echohub.repository.UserRepository;
-//import com.app.Echohub.security.UserDetailsImpl;
-//import com.app.Echohub.service.AuthService;
-//import com.app.Echohub.service.UserService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.domain.Page;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.multipart.MultipartFile;
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/api/user")
-//public class UserController {
-//
-//    @Autowired
-//    private AuthService authService;
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Autowired
-//    private UserService userService;
-//
-//    @GetMapping("/get-me")
-//    public ResponseEntity<UserDescResponse> getMe(@AuthenticationPrincipal UserDetailsImpl userDetails){
-//        User user = userDetails.getUser();
-//        UserDescResponse response=UserDescResponse
-//                .builder()
-//                .id(user.getId())
-//                .fullname(user.getFullname())
-//                .profilePictureUrl(user.getProfilePictureUrl())
-//                .username(user.getUsername())
-//                .roles(user.getRoles())
-//                .build();
-//        return new ResponseEntity<>(response,HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/logout")
-//    public ResponseEntity<String> logout(@RequestBody LogoutRequest request) {
-//        String response = authService.logout(request.getRefreshToken());
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
-//
+package com.app.Hi5.controller;
+
+import com.app.Hi5.dto.response.GetMeResponse;
+import com.app.Hi5.model.User;
+import com.app.Hi5.security.UserDetailsImpl;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+
+@Slf4j
+@RestController
+@RequestMapping("/api/user")
+public class UserController {
+
+    @GetMapping("/get-me")
+    @PreAuthorize("principal.isAccountNonLocked()")
+    public ResponseEntity<GetMeResponse> getMe(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        log.info("Received request to get user details for username: {}", userDetails.getUsername());
+        User user = userDetails.getUser();
+        log.info("User details fetched successfully for username: {}", user.getUsername());
+        return GetMeResponse.builder().id(user.getId().toHexString()).email(user.getEmail()).username(user.getUsername()).role(user.getRole()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).status(HttpStatus.OK).statusCode(HttpStatus.OK.value()).build().toResponseEntity();
+    }
+
 //    @GetMapping("/{userId}")
 //    public ResponseEntity<UserProfileDTO> getUser(@PathVariable("userId") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
 //        UserProfileDTO response=userService.getProfile(userId,userDetails.getUser().getId());
@@ -130,5 +103,5 @@
 //        List<UserDescResponse> users=userService.suggest();
 //        return new ResponseEntity<>(users,HttpStatus.OK);
 //    }
-//
-//}
+
+}

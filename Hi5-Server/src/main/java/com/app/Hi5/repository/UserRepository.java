@@ -1,22 +1,23 @@
-//package com.app.Echohub.repository;
-//
-//import com.app.Echohub.dto.UserDescResponse;
-//import com.app.Echohub.dto.UserProfileDTO;
-//import com.app.Echohub.model.User;
-//
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.mongodb.repository.Aggregation;
-//import org.springframework.data.mongodb.repository.MongoRepository;
-//import org.springframework.data.mongodb.repository.Query;
-//import org.springframework.data.domain.Pageable;
-//import java.util.List;
-//import java.util.Optional;
-//
-//public interface UserRepository extends MongoRepository<User, String> {
-//
-//
-//    Optional<User> findByEmail(String email);
-//
+package com.app.Hi5.repository;
+
+import com.app.Hi5.model.User;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends MongoRepository<User, ObjectId> {
+
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByEmailAndIsActiveTrue(String email);
+
+    Optional<User> findByUsername(String username);
+
+    Optional<User> findByUsernameAndIsActiveTrue(String username);
+
 //    Optional<User> findByUsername(String username);
 //
 //    @Aggregation(pipeline = {
@@ -45,15 +46,15 @@
 //    })
 //    UserProfileDTO findUserProfileById(String userId, String myId);
 //
-////    @Query("{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }")
-////    List<User> searchByPattern(String pattern);
+//    @Query("{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }")
+//    List<User> searchByPattern(String pattern);
 //
-////    @Query(value = "{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }",
-////            fields = "{ 'id': '$_id', 'username': 1, 'fullname': 1, 'profile_picture_url': 1 }")
-////    Page<User> searchByPattern(String pattern, Pageable pageable);
+//    @Query(value = "{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }",
+//            fields = "{ 'id': '$_id', 'username': 1, 'fullname': 1, 'profile_picture_url': 1 }")
+//    Page<User> searchByPattern(String pattern, Pageable pageable);
 //
 //    @Query(value = "{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ], 'roles': { '$in': ['ROLE_USER'] } }",
 //            fields = "{ 'id': '$_id', 'username': 1, 'fullname': 1, 'profile_picture_url': 1 }")
 //    Page<User> searchByPattern(String pattern, Pageable pageable);
-//
-//}
+
+}

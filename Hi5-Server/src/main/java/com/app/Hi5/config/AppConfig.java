@@ -1,0 +1,58 @@
+package com.app.Hi5.config;
+
+import com.app.Hi5.model.Enum.Gender;
+import com.app.Hi5.model.Enum.IdentityProvider;
+import com.app.Hi5.model.Enum.Role;
+import com.app.Hi5.model.User;
+import com.app.Hi5.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.security.SecureRandom;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+@Slf4j
+@Configuration
+@RequiredArgsConstructor
+public class AppConfig {
+
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+
+    @Bean
+    public SecureRandom secureRandom() {
+        return new SecureRandom();
+    }
+
+    @PostConstruct
+    public void setup() {
+        try {
+            User user = userRepository.save(User.builder()
+                    .email("admin000@gmail.com")
+                    .password(passwordEncoder.encode("admin000"))
+                    .username("admin")
+                    .identityProvider(IdentityProvider.SELF)
+                    .twoFactorAuthentication(false)
+                    .role(Role.ADMIN)
+                    .banUntil(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)))
+                    .isActive(true)
+                    .fullname("Admin User")
+                    .bio("Administrator account")
+                    .dateOfBirth(new Date())
+                    .gender(Gender.PREFER_NOT_TO_SAY)
+                    .profileImageUrl("/profileImage/default.png")
+                    .coverImageUrl("/coverImage/default.png")
+                    .build());
+            log.info("Admin user created with ID: {}", user.getId());
+        } catch (Exception e) {
+            log.error("Error occurred while setting up the default admin user: {}", e.getMessage(), e);
+        }
+    }
+
+}

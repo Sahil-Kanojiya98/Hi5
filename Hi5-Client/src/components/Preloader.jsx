@@ -1,13 +1,19 @@
-// import Echohub from "./logo/Echohub";
+import logo from "../assets/images/logo/Hi5.svg";
 
-// function Preloader() {
-//   return (
-//     <div className="max-w-screen-xl flex h-screen mx-auto p-4">
-//       <div className="flex-1 flex flex-col justify-center items-center">
-//         <Echohub classNames={"text-5xl"} />
-//       </div>
-//     </div>
-//   );
-// }
+const Preloader = () => {
+  console.log("Preloader");
 
-// export default Preloader;
+  return (
+    <div className="flex w-screen h-screen p-4 mx-auto bg-black">
+      <div className="flex flex-col items-center justify-center flex-1">
+        <img
+          src={logo}
+          alt="Hi5"
+          className="w-1/6 sm:w-28 md:w-32 lg:w-36 xl:w-40"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Preloader;

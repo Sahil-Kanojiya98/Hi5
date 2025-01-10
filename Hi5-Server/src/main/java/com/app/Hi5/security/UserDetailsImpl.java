@@ -1,57 +1,68 @@
-//package com.app.Echohub.security;
-//
-//import com.app.Echohub.model.User;
-//import lombok.*;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
-//
-//import java.util.Collection;
-//import java.util.stream.Collectors;
-//
-//@Data
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Builder
-//public class UserDetailsImpl implements UserDetails {
-//
-//    private User user;
-//
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return user.getRoles().stream()
-//                .map(SimpleGrantedAuthority::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public String getPassword() {
-//        return user.getPassword();
-//    }
-//
-//    @Override
-//    public String getUsername() {
-//        return user.getEmail();
-//    }
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return true;
-//    }
-//}
+package com.app.Hi5.security;
+
+import com.app.Hi5.model.User;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+@Slf4j
+@Data
+@Builder
+public class UserDetailsImpl implements UserDetails {
+
+    private final User user;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        log.info("Fetching authorities for user: {}", user.getEmail());
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        log.info("Authorities for user {}: {}", user.getEmail(), authorities);
+        return authorities;
+    }
+
+
+    @Override
+    public String getUsername() {
+        log.info("Fetching email:as username for user: {}", user.getEmail());
+        return user.getEmail();
+    }
+
+    @Override
+    public String getPassword() {
+        log.info("Fetching password for user: {}", user.getEmail());
+        return user.getPassword();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        boolean isEnabled = user.getIsActive();
+        log.info("Checking if user {} is enabled: {}", user.getEmail(), isEnabled);
+        return isEnabled;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        boolean isAccountNonLocked = user.getBanUntil() == null || user.getBanUntil().before(new Date());
+        log.info("Checking if account for user {} is non-locked: {}", user.getEmail(), isAccountNonLocked);
+        return isAccountNonLocked;
+    }
+
+
+    //    default support from spring boot security
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+}

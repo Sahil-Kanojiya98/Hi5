@@ -1,23 +1,26 @@
-// import PropTypes from 'prop-types';
-// import { useSelector } from "react-redux";
-// import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-// import Preloader from "../components/Preloader";
+import Preloader from "../components/Preloader";
 
-// const AuthGuard = ({ children }) => {
+const AuthGuard = ({ children }) => {
+  console.log("AuthGuard");
 
-//   const isInitializing = useSelector((state) => state.auth.isInitializing);
-//   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isInitializing = useSelector((state) => state.auth.isInitializing);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  
+  console.log("AuthGuard isAuthenticated :" + isAuthenticated);
+  console.log("AuthGuard isInitializing :" + isInitializing);
 
-//   if(isInitializing){
-//     return <Preloader />
-//   }
+  if (isInitializing) return <Preloader />;
+  if (!isAuthenticated) return <Navigate to="/login" />;
 
-//   return isAuthenticated ? children : <Navigate to="/login" />;
-// };
+  return children;
+};
 
-// AuthGuard.propTypes = {
-//   children: PropTypes.node.isRequired,
-// };
+AuthGuard.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
-// export default AuthGuard;
+export default AuthGuard;

@@ -1,59 +1,72 @@
-//package com.app.Echohub.filter;
-//
-//import com.app.Echohub.security.AuthenticationTokenServiceImpl;
-//import jakarta.servlet.FilterChain;
-//import jakarta.servlet.ServletException;
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpServletResponse;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-//import org.springframework.stereotype.Service;
-//import org.springframework.web.filter.OncePerRequestFilter;
-//
-//import java.io.IOException;
-//
-//@Service
-//public class AuthTokenFilter extends OncePerRequestFilter {
-//
-//    @Autowired
-//    private AuthenticationTokenServiceImpl authTokenService;
-//
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-//
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        logger.debug("request started");
-////        fetches authorization header
-//        System.out.println(0);
-//        String authHeader = request.getHeader("Authorization");
-//        String token = null;
-//        String userName = null;
-//
-//        System.out.println(1);
-////        if bearer is valid then extract username
-//        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-//            token = authHeader.substring(7);
-//            userName = authTokenService.extractUserName(token);
-//        }
-//
-//        System.out.println(2);
-////        if token is valid then set the authentication
-//        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-//            if (authTokenService.validateToken(token, userDetails.getUsername())) {
-//                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//                SecurityContextHolder.getContext().setAuthentication(authToken);
-//            }
-//        }
-//
-//        System.out.println("3");
-////        continue
-//        filterChain.doFilter(request, response);
-//    }
-//}
+package com.app.Hi5.filter;
+
+import com.app.Hi5.security.AuthTokenService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Service;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AuthTokenFilter extends OncePerRequestFilter {
+
+    private final AuthTokenService authTokenService;
+    private final UserDetailsService userDetailsService;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        String email = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            email = authTokenService.extractSub(token);
+            log.info("Extracted token from request header, email: {}", email);
+        } else {
+            log.warn("Authorization header is missing or invalid in the request");
+        }
+
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            log.debug("Attempting to authenticate user with email: {}", email);
+
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                if (authTokenService.validateToken(token)) {
+                    log.info("Token validated successfully for user: {}", email);
+
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    log.debug("Authentication set for user: {}", email);
+                } else {
+                    log.warn("Invalid token for user: {}", email);
+                }
+            } catch (Exception e) {
+                log.error("Error occurred while authenticating user {}: {}", email, e.getMessage());
+            }
+        } else {
+            if (email == null) {
+                log.warn("No email found in token for request");
+            }
+            if (SecurityContextHolder.getContext().getAuthentication() != null) {
+                log.info("User is already authenticated: {}", email);
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}

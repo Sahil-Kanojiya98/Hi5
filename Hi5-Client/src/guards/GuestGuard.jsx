@@ -1,32 +1,41 @@
-// import PropTypes from "prop-types";
-// import { useSelector } from "react-redux";
-// import { Navigate } from "react-router-dom";
-// import Preloader from "../components/Preloader";
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import Preloader from "../components/Preloader";
 
-// const GuestGuard = ({ children }) => {
-//   const isInitializing = useSelector((state) => state.auth.isInitializing);
-//   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-//   const user = useSelector((state) => state.auth.user);
+const GuestGuard = ({ children }) => {
+  console.log("GuestGuard");
 
-//   console.log(
-//     user?.roles.includes("ROLE_ADMIN") == true
-//       ? "admin redirecting "
-//       : "home redirecting"
-//   );
-//   if (isInitializing) {
-//     return <Preloader />;
-//   }
-//   return !isAuthenticated ? (
-//     children
-//   ) : user?.roles.includes("ROLE_ADMIN") ? (
-//     <Navigate to="/admin" />
-//   ) : (
-//     <Navigate to="/home" />
-//   );
-// };
+  const isInitializing = useSelector((state) => state.auth.isInitializing);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.user.profile);
 
-// GuestGuard.propTypes = {
-//   children: PropTypes.node.isRequired,
-// };
+  console.log("GuestGuard isAuthenticated :" + isAuthenticated);
+  console.log("GuestGuard isInitializing :" + isInitializing);
+  console.log("GuestGuard user :" + JSON.stringify(user));
 
-// export default GuestGuard;
+  if (isInitializing) return <Preloader />;
+
+  console.log(user?.role);
+
+  if (isAuthenticated) {
+    if (user?.role === "ADMIN") {
+      console.log("redirecting to: /admin");
+      return <Navigate to="/admin" />;
+    } else if (user?.role === "USER") {
+      console.log("redirecting to: /home");
+      return <Navigate to="/home" />;
+    } else {
+      console.log("redirecting to: /*");
+      return <Navigate to="/*" />;
+    }
+  }
+
+  return children;
+};
+
+GuestGuard.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default GuestGuard;
