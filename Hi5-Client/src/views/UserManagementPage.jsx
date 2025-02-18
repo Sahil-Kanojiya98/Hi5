@@ -76,27 +76,27 @@
 //   };
 
 //   return (
-//     <div className="flex-[4_4_0] mr-auto border-r border-[#374151] bg-black min-h-[calc(100vh+1px)] ">
-//       <div className="sticky top-0 z-10 border-b border-[#212121] p-4 bg-black">
-//         <div className="flex items-center justify-between">
-//           <p className="text-xl font-semibold text-white">Search Users</p>
-//           <div className="flex items-center border rounded-md p-2 bg-black">
+//     <div className="flex-[4_4_0] border-[#374151] bg-black mr-auto border-r min-h-[calc(100vh+1px)]">
+//       <div className="top-0 z-10 sticky border-[#212121] bg-black p-4 border-b">
+//         <div className="flex justify-between items-center">
+//           <p className="font-semibold text-white text-xl">Search Users</p>
+//           <div className="flex items-center bg-black p-2 border rounded-md">
 //             <input
 //               type="text"
 //               value={searchTerm}
 //               onChange={handleInputChange}
 //               placeholder="Search users..."
-//               className="bg-transparent text-white outline-none placeholder-white px-2 py-1 w-full"
+//               className="bg-transparent px-2 py-1 w-full text-white outline-none placeholder-white"
 //             />
-//             <button className="text-white hover:text-gray-300 ml-2">
-//               <FaSearch className="h-5 w-5" />
+//             <button className="ml-2 text-white hover:text-gray-300">
+//               <FaSearch className="w-5 h-5" />
 //             </button>
 //           </div>
 //         </div>
 //       </div>
 //       <div className="p-4">
 //         {!isLoading && error && (
-//           <p className="text-center my-4 text-red-500">{error}</p>
+//           <p className="my-4 text-center text-red-500">{error}</p>
 //         )}
 //         {!isLoading && users.length === 0 && searchTerm != "" && (
 //           <p className="text-center text-white">
@@ -122,10 +122,10 @@
 //               {users.map((user) => (
 //                 <div
 //                   key={user?.id}
-//                   className="flex items-center justify-between gap-4 p-4 bg-black rounded-md hover:bg-[#212121] transition-colors"
+//                   className="flex justify-between items-center gap-4 bg-black hover:bg-[#212121] p-4 rounded-md transition-colors"
 //                 >
 //                   <div className="flex items-center gap-3">
-//                     <div className="avatar w-10 h-10 rounded-full overflow-hidden">
+//                     <div className="rounded-full w-10 h-10 overflow-hidden avatar">
 //                       <img
 //                         src={
 //                           user?.profilePictureUrl
@@ -137,15 +137,15 @@
 //                       />
 //                     </div>
 //                     <div>
-//                       <p className="text-white font-semibold">
+//                       <p className="font-semibold text-white">
 //                         {user?.fullname}
 //                       </p>
-//                       <p className="text-white text-sm">@{user?.username}</p>
+//                       <p className="text-sm text-white">@{user?.username}</p>
 //                     </div>
 //                   </div>
 //                   <button
 //                     onClick={() => deleteUser(user.id)}
-//                     className="bg-red-700 rounded-md hover:bg-red-500 hover:text-gray-300 px-3 py-2  "
+//                     className="bg-red-700 hover:bg-red-500 px-3 py-2 rounded-md hover:text-gray-300"
 //                   >
 //                     Delete
 //                   </button>

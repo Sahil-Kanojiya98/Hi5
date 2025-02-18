@@ -32,6 +32,10 @@ const validationSchemas = [
         /[@$!%*?&]/,
         "Password must contain at least one special character"
       )
+      .matches(
+        /^[A-Za-z0-9@$!%*?&]+$/, // Ensures NO other characters are allowed
+        "Password can only contain letters, numbers, and special characters (@ $ ! % * ? &)"
+      )
       .required("Password is required"),
   }),
 ];
@@ -63,15 +67,15 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <section className="flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900 mx-auto px-6 py-8 min-h-screen">
-      <div className="relative dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-md">
+    <section className="flex flex-col justify-center items-center bg-gray-100 dark:bg-gray-900 mx-auto px-6 py-8 min-h-screen">
+      <div className="relative border-gray-300 dark:border-gray-700 bg-white dark:bg-black shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-md">
         <div className="flex justify-center items-center my-4 text-center">
           <a href="/">
             <img className="w-auto h-16" src={logo} alt="Hi5" />
           </a>
         </div>
 
-        <h1 className="mb-4 font-bold text-center text-gray-900 text-xl dark:text-white">
+        <h1 className="mb-4 font-bold text-center text-xl">
           {step === validationSchemas.length
             ? "Reset Your Password"
             : "Forgot Password"}
@@ -132,11 +136,11 @@ const ForgotPasswordPage = () => {
                           type="email"
                           id="email"
                           placeholder="name@company.com"
-                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                           disabled={isLoading}
                         />
                         {touched.email && errors.email && (
-                          <p className="mt-2 ml-1 text-red-500 text-sm">
+                          <p className="mt-2 ml-1 text-red-700 text-sm">
                             {errors.email}
                           </p>
                         )}
@@ -156,11 +160,11 @@ const ForgotPasswordPage = () => {
                           type="text"
                           id="username"
                           placeholder="Enter your username"
-                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                           disabled={isLoading}
                         />
                         {touched.username && errors.username && (
-                          <p className="mt-2 ml-1 text-red-500 text-sm">
+                          <p className="mt-2 ml-1 text-red-700 text-sm">
                             {errors.username}
                           </p>
                         )}
@@ -190,11 +194,11 @@ const ForgotPasswordPage = () => {
                       type="text"
                       id="otp"
                       placeholder="Choose a username"
-                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                       disabled={isLoading}
                     />
                     {touched.otp && errors.otp && (
-                      <p className="mt-2 ml-1 text-red-500 text-sm">
+                      <p className="mt-2 ml-1 text-red-700 text-sm">
                         {errors.otp}
                       </p>
                     )}
@@ -211,11 +215,11 @@ const ForgotPasswordPage = () => {
                       type="password"
                       id="password"
                       placeholder="••••••••"
-                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                       disabled={isLoading}
                     />
                     {touched.password && errors.password && (
-                      <p className="mt-2 ml-1 text-red-500 text-sm">
+                      <p className="mt-2 ml-1 text-red-700 text-sm">
                         {errors.password}
                       </p>
                     )}
@@ -225,17 +229,16 @@ const ForgotPasswordPage = () => {
 
               {/* Show error from backend if exists */}
               {error && (
-                <div className="mt-4 p-2 border-red-500 rounded-lg text-red-500 text-xs borde">
+                <div className="ml-1 text-red-500 text-xs">
                   {error}
                 </div>
               )}
 
-              {/* Submit or Next Button */}
               {(step == 0 || step == 1) && (
                 <div className="flex justify-between items-center mt-4">
                   <button
                     type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg focus:ring-4 focus:ring-blue-300 w-full font-semibold text-white focus:outline-none"
+                    className="bg-blue-600 hover:bg-blue-700 p-2 rounded-lg focus:ring-4 focus:ring-blue-300 w-full font-semibold text-white focus:outline-none"
                     disabled={isLoading}
                   >
                     {step === 0 ? "Continue" : "Verify"}

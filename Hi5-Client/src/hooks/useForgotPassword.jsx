@@ -18,7 +18,7 @@ const useForgotPassword = () => {
             email: values.email.toLowerCase(),
           });
 
-          if (response.data?.sent) {
+          if (response.data?.isSent) {
             setStep(1);
           }
 

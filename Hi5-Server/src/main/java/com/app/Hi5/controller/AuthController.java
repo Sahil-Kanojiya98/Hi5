@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
@@ -85,7 +86,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> generateOtpForLogin(@RequestBody @Valid LoginRequest request) {
         log.info("Login attempt for email or username: {}", request.getEmail() != null ? request.getEmail() : request.getUsername());
-        Validator.validateEmailOrUsername(request.getEmail(), request.getUsername());
+        Validator.validateEitherEmailOrUsernameExsistsAndValidateFormate(request.getEmail(), request.getUsername());
         String token = authService.GenerateAuthTokenIf2FAIsOffAndPassIsValid(request.getEmail(), request.getUsername(), request.getPassword());
         if (token != null) {
             log.info("Login successful for user: {}", request.getEmail() != null ? request.getEmail() : request.getUsername());
@@ -106,7 +107,7 @@ public class AuthController {
     @PostMapping("/forget-password")
     public ResponseEntity<OtpStatusResponse> generateOtpForLogin(@RequestBody @Valid ForgotPasswordOtpRequest request) {
         log.info("Generating OTP for password recovery for email or username: {}", request.getEmail() != null ? request.getEmail() : request.getUsername());
-        Validator.validateEmailOrUsername(request.getEmail(), request.getUsername());
+        Validator.validateEitherEmailOrUsernameExsistsAndValidateFormate(request.getEmail(), request.getUsername());
         otpService.generateAndSendOtpForForgetPassword(request.getEmail(), request.getUsername());
         return OtpStatusResponse.builder().isSent(true).status(HttpStatus.OK).statusCode(HttpStatus.OK.value()).message("OTP for password recovery has been sent to your email.").build().toResponseEntity();
     }
@@ -114,7 +115,7 @@ public class AuthController {
     @PostMapping("/forget-password/{otp}")
     public ResponseEntity<ForgotPasswordResponse> forgetPassword(@PathVariable("otp") String otp, @RequestBody @Valid ForgotPasswordOtpVerificationRequest request) {
         log.info("Password recovery attempt for email or username: {}", request.getEmail() != null ? request.getEmail() : request.getUsername());
-        Validator.validateEmailOrUsername(request.getEmail(), request.getUsername());
+        Validator.validateEitherEmailOrUsernameExsistsAndValidateFormate(request.getEmail(), request.getUsername());
         authService.forgotPassword(request.getEmail(), request.getUsername(), request.getPassword(), otp);
         return ForgotPasswordResponse.builder().status(HttpStatus.OK).statusCode(HttpStatus.OK.value()).message("Password reset successful. You can now log in with your new password.").build().toResponseEntity();
     }

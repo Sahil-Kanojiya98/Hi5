@@ -23,10 +23,11 @@ import RoutesConfig from "./Routes";
 const App = () => {
   console.log("App Mounted");
 
-
   return (
     <>
+      <div className="bg-gray-100 dark:bg-gray-900 font-roboto text-base text-black dark:text-white">
       <RoutesConfig />
+      </div>
     </>
 
     // <div className="flex mx-auto max-w-6xl">

@@ -13,11 +13,17 @@ const validationSchemas = [
     username: Yup.string()
       .min(3, "Username must be at least 3 characters")
       .max(15, "Username must not exceed 15 characters")
+      .matches(
+        /^[a-z0-9_]+$/,
+        "Username can only contain lowercase letters, numbers, and underscores"
+      )
       .required("Username is required"),
   }),
 
   Yup.object({
     fullname: Yup.string()
+      .min(3, "Fullname must be at least 3 characters")
+      .max(50, "Fullname must not exceed 30 characters")
       .matches(/^[A-Za-z ]+$/, "Full name can only contain letters and spaces")
       .required("Full name is required"),
     dob: Yup.date()
@@ -66,7 +72,7 @@ const SignUpOAuth2Handler = () => {
       try {
         console.log("Form Value username:", values.username);
         const response = await checkUsername({ username: values.username });
-        if (response.data?.available) {
+        if (response.data?.isAvailable) {
           setStep(1);
         }
         setError(null);
@@ -115,15 +121,15 @@ const SignUpOAuth2Handler = () => {
   };
 
   return (
-    <section className="flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900 mx-auto px-6 py-8 min-h-screen">
-      <div className="relative dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-md">
+    <section className="flex flex-col justify-center items-center bg-gray-100 dark:bg-gray-900 mx-auto px-6 py-8 min-h-screen">
+      <div className="relative border-gray-300 dark:border-gray-700 bg-white dark:bg-black shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-md">
         <div className="flex justify-center items-center my-4 text-center">
           <a href="/">
             <img className="w-auto h-16" src={logo} alt="Hi5" />
           </a>
         </div>
 
-        <h1 className="mb-4 font-bold text-center text-gray-900 text-xl dark:text-white">
+        <h1 className="mb-4 font-bold text-center text-xl">
           {step === validationSchemas.length
             ? "Complete Your Profile"
             : "Sign Up to Hi5"}
@@ -159,11 +165,11 @@ const SignUpOAuth2Handler = () => {
                       type="text"
                       id="username"
                       placeholder="Choose a username"
-                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                       disabled={isLoading}
                     />
                     {touched.username && errors.username && (
-                      <p className="mt-2 ml-1 text-red-500 text-sm">
+                      <p className="mt-2 ml-1 text-red-700 text-sm">
                         {errors.username}
                       </p>
                     )}
@@ -192,11 +198,11 @@ const SignUpOAuth2Handler = () => {
                         type="text"
                         id="fullname"
                         placeholder="Enter your full name"
-                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                         disabled={isLoading}
                       />
                       {touched.fullname && errors.fullname && (
-                        <p className="mt-2 ml-1 text-red-500 text-sm">
+                        <p className="mt-2 ml-1 text-red-700 text-sm">
                           {errors.fullname}
                         </p>
                       )}
@@ -213,11 +219,11 @@ const SignUpOAuth2Handler = () => {
                         name="dob"
                         type="date"
                         id="dob"
-                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                         disabled={isLoading}
                       />
                       {touched.dob && errors.dob && (
-                        <p className="mt-2 ml-1 text-red-500 text-sm">
+                        <p className="mt-2 ml-1 text-red-700 text-sm">
                           {errors.dob}
                         </p>
                       )}
@@ -234,7 +240,7 @@ const SignUpOAuth2Handler = () => {
                         name="gender"
                         as="select"
                         id="gender"
-                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                         disabled={isLoading}
                       >
                         <option value="">Select</option>
@@ -246,7 +252,7 @@ const SignUpOAuth2Handler = () => {
                         </option>
                       </Field>
                       {touched.gender && errors.gender && (
-                        <p className="mt-2 ml-1 text-red-500 text-sm">
+                        <p className="mt-2 ml-1 text-red-700 text-sm">
                           {errors.gender}
                         </p>
                       )}
@@ -257,16 +263,14 @@ const SignUpOAuth2Handler = () => {
 
               {/* Show error from backend if exists */}
               {error && (
-                <div className="mt-4 p-2 border border-red-500 rounded-lg text-red-500 text-xs">
-                  {error}
-                </div>
+                <div className="ml-1 text-red-500 text-xs">{error}</div>
               )}
 
               {/* Submit or Next Button */}
               <div className="flex justify-between items-center mt-4">
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg focus:ring-4 focus:ring-blue-300 w-full font-semibold text-white focus:outline-none"
+                  className="bg-blue-600 hover:bg-blue-700 p-2 rounded-lg focus:ring-4 focus:ring-blue-300 w-full font-semibold text-white focus:outline-none"
                   disabled={isLoading}
                 >
                   {step == 0 ? "Continue" : "Finish"}

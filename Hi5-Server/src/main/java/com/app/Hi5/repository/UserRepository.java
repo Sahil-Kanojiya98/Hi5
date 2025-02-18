@@ -44,7 +44,7 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 //                    "'is_following': { $in: [?1, '$followers'] } " +
 //                    "} }"
 //    })
-//    UserProfileDTO findUserProfileById(String userId, String myId);
+//    UserProfileResponse findUserProfileById(String userId, String myId);
 //
 //    @Query("{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ] }")
 //    List<User> searchByPattern(String pattern);

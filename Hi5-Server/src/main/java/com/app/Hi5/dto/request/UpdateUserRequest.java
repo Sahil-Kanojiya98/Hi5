@@ -1,18 +1,36 @@
-//package com.app.Echohub.dto.request;
-//
-//import lombok.*;
-//
-//@Data
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
-//public class UpdateUserRequest {
-//    private String fullName;
-//    private String email;
-//    private String currentPassword;
-//    private String link;
-//    private String username;
-//    private String bio;
-//    private String newPassword;
-//}
+package com.app.Hi5.dto.request;
+
+import com.app.Hi5.model.Enum.Gender;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UpdateUserRequest {
+
+    @NotBlank(message = "Full name cannot be null or blank")
+    private String fullName;
+
+    @NotNull(message = "Username cannot be null")
+    private String link;
+
+    @NotNull(message = "Username cannot be null")
+    private String bio;
+
+    @NotNull(message = "Date of Birth cannot be null or blank")
+    @Past(message = "Date of Birth must be in the past")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date DateOfBirth;
+
+    @NotNull(message = "Gender cannot be null or blank. Valid responses are 'MALE', 'FEMALE', 'OTHER', or 'PREFER_NOT_TO_SAY'.")
+    private Gender gender;
+
+}

@@ -65,7 +65,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " + user.getIdentityProvider() + " account. Please use your " + user.getIdentityProvider() + " account to login.");
                 }
             }
-            user = updateExistingUser(user, oAuth2UserInfo);
         } else {
             log.info("No user found with email: {}. Registering new user.", oAuth2UserInfo.getEmail());
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
@@ -77,17 +76,14 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
         log.info("Registering new user with email: {}", oAuth2UserInfo.getEmail());
-        User user = User.builder().email(oAuth2UserInfo.getEmail()).password(null).username("").identityProvider(IdentityProvider.valueOf(oAuth2UserRequest.getClientRegistration().getClientName().toUpperCase())).twoFactorAuthentication(false).role(Role.USER).banUntil(Date.from(Instant.now().minus(1, ChronoUnit.DAYS))).isActive(false).fullname("").bio("").dateOfBirth(new Date()).gender(Gender.PREFER_NOT_TO_SAY).profileImageUrl(oAuth2UserInfo.getImageUrl() == null ? "/profileImage/default.png" : oAuth2UserInfo.getImageUrl()).coverImageUrl("/coverImage/default.png").build();
+        User user = User.builder()
+                .email(oAuth2UserInfo.getEmail())
+                .password(null)
+                .identityProvider(IdentityProvider.valueOf(oAuth2UserRequest.getClientRegistration().getClientName().toUpperCase()))
+                .build();
         User savedUser = userRepository.save(user);
         log.info("New user registered with email: {}", savedUser.getEmail());
         return savedUser;
     }
 
-    private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        log.info("Updating existing user with email: {}", existingUser.getEmail());
-        existingUser.setProfileImageUrl((existingUser.getProfileImageUrl().equals("/profileImage/default.png") ? (oAuth2UserInfo.getImageUrl() == null ? "/profileImage/default.png" : oAuth2UserInfo.getImageUrl()) : "/profileImage/default.png"));
-        User updatedUser = userRepository.save(existingUser);
-        log.info("Existing user updated with email: {}", updatedUser.getEmail());
-        return updatedUser;
-    }
 }

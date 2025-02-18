@@ -2,6 +2,7 @@ package com.app.Hi5.config;
 
 import com.app.Hi5.filter.AuthTokenFilter;
 import com.app.Hi5.security.AuthEntryPointHandler;
+import jakarta.validation.constraints.Max;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,12 +61,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 
@@ -88,9 +91,11 @@ public class SecurityConfig {
                         req -> req
                                 .requestMatchers("/oauth2/**", "/oauth2/authorization/**", "/oauth2/callback/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/logo/**","/coverImage/**","/profileImage/**").permitAll()
+                                .requestMatchers("/api/shared/**").permitAll()
+                                .requestMatchers("/api/dummy/**").permitAll()
+                                .requestMatchers("/hi5/ws","/hi5/ws/**").permitAll()
+                                .requestMatchers("/logo/**","/user/**","/post/**","/story/**","/reel/**","/chat/**").permitAll()
 //                                .requestMatchers("/**").permitAll()
-//                                .requestMatchers("/api/dummy/**").permitAll()
 //                                .requestMatchers("/error","/favicon.ico").permitAll()
 //                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
 //                                .requestMatchers("/actuator/**").hasRole("ADMIN")

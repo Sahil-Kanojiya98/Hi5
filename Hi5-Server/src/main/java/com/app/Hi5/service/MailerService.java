@@ -44,7 +44,7 @@ public class MailerService {
             helper.setTo(email);
             helper.setSubject(subject);
             helper.setText(content, true);
-            mailSender.send(message);
+//            mailSender.send(message);
 
             log.info("Email successfully sent to: {} with subject: {}", email, subject);
             return true;

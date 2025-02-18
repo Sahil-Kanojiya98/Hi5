@@ -1,10 +1,7 @@
 package com.app.Hi5.exceptions.handler;
 
 import com.app.Hi5.dto.response.ErrorResponse;
-import com.app.Hi5.exceptions.EntityAlreadyExistsException;
-import com.app.Hi5.exceptions.InvalidOtpException;
-import com.app.Hi5.exceptions.OAuth2AuthenticationProcessingException;
-import com.app.Hi5.exceptions.ValidationException;
+import com.app.Hi5.exceptions.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -17,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailSendException;
+import org.springframework.messaging.MessagingException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,8 +27,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({InsufficientAuthenticationException.class})
-    public ResponseEntity<ErrorResponse> handleInsufficientAuthenticationException(RuntimeException e){
-        log.warn("InsufficientAuthenticationException occured: {}",e.getMessage(),e);
+    public ResponseEntity<ErrorResponse> handleInsufficientAuthenticationException(RuntimeException e) {
+        log.warn("InsufficientAuthenticationException occured: {}", e.getMessage(), e);
         return ErrorResponse.builder().status(HttpStatus.FORBIDDEN).statusCode(HttpStatus.FORBIDDEN.value()).message("Insufficient Authentication error!").build().toResponseEntity();
     }
 
@@ -50,9 +48,21 @@ public class GlobalExceptionHandler {
         return ErrorResponse.builder().status(HttpStatus.BAD_REQUEST).statusCode(HttpStatus.BAD_REQUEST.value()).message(e.getMessage()).build().toResponseEntity();
     }
 
+    @ExceptionHandler({EntityNotFoundException.class})
+    public ResponseEntity<ErrorResponse> handleBadRequestException(RuntimeException e) {
+        log.error("Bad Request: {}", e.getMessage(), e);
+        return ErrorResponse.builder().status(HttpStatus.BAD_REQUEST).statusCode(HttpStatus.BAD_REQUEST.value()).message(e.getMessage()).build().toResponseEntity();
+    }
+
     @ExceptionHandler({EntityAlreadyExistsException.class})
     public ResponseEntity<ErrorResponse> handleEntityAlreadyExistsException(RuntimeException e) {
         log.warn("EntityAlreadyExistsException occurred: {}", e.getMessage(), e);
+        return ErrorResponse.builder().status(HttpStatus.BAD_REQUEST).statusCode(HttpStatus.BAD_REQUEST.value()).message(e.getMessage()).build().toResponseEntity();
+    }
+
+    @ExceptionHandler({UnauthorizedAccessException.class})
+    public ResponseEntity<ErrorResponse> handleUnauthorizedAccessException(RuntimeException e) {
+        log.warn("UnauthorizedAccessException occurred: {}", e.getMessage(), e);
         return ErrorResponse.builder().status(HttpStatus.BAD_REQUEST).statusCode(HttpStatus.BAD_REQUEST.value()).message(e.getMessage()).build().toResponseEntity();
     }
 
@@ -105,6 +115,11 @@ public class GlobalExceptionHandler {
         return ErrorResponse.builder().status(HttpStatus.INTERNAL_SERVER_ERROR).statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value()).message(e.getLocalizedMessage()).build().toResponseEntity();
     }
 
+    @ExceptionHandler({MessagingException.class})
+    public void handleMessagingException(Exception e) {
+        log.warn("Messaging exception occurred: {}", e.getMessage(), e);
+    }
+
     @ExceptionHandler({DecodingException.class, WeakKeyException.class, InvalidKeyException.class})
     public void handleDecodingException(Exception e) {
         log.warn("Key-related exception occurred: {}", e.getMessage(), e);
@@ -122,16 +137,6 @@ public class GlobalExceptionHandler {
 //    public ResponseEntity<String> handleForbiddenException(RuntimeException ex) {
 //        logger.error("Forbidden: {}", ex.getMessage(), ex);
 //        return new ResponseEntity<>("Access Denied: " + ex.getMessage(), HttpStatus.FORBIDDEN);
-//    }
-//
-//    @ExceptionHandler({
-//            InvalidUsernameOrPasswordException.class,
-//            EntityNotFoundException.class,
-//            IllegalAccessException.class
-//    })
-//    public ResponseEntity<String> handleBadRequestException(RuntimeException ex) {
-//        logger.error("Bad Request: {}", ex.getMessage(), ex);
-//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 //    }
 //
 //    @ExceptionHandler({

@@ -1,22 +1,20 @@
-//package com.app.Echohub.repository;
-//
-//import com.app.Echohub.dto.PostReportDTO;
-//import com.app.Echohub.model.Report;
-//import org.springframework.data.mongodb.repository.Aggregation;
-//import org.springframework.data.mongodb.repository.MongoRepository;
-//import org.springframework.stereotype.Repository;
-//
-//import java.util.List;
-//
-//@Repository
-//public interface ReportRepository extends MongoRepository<Report, String> {
-//
-////    @Aggregation(pipeline = {
-////            "{ $group: { _id: '$post_id', reportCount: { $sum: 1 } } }",
-////            "{ $project: { reported_post_id: '$_id', reportCount: 1 } }"
-////    })
-////    List<PostReportDTO> getPostReportStats();
-//
+package com.app.Hi5.repository;
+
+import com.app.Hi5.model.Report;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+
+@Repository
+public interface ReportRepository extends MongoRepository<Report, ObjectId> {
+
+//    @Aggregation(pipeline = {
+//            "{ $group: { _id: '$post_id', reportCount: { $sum: 1 } } }",
+//            "{ $project: { reported_post_id: '$_id', reportCount: 1 } }"
+//    })
+//    List<PostReportDTO> getPostReportStats();
+
 //    @Aggregation(pipeline = {
 //            "{ $group: { _id: '$post_id', reportCount: { $sum: 1 } } }",
 //            "{ $project: { reported_post_id: '$_id', reportCount: 1 } }",
@@ -27,5 +25,5 @@
 //    List<PostReportDTO> getPostReportStats(int skip, int limit);
 //
 //    void deleteAllByPostId(String postId);
-//
-//}
+
+}

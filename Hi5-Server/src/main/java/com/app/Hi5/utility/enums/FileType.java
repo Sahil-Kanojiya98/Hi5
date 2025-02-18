@@ -1,16 +1,24 @@
-//package com.app.Echohub.utility.enums;
-//
-//public enum FileType {
-//    USER("user"),
-//    POST("post");
-//
-//    private final String directory;
-//
-//    FileType(String directory) {
-//        this.directory = directory;
-//    }
-//
-//    public String getDirectory() {
-//        return directory;
-//    }
-//}
+package com.app.Hi5.utility.enums;
+
+import lombok.Getter;
+
+@Getter
+public enum FileType {
+    USER_PROFILE_IMAGE("user/profileImage"),
+    USER_COVER_IMAGE("user/coverImage"),
+    POST_IMAGE("post/image"),
+    POST_VIDEO("post/video"),
+    STORY_IMAGE("story/image"),
+    STORY_VIDEO("story/video"),
+    REEL_THUMBNAIL_IMAGE("reel/thumbnailImage"),
+    REEL_VIDEO("reel/video"),
+    CHAT_IMAGE("chat/image"),
+    CHAT_VIDEO("chat/video");
+
+    private final String directory;
+
+    FileType(String directory) {
+        this.directory = directory;
+    }
+
+}

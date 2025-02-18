@@ -6,6 +6,7 @@ import store from "../redux/store";
 const axiosInstance = axios.create({
   baseURL: "/api",
   timeout: Number(import.meta.env.VITE_HI5_API_REQUEST_TIMEOUT),
+  timeoutErrorMessage: "The request timed out, please try again."
 });
 
 axiosInstance.interceptors.request.use(

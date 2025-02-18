@@ -32,7 +32,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String email = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            System.out.println("authHeader"+authHeader);
             token = authHeader.substring(7);
+            System.out.println("token"+token);
             email = authTokenService.extractSub(token);
             log.info("Extracted token from request header, email: {}", email);
         } else {

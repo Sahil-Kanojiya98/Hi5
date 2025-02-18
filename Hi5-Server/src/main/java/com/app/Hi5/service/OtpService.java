@@ -69,12 +69,12 @@ public class OtpService {
     public void generateAndSendOtpForRegister(String email) {
         log.info("Generating OTP for registration for email: {}", email);
         Optional<User> optionalUser = userRepository.findByEmailAndIsActiveTrue(email);
-        if (optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             log.warn("Email already exists for registration: {}", email);
             throw new EntityAlreadyExistsException("Email already exists.");
         }
         Otp otpEntity = createOrUpdateOtp(email, OtpType.REGISTER);
-        if (!mailerService.sendOtpForRegistration(email, otpEntity.getOtp())){
+        if (!mailerService.sendOtpForRegistration(email, otpEntity.getOtp())) {
             log.error("Failed to send OTP for registration to email: {}", email);
             throw new MailSendException("An error occurred while sending the OTP for registration. Please try again.");
         }
@@ -106,7 +106,7 @@ public class OtpService {
             email = user.getEmail();
         }
         Otp otpEntity = createOrUpdateOtp(email, OtpType.FORGOT_PASSWORD);
-        if (!mailerService.sendOtpForForgetPassword(email, otpEntity.getOtp())){
+        if (!mailerService.sendOtpForForgetPassword(email, otpEntity.getOtp())) {
             log.error("Failed to send OTP for forget password to email: {}", email);
             throw new MailSendException("An error occurred while sending the OTP for password recovery. Please try again.");
         }

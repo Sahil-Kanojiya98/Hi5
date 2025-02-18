@@ -1,13 +1,17 @@
 package com.app.Hi5.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
@@ -18,10 +22,10 @@ import java.util.Set;
 public class Post {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @Field("user")
-    private String user_id;
+    private String userId;
 
     @Field("content")
     private String content;
@@ -32,24 +36,25 @@ public class Post {
     @Field("video_url")
     private String videoUrl;
 
-    @Field("created_at")
     @CreatedDate
+    @Field("created_at")
     private Date createdAt;
+
 
     @Field("likes")
     @Builder.Default
-    private Set<String> likes = new HashSet<>();
+    private Set<String> likedUserIds = new LinkedHashSet<>();
 
     @Field("comments")
     @Builder.Default
-    private Set<String> comments = new HashSet<>();
+    private Set<String> commentIds = new LinkedHashSet<>();
 
-    @Field("reported_by_users")
+    @Field("reports")
     @Builder.Default
-    private Set<String> reportedByUsers = new HashSet<>();
+    private Set<String> reportedUsersIds = new LinkedHashSet<>();
 
-    @Field("saved_by_users")
+    @Field("saved")
     @Builder.Default
-    private Set<String> savedByUsers = new HashSet<>();
+    private Set<String> savedUserIds = new LinkedHashSet<>();
 
 }

@@ -61,18 +61,6 @@ public class AuthService {
         User user = User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .username("")
-                .identityProvider(IdentityProvider.SELF)
-                .twoFactorAuthentication(false)
-                .role(Role.USER)
-                .banUntil(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)))
-                .isActive(false)
-                .fullname("")
-                .bio("")
-                .dateOfBirth(new Date())
-                .gender(Gender.PREFER_NOT_TO_SAY)
-                .profileImageUrl("/profileImage/default.png")
-                .coverImageUrl("/coverImage/default.png")
                 .build();
         userRepository.save(user);
         log.info("User registered with email: {}", email);

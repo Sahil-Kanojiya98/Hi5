@@ -1,47 +1,60 @@
 // import { useState } from "react";
-// import Echohub from "../components/logo/Echohub";
-// import CreatePost from "../components/CreatePost";
-// import Posts from "../components/Posts";
+import CreatePost from "../components/post/CreatePost";
+import MainLayout from "../components/layout/MainLayout";
+import RightPanel from "../components/common/panel/RightPanel";
+// import Storys from "../components/common/story/Storys";
+import Posts from "../components/post/Posts";
+import { useState } from "react";
 
-// function HomePage() {
-//   const [feedType, setFeedType] = useState("forYou");
 
-//   return (
-//     <>
-//       <div className="flex-1 mr-auto border-r border-gray-700 min-h-[calc(100vh+1px)]">
-//         <div className="flex w-full border-b border-gray-700">
-//           <div
-//             className={
-//               "flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
-//             }
-//             onClick={() => setFeedType("forYou")}
-//           >
-//             For you
-//             {feedType === "forYou" && (
-//               <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
-//             )}
-//           </div>
-//           <div
-//             className={
-//               "flex justify-center flex-4 pt-3 transition duration-300 cursor-pointer relative"
-//             }
-//           >
-//             <Echohub classNames={"md:hidden text-sm"} />
-//           </div>
-//           <div
-//             className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
-//             onClick={() => setFeedType("following")}
-//           >
-//             Following
-//             {feedType === "following" && (
-//               <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
-//             )}
-//           </div>
-//         </div>
-//         <CreatePost />
-//         <Posts feedType={feedType} isMyPost={false} />
-//       </div>
-//     </>
-//   );
-// }
-// export default HomePage;
+function HomePage() {
+  const [feedType, setFeedType] = useState("forYou");
+
+  const forYouTabClickHandle = () => {
+    setFeedType("forYou");
+  };
+  const followingTabClickHandle = () => {
+    setFeedType("following");
+  };
+
+  return (
+    <>
+      <MainLayout>
+        <div className="flex justify-center items-start gap-5 bg-gray-100 dark:bg-gray-900 mx-auto mt-[60px] sm:mt-[50px] md:mt-[10px] p-2 sm:p-4 md:pt-[0px] md:pl-[70px] lg:pl-[260px] w-full">
+          <div className="flex flex-col items-center px-2 sm:px-3 xl:px-4 w-full lg:max-w-xl max-w-2xl">
+            {/* <Storys /> */}
+
+            <CreatePost />
+
+            <div className="flex bg-white dark:bg-black shadow-md rounded-lg w-full max-w-xl">
+                <div
+                  className="relative flex flex-1 justify-center hover:bg-gray-200 hover:dark:bg-gray-800 p-3 rounded-lg cursor-pointer"
+                  onClick={forYouTabClickHandle}
+                >
+                  For You
+                  {feedType === "forYou" && (
+                    <div className="bottom-0 absolute bg-gray-800 dark:bg-gray-200 rounded-full w-10 h-1"></div>
+                  )}
+                </div>
+
+                <div
+                  className="relative flex flex-1 justify-center hover:bg-gray-200 hover:dark:bg-gray-800 p-3 rounded-lg cursor-pointer"
+                  onClick={followingTabClickHandle}
+                >
+                  Following
+                  {feedType === "following" && (
+                    <div className="bottom-0 absolute bg-gray-800 dark:bg-gray-200 rounded-full w-10 h-1"></div>
+                  )}
+                </div>
+            </div>
+
+            <Posts feedType={feedType} />
+            
+          </div>
+          <RightPanel />
+        </div>
+      </MainLayout>
+    </>
+  );
+}
+export default HomePage;

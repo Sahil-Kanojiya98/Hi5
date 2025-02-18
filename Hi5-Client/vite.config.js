@@ -11,11 +11,23 @@ export default defineConfig({
         target: "http://localhost:8080",
         changeOrigin: true,
       },
-      "/profileImage/": {
+      "/user/": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },
-      "/coverImage/": {
+      "/post/": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/story/": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/reel/": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      "/chat/": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },

@@ -20,6 +20,10 @@ const validationSchemas = [
         /[@$!%*?&]/,
         "Password must contain at least one special character"
       )
+      .matches(
+        /^[A-Za-z0-9@$!%*?&]+$/,
+        "Password can only contain letters, numbers, and special characters (@ $ ! % * ? &)"
+      )
       .required("Password is required"),
   }),
 
@@ -27,6 +31,10 @@ const validationSchemas = [
     username: Yup.string()
       .min(3, "Username must be at least 3 characters")
       .max(15, "Username must not exceed 15 characters")
+      .matches(
+        /^[a-z0-9_]+$/,
+        "Username can only contain lowercase letters, numbers, and underscores"
+      )
       .required("Username is required"),
     password: Yup.string()
       .min(8, "Password must be at least 6 characters long")
@@ -75,7 +83,6 @@ const LoginPage = () => {
     location.href = "http://localhost:8080/oauth2/authorize/github";
   };
 
-  // Dynamically set the validation schema based on the selected tab
   const getValidationSchema = () => {
     if (step == 0) {
       return selectedTab === "email"
@@ -86,15 +93,15 @@ const LoginPage = () => {
   };
 
   return (
-    <section className="flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900 mx-auto px-6 py-8 min-h-screen">
-      <div className="relative dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-md">
-        <div className="flex justify-center items-center my-4 text-center">
-          <a href="/">
+    <section className="flex flex-col justify-center items-center bg-gray-100 dark:bg-gray-900 mx-auto px-6 py-8 min-h-screen">
+      <div className="relative border-gray-300 dark:border-gray-700 bg-white dark:bg-black shadow-lg sm:px-8 p-6 rounded-lg w-full max-w-md">
+        <div className="flex justify-center items-center mt-1 mb-3 text-center">
+          <Link to="/">
             <img className="w-auto h-16" src={logo} alt="Hi5" />
-          </a>
+          </Link>
         </div>
 
-        <h1 className="mb-4 font-bold text-center text-gray-900 text-xl dark:text-white">
+        <h1 className="mb-4 font-bold text-center text-xl">
           {step === validationSchemas.length
             ? "Complete Your Profile"
             : "Login to Hi5"}
@@ -155,11 +162,11 @@ const LoginPage = () => {
                           type="email"
                           id="email"
                           placeholder="name@company.com"
-                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                           disabled={isLoading}
                         />
                         {touched.email && errors.email && (
-                          <p className="mt-2 ml-1 text-red-500 text-sm">
+                          <p className="mt-2 ml-1 text-red-700 text-sm">
                             {errors.email}
                           </p>
                         )}
@@ -179,11 +186,11 @@ const LoginPage = () => {
                           type="text"
                           id="username"
                           placeholder="Enter your username"
-                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                           disabled={isLoading}
                         />
                         {touched.username && errors.username && (
-                          <p className="mt-2 ml-1 text-red-500 text-sm">
+                          <p className="mt-2 ml-1 text-red-700 text-sm">
                             {errors.username}
                           </p>
                         )}
@@ -202,11 +209,11 @@ const LoginPage = () => {
                         type="password"
                         id="password"
                         placeholder="••••••••"
-                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                         disabled={isLoading}
                       />
                       {touched.password && errors.password && (
-                        <p className="mt-2 ml-1 text-red-500 text-sm">
+                        <p className="mt-2 ml-1 text-red-700 text-sm">
                           {errors.password}
                         </p>
                       )}
@@ -235,11 +242,11 @@ const LoginPage = () => {
                       type="text"
                       id="otp"
                       placeholder="Choose a username"
-                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
                       disabled={isLoading}
                     />
                     {touched.otp && errors.otp && (
-                      <p className="mt-2 ml-1 text-red-500 text-sm">
+                      <p className="mt-2 ml-1 text-red-700 text-sm">
                         {errors.otp}
                       </p>
                     )}
@@ -249,7 +256,7 @@ const LoginPage = () => {
 
               {/* Show error from backend if exists */}
               {error && (
-                <div className="mt-4 p-2 border-red-500 rounded-lg text-red-500 text-xs borde">
+                <div className="ml-1 text-red-700 text-xs">
                   {error}
                 </div>
               )}
@@ -258,7 +265,7 @@ const LoginPage = () => {
               <div className="flex justify-between items-center mt-4">
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg focus:ring-4 focus:ring-blue-300 w-full font-semibold text-white focus:outline-none"
+                  className="bg-blue-600 hover:bg-blue-700 p-2 rounded-lg focus:ring-4 focus:ring-blue-300 w-full font-semibold text-white focus:outline-none"
                   disabled={isLoading}
                 >
                   {step === 0 ? "Login" : "Verify"}
@@ -268,7 +275,7 @@ const LoginPage = () => {
               {step == 0 && (
                 <>
                   <p className="mt-2 text-gray-600 text-sm dark:text-gray-400">
-                  Create a new account ?
+                    Create a new account ?
                     <Link
                       to="/signup"
                       className="pl-2 font-medium text-blue-600 hover:underline"
@@ -299,7 +306,7 @@ const LoginPage = () => {
                 <div className="border-gray-300 border-t w-full" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white dark:bg-gray-800 px-2 text-gray-500 dark:text-white">
+                <span className="bg-gray-200 dark:bg-gray-800 px-3 py-1 rounded-md text-gray-500 dark:text-white">
                   Or continue with
                 </span>
               </div>
@@ -308,7 +315,7 @@ const LoginPage = () => {
             <div className="gap-3 grid grid-cols-2 mt-6">
               <button
                 onClick={handleGoogleRedirect}
-                className="inline-flex justify-center border-gray-300 dark:border-gray-600 bg-white hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 shadow-sm px-4 py-2 border rounded-md w-full text-gray-700 dark:text-white"
+                className="inline-flex justify-center bg-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 dark:bg-gray-700 shadow-sm px-4 py-2 rounded-md w-full text-gray-700 dark:text-white"
                 disabled={isLoading}
               >
                 <img className="w-6" src={googleLogo} alt="Google Logo" />
@@ -317,7 +324,7 @@ const LoginPage = () => {
 
               <button
                 onClick={handleGithubRedirect}
-                className="inline-flex justify-center border-gray-300 dark:border-gray-900 bg-white hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 shadow-sm px-4 py-2 border rounded-md w-full text-gray-700 dark:text-white"
+                className="inline-flex justify-center bg-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 dark:bg-gray-700 shadow-sm px-4 py-2 rounded-md w-full text-gray-700 dark:text-white"
                 disabled={isLoading}
               >
                 <img className="w-6" src={githubLogo} alt="GitHub Logo" />

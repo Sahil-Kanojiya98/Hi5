@@ -1,21 +1,34 @@
 package com.app.Hi5.controller;
 
+import com.app.Hi5.dto.request.UpdateUserRequest;
+import com.app.Hi5.dto.response.FollowUserResponse;
 import com.app.Hi5.dto.response.GetMeResponse;
+import com.app.Hi5.dto.response.UpdateImagesResponse;
+import com.app.Hi5.dto.response.UserProfileResponse;
 import com.app.Hi5.model.User;
 import com.app.Hi5.security.UserDetailsImpl;
-
+import com.app.Hi5.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
+
+    private final UserService userService;
 
     @GetMapping("/get-me")
     @PreAuthorize("principal.isAccountNonLocked()")
@@ -27,41 +40,42 @@ public class UserController {
     }
 
 //    @GetMapping("/{userId}")
-//    public ResponseEntity<UserProfileDTO> getUser(@PathVariable("userId") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-//        UserProfileDTO response=userService.getProfile(userId,userDetails.getUser().getId());
+//    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable("userId") String userId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        UserProfileResponse response=userService.getProfile(userId,userDetails.getUser());
 //        return new ResponseEntity<>(response,HttpStatus.OK);
 //    }
-//
-//    @PostMapping("/follow/{user_id}")
-//    public ResponseEntity<String> followUser(@PathVariable("user_id") String user_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        String message=userService.follow(user_id,userDetails.getUser());
-//        return new ResponseEntity<>(message,HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/unfollow/{user_id}")
-//    public ResponseEntity<String> unfollowUser(@PathVariable("user_id") String user_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        String message=userService.unfollow(user_id,userDetails.getUser());
-//        return new ResponseEntity<>(message,HttpStatus.OK);
+
+//    @PatchMapping("/update-images")
+//    public ResponseEntity<UpdateImagesResponse> updateUserImages(@RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture, @RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        UpdateImagesResponse response = userService.updateUserImages(userDetails.getUser(), profilePicture, coverPicture);
+//        return new ResponseEntity<>(response, HttpStatus.CREATED);
 //    }
 //
 //    @PutMapping
-//    public ResponseEntity<User> updateUser(@RequestBody UpdateUserRequest updateUserRequest,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        System.out.println(updateUserRequest);
-//        User user=userService.updateUser(userDetails.getUser(), updateUserRequest);
-//        return new ResponseEntity<>(user,HttpStatus.OK);
+//    public ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        userService.updateUser(userDetails.getUser(), request.getFullName(),request.getBio(),request.getLink(),request.getDateOfBirth(),request.getGender());
+//        return new ResponseEntity<>("User Updated Successfully.",HttpStatus.OK);
 //    }
 //
-//    @PostMapping("/update-images")
-//    public ResponseEntity<ImageUpdateResponseDTO> updateUserImages(
-//            @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture,
-//            @RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails
-//            ) throws RuntimeException {
-//        ImageUpdateResponseDTO response = userService.updateUserImages(userDetails.getUser(), profilePicture, coverPicture);
-//        System.out.println(response);
+//    @PostMapping("/follow/{user_id}")
+//    public ResponseEntity<FollowUserResponse> followUser(@PathVariable("user_id") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        FollowUserResponse response=userService.follow(userDetails.getUser(),userId);
+//        return response.toResponseEntity();
+//    }
+//
+//    @PostMapping("/unfollow/{user_id}")
+//    public ResponseEntity<String> unfollowUser(@PathVariable("user_id") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        String message=userService.unfollow(userDetails.getUser(),userId);
+//        return new ResponseEntity<>(message,HttpStatus.OK);
+//    }
+
+//    on user accoun delete remove all the posts and its all history
+//    @GetMapping("/{userId}")
+//    public ResponseEntity<UserProfileResponse> getUser(@PathVariable("userId") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+//        UserProfileResponse response=userService.getProfile(userId,userDetails.getUser().getId());
 //        return new ResponseEntity<>(response,HttpStatus.OK);
 //    }
-//
+
 //    @GetMapping("/saved-posts")
 //    public ResponseEntity<List<PostResponseDTO>> getSavedPosts(
 //            @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -71,33 +85,14 @@ public class UserController {
 //        List<PostResponseDTO> savedPosts = userService.getAllSavedPosts(userDetails.getUser(), page, pageSize);
 //        return new ResponseEntity<>(savedPosts, HttpStatus.OK);
 //    }
-//
-//    @PostMapping("/saved-posts/{post_id}")
-//    public ResponseEntity<String> addSavedPost(
-//            @PathVariable("post_id") String post_id,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails
-//    ){
-//        userService.addSavedPost(userDetails.getUser(),post_id);
-//        return new ResponseEntity<>("post added successfully!",HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping("/saved-posts/{post_id}")
-//    public ResponseEntity<String> removeSavedPost(
-//            @PathVariable("post_id") String post_id,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails
-//    ){
-//        userService.removeSavedPost(userDetails.getUser(),post_id);
-//        return new ResponseEntity<>("post removed successfully!",HttpStatus.OK);
-//    }
-//
-//
+
 //    @GetMapping("/search")
 //    public Page<User> search(@RequestParam String pattern,
 //                             @RequestParam(defaultValue = "0") int page,
 //                             @RequestParam(defaultValue = "10") int size) {
 //        return userService.searchUsers(pattern, page, size);
 //    }
-//
+
 //    @GetMapping("/suggest")
 //    public ResponseEntity<List<UserDescResponse>> suggestUsers(){
 //        List<UserDescResponse> users=userService.suggest();

@@ -26,7 +26,7 @@ const useSignup = () => {
           email: values.email.toLowerCase(),
         });
 
-        if (response.data?.sent) {
+        if (response.data?.isSent) {
           setStep(1);
         }
 
@@ -70,7 +70,7 @@ const useSignup = () => {
       try {
         console.log("Form Value username:", values.username);
         const response = await checkUsername({ username: values.username });
-        if (response.data?.available) {
+        if (response.data?.isAvailable) {
           setStep(3);
         }
         setError(null);

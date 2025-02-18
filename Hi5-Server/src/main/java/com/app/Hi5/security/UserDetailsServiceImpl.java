@@ -25,6 +25,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return new UsernameNotFoundException("User with email '" + email + "' not found");
         });
 
+        System.out.println("my user:"+user);
+
         log.info("Successfully loaded user with email: {}", email);
         return UserDetailsImpl.builder().user(user).build();
     }

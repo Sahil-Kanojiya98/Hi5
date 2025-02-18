@@ -28,7 +28,7 @@ public class Otp {
     private OtpType otpType;
 
     @Indexed(unique = true)
-    @Field("email")
+    @Field("user_email")
     private String email;
 
     @Field("created_at")

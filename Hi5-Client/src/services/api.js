@@ -44,8 +44,60 @@ const forgotPassword = async (body) => {
   return axiosInstance.post("/auth/forget-password", body);
 };
 
-const forgotPasswordVerifyOTP = async (otp,body)=>{
-  return axiosInstance.post(`/auth/forget-password/${otp}`,body);
+const forgotPasswordVerifyOTP = async (otp, body) => {
+  return axiosInstance.post(`/auth/forget-password/${otp}`, body);
+};
+
+// const deletePost = async (postId) => {
+//   return axiosInstance.delete(`/post/${postId}`);
+// };
+
+// const reportPost = async (body) => {
+//   return axiosInstance.post("/report", body);
+// };
+
+// const likePost = async (postId) => {
+//   return axiosInstance.post(`/post/${postId}/like`);
+// };
+
+// const unlikePost = async (postId) => {
+//   return axiosInstance.delete(`/like/${postId}/like`);
+// };
+
+const save = async (body) => {
+  return axiosInstance.post("/save", body);
+};
+
+const unsave = async (body) => {
+  return axiosInstance.delete("/save", {
+    params: body,
+  });
+};
+
+// const getSharedPost = async (postId) => {
+//   return axiosInstance.get(`/shared/post?postId=${postId}`);
+// };
+
+// const getUserProfile = async (userId) => {
+//   return axiosInstance.get(`/user/${userId}`);
+// };
+
+const makeComment = async (body) => {
+  return axiosInstance.post("/comment", body);
+};
+
+const likeEntity = async (body) => {
+  return axiosInstance.post("/like", body);
+};
+
+const unlikeEntity = async (body) => {
+  return axiosInstance.delete("/like", {
+    params: body,
+  });
+};
+
+const reportEntity = async (body)=>{
+  return axiosInstance.post("/report", body);
 }
 
 export {
@@ -59,4 +111,16 @@ export {
   loginVerifyOTP,
   forgotPassword,
   forgotPasswordVerifyOTP,
+  // deletePost,
+  // reportPost,
+  // likePost,
+  // unlikePost,
+  save,
+  unsave,
+  // getSharedPost,
+  // getUserProfile,
+  makeComment,
+  likeEntity,
+  unlikeEntity,
+  reportEntity,
 };

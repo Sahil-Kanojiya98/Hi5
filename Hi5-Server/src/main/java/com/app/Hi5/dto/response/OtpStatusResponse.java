@@ -1,5 +1,6 @@
 package com.app.Hi5.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 @Builder
 public class OtpStatusResponse {
 
+    @JsonProperty("isSent")
     private boolean isSent;
     private HttpStatus status;
     private int statusCode;

@@ -1,27 +1,30 @@
 // import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import Preloader from "./components/Preloader";
+import Preloader from "./components/common/preloader/Preloader.jsx";
 import { Suspense } from "react";
-import StoreProvider from "./redux/providers/StoreProvider";
-import ThemeProvider from "./components/ThemeProvider";
+import StoreProvider from "./components/providers/StoreProvider.jsx";
+import ThemeProvider from "./components/providers/ThemeProvider.jsx";
 import App from "./App.jsx";
 import { BrowserRouter as Router } from "react-router-dom";
-import AuthContext from "./contexts/AuthContext.jsx";
+import AuthProvider from "./components/providers/AuthProvider.jsx";
+import { ToastProvider } from "./components/providers/ToastProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
-    <Suspense fallback={<Preloader />}>
-      <StoreProvider>
-        <AuthContext>
-          <ThemeProvider>
+  <Suspense fallback={<Preloader />}>
+    <StoreProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <ToastProvider>
             <Router>
               <App />
             </Router>
-          </ThemeProvider>
-        </AuthContext>
-      </StoreProvider>
-    </Suspense>
+          </ToastProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </StoreProvider>
+  </Suspense>
   // </StrictMode>
 );
 

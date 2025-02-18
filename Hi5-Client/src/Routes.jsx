@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import GuestGuard from "./guards/GuestGuard";
-import TokenManager from "./components/TokenManager";
+import TokenManager from "./components/test/TokenManager";
 import AuthGuard from "./guards/AuthGuard";
 import RoleGuard from "./guards/RoleGuard";
 import LoginPage from "./views/LoginPage";
@@ -10,7 +10,15 @@ import SignUpOAuth2Handler from "./components/auth/SignUpOAuth2Handler";
 import LoginOAuth2Handler from "./components/auth/LoginOAuth2Handler";
 import ForgotPasswordPage from "./views/ForgotPasswordPage";
 import OAuth2Error from "./components/auth/OAuth2Error";
-import NotFound from "./components/NotFound";
+import NotFound from "./components/temp/NotFound";
+import HomePage from "./views/HomePage";
+// import SearchPage from "./views/SearchPage";
+import ReelsPage from "./views/ReelsPage";
+// import ChatPage from "./views/ChatPage";
+// import NotificationsPage from "./views/NotificationsPage";
+// import ProfilePage from "./views/ProfilePage";
+// import SettingsPage from "./views/SettingsPage";
+// import SharedMediaPage from "./views/SharedMediaPage";
 // import HomePage from "./pages/HomePage";
 // import ProfilePage from "./pages/ProfilePage";
 // import SavedPostsPage from "./pages/SavedPostsPage";
@@ -98,12 +106,72 @@ const RoutesConfig = () => {
         element={
           <AuthGuard>
             <RoleGuard requiredRole={"USER"}>
-              home
-              <img src="/profileImage/default.png" />
+              <HomePage />
             </RoleGuard>
           </AuthGuard>
         }
       />
+
+      <Route
+        path="/search"
+        element={
+          <AuthGuard>
+            {/* <SearchPage /> */}
+          </AuthGuard>
+        }
+      />
+
+      <Route
+        path="/chat"
+        element={
+          <AuthGuard>
+            {/* <ChatPage /> */}
+          </AuthGuard>
+        }
+      />
+
+      <Route
+        path="/reels"
+        element={
+          <AuthGuard>
+            <ReelsPage />
+          </AuthGuard>
+        }
+      />
+
+      <Route
+        path="/profile/:userId"
+        element={
+          <AuthGuard>
+            {/* <ProfilePage /> */}
+          </AuthGuard>
+        }
+      />
+
+      <Route
+        path="/notifications"
+        element={
+          <AuthGuard>
+            {/* <NotificationsPage /> */}
+          </AuthGuard>
+        }
+      />
+
+      <Route
+        path="/settings"
+        element={
+          <AuthGuard>
+            {/* <SettingsPage /> */}
+          </AuthGuard>
+        }
+      />
+
+      {/* <Route path="/share" element={<SharedMediaPage />} /> */}
+
+
+
+
+
 
       <Route
         path="/admin"
@@ -114,19 +182,13 @@ const RoutesConfig = () => {
         }
       />
 
-      <Route
-        path="*"
-        element={
-          <NotFound />
-        }
-      />
+
+      <Route path="*" element={<NotFound />} />
 
       {/* <Route element={<AuthGuard />}>
         <Route element={<RoleGuard requiredRoles={["ROLE_USER"]} />}>
-          <Route path="/home" element={<HomePage />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/saved" element={<SavedPostsPage />} />
-          <Route path="/search" element={<SearchPage />} />
         </Route>
       </Route> */}
 

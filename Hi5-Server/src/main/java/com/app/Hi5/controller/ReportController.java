@@ -1,32 +1,32 @@
-//package com.app.Echohub.controller;
-//
-//import com.app.Echohub.dto.PostReportDTO;
-//import com.app.Echohub.dto.request.ReportRequestDTO;
-//import com.app.Echohub.model.Report;
-//import com.app.Echohub.security.UserDetailsImpl;
-//import com.app.Echohub.service.ReportService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.access.prepost.PreAuthorize;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/api/report")
-//public class ReportController {
-//
-//    @Autowired
-//    private ReportService reportService;
-//
-//    @PostMapping
-//    public ResponseEntity<Report> createReport(@RequestBody ReportRequestDTO report, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        Report createdReport = reportService.createReport(report,userDetails.getUser());
-//        return new ResponseEntity<>(createdReport, HttpStatus.CREATED);
-//    }
-//
+package com.app.Hi5.controller;
+
+import com.app.Hi5.dto.request.ReportRequest;
+import com.app.Hi5.security.UserDetailsImpl;
+import com.app.Hi5.service.ReportService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+
+@Slf4j
+@RestController
+@RequestMapping("/api/report")
+@PreAuthorize("principal.isAccountNonLocked()")
+@RequiredArgsConstructor
+public class ReportController {
+
+    private final ReportService reportService;
+
+    @PostMapping
+    public ResponseEntity<String> reportPost(@RequestBody ReportRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        reportService.reportPost(userDetails.getUser(),request.getRelevantId(),request.getType(),request.getReason());
+        return new ResponseEntity<>("reported successfully.", HttpStatus.CREATED);
+    }
+
 //    @PreAuthorize("hasRole('ADMIN')")
 //    @GetMapping
 //    public List<PostReportDTO> getPostReportStats(@RequestParam(defaultValue = "1") int page,
@@ -35,6 +35,5 @@
 //        int skip = (page - 1) * limit;
 //        return reportService.getPostReportStats(skip, limit);
 //    }
-//
-//
-//}
+
+}

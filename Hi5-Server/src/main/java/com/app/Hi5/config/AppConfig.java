@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.security.SecureRandom;
@@ -20,6 +21,7 @@ import java.util.Date;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
+@EnableAsync
 public class AppConfig {
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -33,23 +35,20 @@ public class AppConfig {
     @PostConstruct
     public void setup() {
         try {
-            User user = userRepository.save(User.builder()
-                    .email("admin000@gmail.com")
-                    .password(passwordEncoder.encode("admin000"))
-                    .username("admin")
-                    .identityProvider(IdentityProvider.SELF)
-                    .twoFactorAuthentication(false)
-                    .role(Role.ADMIN)
-                    .banUntil(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)))
-                    .isActive(true)
-                    .fullname("Admin User")
-                    .bio("Administrator account")
-                    .dateOfBirth(new Date())
-                    .gender(Gender.PREFER_NOT_TO_SAY)
-                    .profileImageUrl("/profileImage/default.png")
-                    .coverImageUrl("/coverImage/default.png")
-                    .build());
-            log.info("Admin user created with ID: {}", user.getId());
+            if (userRepository.findByEmailAndIsActiveTrue("admin000@gmail.com").isEmpty()){
+                User user = userRepository.save(User.builder()
+                        .email("admin000@gmail.com")
+                        .password(passwordEncoder.encode("sksk1!SKSK"))
+                        .username("admin")
+                        .role(Role.ADMIN)
+                        .isActive(true)
+                        .gender(Gender.PREFER_NOT_TO_SAY)
+                        .isAllowedPostNotification(false)
+                        .isAllowedReelsNotification(false)
+                        .isAllowedStoryNotification(false)
+                        .build());
+                log.info("Admin user created with ID: {}", user.getId());
+            }
         } catch (Exception e) {
             log.error("Error occurred while setting up the default admin user: {}", e.getMessage(), e);
         }

@@ -1,343 +1,237 @@
-// import { useEffect, useRef, useState } from "react";
-// import { Link, useParams } from "react-router-dom";
-// import EditProfileModal from "../components/EditProfileModal";
-// import { FaArrowLeft } from "react-icons/fa";
-// import { IoCalendarOutline } from "react-icons/io5";
-// import { FaLink } from "react-icons/fa";
-// import { MdEdit } from "react-icons/md";
-// import axiosInstance from "../utils/axiosConfig";
-// import ProfileHeaderSkeleton from "../components/skeletons/ProfileHeaderSkeleton";
-// import { useDispatch, useSelector } from "react-redux";
-// import { updateUser } from "../redux/slices/authSlice";
-// import Posts from "../components/Posts";
+// import MainLayout from "../components/layout/MainLayout";
+// import {
+//   FaArrowLeft,
+//   FaLink,
+//   FaCalendarAlt,
+//   FaEdit,
+//   FaCog,
+// } from "react-icons/fa";
+// import Posts from "../components/post/Posts";
+// import { useEffect, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { getUserProfile } from "../services/api";
 
 // const ProfilePage = () => {
-//   const authUser = useSelector((state) => state.auth.user);
-//   const { id } = useParams();
-//   const [feedType, setFeedType] = useState("posts");
-//   const [coverImg, setCoverImg] = useState(null);
-//   const [profileImg, setProfileImg] = useState(null);
-//   const coverImgRef = useRef(null);
-//   const profileImgRef = useRef(null);
-//   const [user, setUser] = useState(null);
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
-//   const [isMyProfile, setIsMyProfile] = useState(false);
-//   const [isPending, setIsPending] = useState(false);
-//   const [postsCount, setPostsCount] = useState(0);
+//   const [profileData, setProfileData] = useState(null);
 
-//   useEffect(() => {
-//     const fetchUser = async () => {
-//       try {
-//         const response = await axiosInstance.get(`/user/${id}`);
-//         setUser(response.data);
-//         console.log(response.data);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
 
-//         if (id === authUser.id) {
-//           setIsMyProfile(true);
-//         } else {
-//           setIsMyProfile(false);
-//         }
-//         setPostsCount(response.data.postsCount);
-//       } catch (error) {
-//         console.error("Error fetching user data:", error);
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-//     fetchUser();
-//   }, [authUser, id]);
+//   const [coverImage, setCoverImage] = useState("/user/coverImage/default.png");
+//   const [profileImage, setProfileImage] = useState(
+//     "/user/profileImage/default.png"
+//   );
 
-//   const handleImgChange = (e, state) => {
+//   const handleCoverImageChange = (e) => {
 //     const file = e.target.files[0];
 //     if (file) {
-//       if (state === "coverImg") {
-//         setCoverImg(file);
-//       } else if (state === "profileImg") {
-//         setProfileImg(file);
+//       setCoverImage(URL.createObjectURL(file));
+//     }
+//   };
+
+//   const handleProfileImageChange = (e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       setProfileImage(URL.createObjectURL(file));
+//     }
+//   };
+
+//   const navigate = useNavigate();
+//   const handleBackClick = () => {
+//     if (window.history.length > 1) {
+//       navigate(-1);
+//     } else {
+//       navigate("/");
+//     }
+//   };
+
+//   const { userId } = useParams();
+//   console.log(userId);
+//   useEffect(() => {
+//     const fetchProfile = async () => {
+//       try {
+//         setLoading(true);
+//         const response = await getUserProfile(userId);
+//         const data = response.data;
+//         setProfileData(data);
+//         setCoverImage(data.coverPictureUrl);
+//         setProfileImage(data.profilePictureUrl);
+//       } catch (err) {
+//         console.log(err);
+//         setError("Failed to load user profile. Please try again later.");
+//       } finally {
+//         setLoading(false);
 //       }
-//     }
-//   };
+//     };
 
-//   const dispatch = useDispatch();
-
-//   const follow = async () => {
-//     setIsPending(true);
-//     try {
-//       const updatedUser = {
-//         ...user,
-//         followingFlag: true,
-//         followersCount: user.followersCount + 1,
-//       };
-//       setUser(updatedUser);
-//       const response = await axiosInstance.post(`/user/follow/${user.id}`);
-//       console.log(response.data);
-//     } catch (error) {
-//       console.error("Error following user:", error);
-//     } finally {
-//       setIsPending(false);
-//     }
-//   };
-
-//   const unfollow = async () => {
-//     setIsPending(true);
-//     try {
-//       const updatedUser = {
-//         ...user,
-//         followingFlag: false,
-//         followersCount: user.followersCount - 1,
-//       };
-//       setUser(updatedUser);
-//       const response = await axiosInstance.post(`/user/unfollow/${user.id}`);
-//       console.log(response.data);
-//     } catch (error) {
-//       console.error("Error unfollowing user:", error);
-//     } finally {
-//       setIsPending(false);
-//     }
-//   };
-
-//   const updateImages = async () => {
-//     setIsUpdatingProfile(true);
-//     const formData = new FormData();
-//     console.log(coverImg, profileImg);
-//     console.log(coverImg instanceof File);
-//     console.log(profileImg instanceof File);
-//     if (coverImg) formData.append("coverPicture", coverImg);
-//     if (profileImg) formData.append("profilePicture", profileImg);
-//     try {
-//       const response = await axiosInstance.post(
-//         "/user/update-images",
-//         formData,
-//         {
-//           headers: {
-//             "Content-Type": "multipart/form-data",
-//           },
-//         }
-//       );
-//       console.log("Images updated:", response.data);
-//       if (response.data.profilePictureUrl) {
-//         const updatedUserProfile = {
-//           ...user,
-//           profilePictureUrl: response.data.profilePictureUrl,
-//           coverPictureUrl: response.data.coverPictureUrl,
-//         };
-//         setUser(updatedUserProfile);
-//         const updatedAuthUserProfile = {
-//           ...authUser,
-//           profilePictureUrl: response.data.profilePictureUrl,
-//         };
-//         dispatch(updateUser(updatedAuthUserProfile));
-//         setCoverImg(null);
-//         setProfileImg(null);
-//       }
-//     } catch (error) {
-//       console.error("Error updating images:", error);
-//     } finally {
-//       setIsUpdatingProfile(false);
-//     }
-//   };
-
-//   const reduceCount = () => {
-//     setPostsCount((prev) => {
-//       if (prev > 0) {
-//         return prev - 1;
-//       } else {
-//         return prev;
-//       }
-//     });
-//   };
+//     fetchProfile();
+//   }, [userId]);
 
 //   return (
-//     <div className="flex-[4_4_0] border-r mr-auto border-gray-700 min-h-[calc(100vh+1px)] ">
-//       {isLoading && <ProfileHeaderSkeleton />}
-//       {!isLoading && !user && (
-//         <p className="text-center text-lg mt-4">User not found</p>
-//       )}
-//       <div className="flex flex-col">
-//         {!isLoading && user && (
-//           <>
-//             <div className="flex gap-10 px-4 py-2 items-center">
-//               <Link to="/">
-//                 <FaArrowLeft className="w-4 h-4" />
-//               </Link>
-//               <div className="flex flex-col">
-//                 <p className="font-bold text-lg">{user.fullname}</p>
-//                 <span className="text-sm text-slate-500">
-//                   {postsCount} posts
-//                 </span>
-//               </div>
+//     <MainLayout>
+//       <div className="flex justify-center bg-gray-100 dark:bg-gray-900 mx-auto p-2 md:p-6 pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full">
+//         <div className="flex flex-col justify-center w-full max-w-3xl">
+//           {
+//             JSON.stringify(profileData)
+//           }
+//           {error && (
+//             <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg mt-[15dvh] p-6 rounded-lg w-full min-h-[200px]">
+//               <h1 className="mb-4 font-bold text-lg text-red-600">
+//                 Profile Not Found
+//               </h1>
+//               <p className="text-center text-gray-600 text-sm dark:text-gray-300">
+//                 An error occurred while loading the profile, or the profile
+//                 doesn&apos;t exist. Please try again later or contact support.
+//               </p>
+//               <button
+//                 className="bg-blue-500 hover:bg-blue-600 shadow-md mt-4 px-6 py-2 rounded-lg text-white transition duration-200"
+//                 onClick={() => window.location.reload()}
+//               >
+//                 Reload Page
+//               </button>
 //             </div>
-//             <div className="relative group/cover">
-//               <img
-//                 src={
-//                   coverImg
-//                     ? URL.createObjectURL(coverImg)
-//                     : user.coverPictureUrl
-//                     ? "http://localhost:8080" + user.coverPictureUrl
-//                     : "/cover.png"
-//                 }
-//                 className="h-52 w-full object-cover"
-//                 alt="cover image"
-//               />
-//               {isMyProfile && (
-//                 <div
-//                   className="absolute top-2 right-2 rounded-full p-2 bg-gray-800 bg-opacity-75 cursor-pointer opacity-0 group-hover/cover:opacity-100 transition duration-200"
-//                   onClick={() => coverImgRef.current.click()}
-//                 >
-//                   <MdEdit className="w-5 h-5 text-white" />
+//           )}
+//           {profileData && (
+//             <div className="flex flex-col bg-white dark:bg-black shadow-md mt-5 rounded-lg min-h-screen">
+//               <div className="flex justify-between items-center gap-4 p-4">
+//                 <div className="flex items-center gap-4">
+//                   <div
+//                     onClick={handleBackClick}
+//                     className="text-gray-500 cursor-pointer"
+//                   >
+//                     <FaArrowLeft className="text-2xl" />
+//                   </div>
+//                   <div className="flex flex-col">
+//                     <p className="font-bold text-xl">{profileData.fullname}</p>
+//                     <span className="text-gray-600 text-sm">{profileData.postsCount} posts</span>
+//                   </div>
 //                 </div>
-//               )}
-//               <input
-//                 type="file"
-//                 hidden
-//                 accept="image/*"
-//                 ref={coverImgRef}
-//                 onChange={(e) => handleImgChange(e, "coverImg")}
-//               />
-//               <input
-//                 type="file"
-//                 hidden
-//                 accept="image/*"
-//                 ref={profileImgRef}
-//                 onChange={(e) => handleImgChange(e, "profileImg")}
-//               />
-//               <div className="avatar absolute -bottom-16 left-4">
-//                 <div className="w-32 rounded-full relative group/avatar">
+//                 {/* only if my profile */}
+//                 {/* <Link
+//                   to="/settings"
+//                   className="text-gray-500 dark:hover:text-gray-400 hover:text-gray-600 transition duration-200 cursor-pointer"
+//                   title="Settings"
+//                 >
+//                   <FaCog className="text-2xl" />
+//                 </Link> */}
+//               </div>
+
+//               <div className="relative">
+//                 <div className="group relative">
 //                   <img
-//                     src={
-//                       profileImg
-//                         ? URL.createObjectURL(profileImg)
-//                         : user.profilePictureUrl
-//                         ? "http://localhost:8080" + user.profilePictureUrl
-//                         : "/avatar.png"
-//                     }
-//                     alt="profile"
+//                     src={coverImage}
+//                     alt="Cover Image"
+//                     className="w-full h-52 md:h-64 lg:h-72 object-cover"
 //                   />
-//                   {isMyProfile && (
-//                     <div className="absolute top-5 right-3 p-1 bg-primary rounded-full group-hover/avatar:opacity-100 opacity-0 cursor-pointer">
-//                       <MdEdit
-//                         className="w-4 h-4 text-white"
-//                         onClick={() => profileImgRef.current.click()}
-//                       />
-//                     </div>
-//                   )}
+//                   <label
+//                     htmlFor="cover-upload"
+//                     className="group-hover:block right-3 bottom-3 absolute hidden bg-black/50 p-2 rounded-full text-white cursor-pointer"
+//                     title="Change Cover"
+//                   >
+//                     <FaEdit />
+//                   </label>
+//                   <input
+//                     id="cover-upload"
+//                     type="file"
+//                     accept="image/*"
+//                     className="hidden"
+//                     onChange={handleCoverImageChange}
+//                   />
+//                 </div>
+//                 <div className="top-40 md:top-44 lg:top-48 left-5 md:left-10 lg:left-16 absolute">
+//                   <div className="group relative border-4 border-white rounded-full w-24 md:w-32 lg:w-40 h-24 md:h-32 lg:h-40 overflow-hidden">
+//                     <img
+//                       src={profileImage}
+//                       alt="Profile Image"
+//                       className="w-full h-full object-cover"
+//                     />
+//                     <label
+//                       htmlFor="profile-upload"
+//                       className="group-hover:block right-3 bottom-3 absolute hidden bg-black/50 p-2 rounded-full text-white cursor-pointer"
+//                       title="Change Profile Picture"
+//                     >
+//                       <FaEdit />
+//                     </label>
+//                     <input
+//                       id="profile-upload"
+//                       type="file"
+//                       accept="image/*"
+//                       className="hidden"
+//                       onChange={handleProfileImageChange}
+//                     />
+//                   </div>
 //                 </div>
 //               </div>
-//             </div>
-//             <div className="flex justify-end px-4 mt-5">
-//               {isMyProfile && (
-//                 <EditProfileModal
-//                   authUser={{
-//                     fullName: user.fullname,
-//                     username: user.username,
-//                     email: user.email,
-//                     bio: user.bio || "",
-//                     link: user.link || "",
-//                   }}
-//                 />
-//               )}
 
-//               {!isMyProfile && (
-//                 <button
-//                   className="btn btn-outline rounded-full btn-sm"
-//                   onClick={async () => {
-//                     if (isPending) return;
-//                     if (user.followingFlag) {
-//                       await unfollow();
-//                     } else {
-//                       await follow();
-//                     }
-//                   }}
-//                 >
-//                   {isPending
-//                     ? "Loading..."
-//                     : user.followingFlag
-//                     ? "Unfollow"
-//                     : "Follow"}
+//               <div className="flex justify-end mt-10 px-4">
+//                 <button className="bg-blue-500 hover:bg-blue-600 shadow-md px-4 py-2 rounded-full text-sm text-white transition duration-200">
+//                   Follow
 //                 </button>
-//               )}
-
-//               {(coverImg || profileImg) && isMyProfile && (
-//                 <button
-//                   className="btn btn-primary rounded-full btn-sm text-white px-4 ml-2"
-//                   onClick={updateImages}
-//                 >
-//                   {isUpdatingProfile ? "Updating..." : "Update"}
+//                 <button className="bg-gray-800 hover:bg-gray-900 shadow-md ml-3 px-4 py-2 rounded-full text-sm text-white transition duration-200">
+//                   Update
 //                 </button>
-//               )}
-//             </div>
-
-//             <div className="flex flex-col gap-4 mt-14 px-4">
-//               <div className="flex flex-col">
-//                 <span className="font-bold text-xl">{user.fullname}</span>
-//                 <span className="text-sm text-slate-500 py-3">
-//                   @{user.username}
-//                 </span>
-//                 <span className="text-sm my-1">
-//                   {user.bio || "No bio available"}
-//                 </span>
 //               </div>
 
-//               <div className="flex gap-2 flex-wrap">
-//                 {user.link && (
-//                   <div className="flex gap-1 items-center">
-//                     <FaLink className="w-3 h-3 text-slate-500" />
+//               <div className="my-6 mt-8 px-4">
+//                 <div className="flex flex-col items-start gap-2">
+//                   <h1 className="font-bold text-2xl">{profileData.fullname}</h1>
+//                   <span className="text-gray-500 text-sm">@{profileData.username}</span>
+//                   <p className="text-gray-700 text-sm dark:text-gray-300">
+//                   {profileData.bio}
+//                   </p>
+//                 </div>
+//                 <div className="flex items-center gap-4 mt-4">
+//                   <div className="flex items-center gap-2">
+//                     <FaLink className="text-gray-500" />
 //                     <a
-//                       href={user.link}
+//                       href="https://www.johndoe.com"
 //                       target="_blank"
+//                       className="text-blue-500 text-sm hover:underline"
 //                       rel="noreferrer"
-//                       className="text-sm text-blue-500 hover:underline"
 //                     >
-//                       {user.link}
+//                       {profileData.fullnamelink}
 //                     </a>
 //                   </div>
-//                 )}
-//                 <div className="flex gap-2 items-center">
-//                   <IoCalendarOutline className="w-4 h-4 text-slate-500" />
-//                   <span className="text-sm text-slate-500">
-//                     {new Date(user.createdAt).toLocaleDateString()}
-//                   </span>
+//                   <div className="flex items-center gap-2">
+//                     <FaCalendarAlt className="text-gray-500" />
+//                     <span className="text-gray-500 text-sm">
+//                     {profileData.createdAt}
+//                     </span>
+//                   </div>
+//                 </div>
+//                 <div className="flex gap-4 mt-4">
+//                   <div className="flex items-center gap-1">
+//                     <span className="font-bold text-sm">120</span>
+//                     <span className="text-gray-500 text-sm">Following</span>
+//                   </div>
+//                   <div className="flex items-center gap-1">
+//                     <span className="font-bold text-sm">150</span>
+//                     <span className="text-gray-500 text-sm">Followers</span>
+//                   </div>
 //                 </div>
 //               </div>
-//               <div className="flex gap-2">
-//                 <div className="flex gap-1 items-center">
-//                   <span className="font-bold text-xs">
-//                     {user.followingsCount}
-//                   </span>
-//                   <span className="text-slate-500 text-xs">Following</span>
+
+//               <div className="flex flex-col items-center">
+//                 <div className="flex gap-3 mt-6">
+//                   <div className="relative flex-1 py-3 font-semibold text-blue-500 text-center cursor-pointer">
+//                     Posts
+//                     <div className="bottom-0 left-0 absolute bg-blue-500 w-full h-1"></div>
+//                   </div>
+//                   <div className="relative flex-1 py-3 font-semibold text-blue-500 text-center cursor-pointer">
+//                     Reels
+//                     <div className="bottom-0 left-0 absolute bg-blue-500 w-full h-1"></div>
+//                   </div>
 //                 </div>
-//                 <div className="flex gap-1 items-center">
-//                   <span className="font-bold text-xs">
-//                     {user.followersCount}
-//                   </span>
-//                   <span className="text-slate-500 text-xs">Followers</span>
+
+//                 <div className="mt-8 px-4 pb-8 w-full max-w-xl">
+//                   <Posts feedType="saved" />
 //                 </div>
 //               </div>
 //             </div>
-//             <div className="flex w-full border-b border-gray-700 mt-4">
-//               <div
-//                 className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 relative cursor-pointer"
-//                 onClick={() => setFeedType("posts")}
-//               >
-//                 Posts
-//                 {feedType === "posts" && (
-//                   <div className="absolute bottom-0 w-10 h-1 rounded-full bg-primary" />
-//                 )}
-//               </div>
-//             </div>
-//             <div className="mt-8">
-//               <Posts
-//                 feedType={feedType}
-//                 userId={id}
-//                 isMyPost={isMyProfile}
-//                 reduceCount={reduceCount}
-//               />
-//             </div>
-//           </>
-//         )}
+//           )}
+//         </div>
 //       </div>
-//     </div>
+//     </MainLayout>
 //   );
 // };
 
