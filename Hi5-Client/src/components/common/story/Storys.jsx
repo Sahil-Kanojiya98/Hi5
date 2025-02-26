@@ -1,348 +1,420 @@
+import { useCallback, useEffect, useState } from "react";
+import Story from "./Story";
 import {
-  FaCamera,
-  FaChevronLeft,
-  FaChevronRight,
-  FaHeart,
-  FaPaperPlane,
-  FaTimes,
-} from "react-icons/fa";
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+  CameraAlt,
+  ChevronLeft,
+  ChevronRight,
+  Favorite,
+  Close,
+  DeleteOutline,
+} from "@mui/icons-material";
+import DeleteConfirmationModal from "../../temp/DeleteConfirmationModal";
+import axiosInstance from "../../../services/axios.config";
+import { deleteStory, getMyStorys } from "../../../services/api";
+import { StoryCreatedToast as displayStoryCreatedToast } from "../../providers/ToastProvider.jsx";
+import MyStorySkeleton from "../../skeletons/MyStorySkeleton.jsx";
 
 const Stories = () => {
-  const [isCreateStoryModalOpen, setIsCreateStoryModalOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedStory, setSelectedStory] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const userStorys = [
+  const uStorys = [
     {
-      isImage: true,
-      media: "https://picsum.photos/id/1/200/300",
+      id: 1,
+      fullname: "Raju Shrinivasa",
+      profilePictureUrl: "/resource/user/profileImage/default.png",
+      data: [
+        {
+          isImage: true,
+          media: "https://picsum.photos/id/1/200/300",
+        },
+        {
+          isImage: true,
+          media: "https://picsum.photos/id/2/200/300",
+        },
+        {
+          isImage: true,
+          media: "https://picsum.photos/id/3/200/300",
+        },
+        {
+          isImage: true,
+          media: "https://picsum.photos/id/4/200/300",
+        },
+        {
+          isImage: false,
+          media: "https://www.w3schools.com/html/mov_bbb.mp4",
+        },
+      ],
     },
     {
-      isImage: true,
-      media: "https://picsum.photos/id/2/200/300",
+      id: 2,
+      fullname: "shree hari",
+      profilePictureUrl: "/resource/user/profileImage/default.png",
+      data: [
+        {
+          isImage: true,
+          media: "https://picsum.photos/id/1/200/300",
+        },
+        {
+          isImage: false,
+          media: "https://www.w3schools.com/html/mov_bbb.mp4",
+        },
+      ],
     },
     {
-      isImage: true,
-      media: "https://picsum.photos/id/3/200/300",
-    },
-    {
-      isImage: true,
-      media: "https://picsum.photos/id/4/200/300",
-    },
-    {
-      isImage: false,
-      media: "https://www.w3schools.com/html/mov_bbb.mp4",
+      id: 3,
+      fullname: "Hello World",
+      profilePictureUrl: "/resource/user/profileImage/default.png",
+      data: [
+        {
+          isImage: true,
+          media: "https://picsum.photos/id/1/200/300",
+        },
+      ],
     },
   ];
 
-  const handleStoryClick = (story) => {
-    setSelectedStory(story);
-    setIsModalOpen(true);
+  const [myStorys, setMyStorys] = useState([
+    {
+      newStoryModel: true,
+    },
+  ]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchStories = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getMyStorys();
+      setMyStorys([
+        ...response.data,
+        {
+          newStoryModel: true,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error fetching stories:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setSelectedStory(null);
-    setCurrentImageIndex(0);
-  };
+  useEffect(() => {
+    fetchStories();
+  }, []);
 
+  const [userStorys, setUserStorys] = useState(uStorys);
+
+  const [isCreateStoryModalOpen, setIsCreateStoryModalOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const handleCreateStoryModelOpen = () => {
+    setCurrentIndex(0);
+    setIsPending(false);
+    setIsError(null);
     setIsCreateStoryModalOpen(true);
   };
-
-  const handleCreateStoryModelClose = () => {
+  const handleCreateStoryModelClose = useCallback(() => {
+    setCurrentIndex(0);
     setIsCreateStoryModalOpen(false);
-  };
+  }, [setCurrentIndex, setIsCreateStoryModalOpen]);
 
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => {
-      if (prevIndex === userStorys.length - 1) {
-        handleModalClose();
+  // const nextImage = () => {
+  //   setCurrentIndex((prevIndex) => {
+  //     if (prevIndex === myStorys.length - 1) {
+  //       handleCreateStoryModelClose();
+  //       setCurrentIndex(0);
+  //     }
+  //     return prevIndex < myStorys.length - 1 ? prevIndex + 1 : prevIndex;
+  //   });
+  // };
+
+  const nextImage = useCallback(() => {
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex === myStorys.length - 1) {
+        handleCreateStoryModelClose();
+        setCurrentIndex(0);
       }
-      return prevIndex < userStorys.length - 1 ? prevIndex + 1 : prevIndex;
+      return prevIndex < myStorys.length - 1 ? prevIndex + 1 : prevIndex;
     });
-  };
+  }, [myStorys.length, handleCreateStoryModelClose]);
 
   const previousImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : prevIndex
-    );
+    setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
   };
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        handleModalClose();
+        handleCreateStoryModelClose();
       }
     };
-
-    if (isModalOpen) {
+    if (isCreateStoryModalOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "auto";
     };
-  }, [isModalOpen]);
+  }, [isCreateStoryModalOpen, handleCreateStoryModelClose]);
 
-  const [storyPreview, setStoryPreview] = useState(null);
-  const [isImage, setIsImage] = useState(true);
+  useEffect(() => {
+    let timer;
+    if (isCreateStoryModalOpen) {
+      timer = setInterval(() => {
+        if (currentIndex < myStorys.length - 1) {
+          nextImage();
+        }
+      }, 2000);
+    }
+    return () => clearInterval(timer);
+  }, [isCreateStoryModalOpen, nextImage, myStorys, currentIndex]);
 
-  const handleStoryFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const isImageFile = file.type.startsWith("image/");
-      setIsImage(isImageFile);
-      const fileURL = URL.createObjectURL(file);
-      setStoryPreview(fileURL);
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [isPending, setIsPending] = useState(false);
+  const [isError, setIsError] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setFile(selectedFile);
+      setPreviewUrl(objectUrl);
     }
   };
 
-  const handleCreateStorySubmit = (e) => {
-    e.preventDefault();
-
-    if (!storyPreview) {
-      alert("Please upload a file to create a story!");
+  const handleCreateStory = async () => {
+    if (!file) {
       return;
     }
+    const formData = new FormData();
+    if (file) {
+      if (file.type.startsWith("image/")) {
+        formData.append("image", file);
+      } else if (file.type.startsWith("video/")) {
+        formData.append("video", file);
+      }
+    }
+    try {
+      const response = await axiosInstance.post("/story", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(percentCompleted);
+        },
+      });
+      console.log("Story created:", response.data);
+      setFile(null);
+      setPreviewUrl("");
+      handleCreateStoryModelClose();
+      setIsLoading(true);
+      fetchStories();
+      displayStoryCreatedToast();
+    } catch (error) {
+      setIsError(error);
+      console.error("Error:", error);
+    } finally {
+      setIsPending(false);
+    }
+  };
 
-    console.log({
-      file: storyPreview,
-    });
-
-    alert("Story created successfully!");
-    handleCreateStoryModelClose(); // Close modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const openDeleteModal = () => setIsDeleteModalOpen(true);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteStory(myStorys[currentIndex].id);
+      console.log("Story deleted");
+      setCurrentIndex(0);
+      handleCreateStoryModelClose();
+    } catch (error) {
+      console.error("Error deleting story: ", error);
+    } finally {
+      setIsDeleting(false);
+      closeDeleteModal();
+    }
   };
 
   return (
     <>
-      <div className="flex gap-4 bg-white shadow-md p-4 rounded-md w-full overflow-x-auto hide-scrollbar">
-        <div className="flex flex-col items-center text-center">
-          <div
-            className="flex justify-center items-center border-2 border-blue-500 rounded-full w-16 h-16 overflow-hidden"
-            onClick={handleCreateStoryModelOpen}
-          >
-            <FaCamera className="text-2xl text-blue-500" />
+      <div className="flex gap-4 bg-white shadow-md p-4 rounded-md w-full max-w-xl overflow-x-auto hide-scrollbar">
+        {isLoading ? (
+          <MyStorySkeleton />
+        ) : (
+          <div className="flex flex-col items-center text-center">
+            <div
+              className="flex justify-center items-center border-2 border-blue-500 rounded-full w-16 h-16 overflow-hidden"
+              onClick={handleCreateStoryModelOpen}
+            >
+              <CameraAlt className="text-blue-500 text-2xl" />
+            </div>
+            <p className="mt-2 w-20 text-gray-700 text-sm truncate">My Story</p>
           </div>
-          <p className="mt-2 w-20 text-gray-700 text-sm truncate">Your Name</p>
-        </div>
+        )}
 
-        {stories.map((story) => (
-          <Story
-            key={story.id}
-            story={story}
-            onClickHandler={handleStoryClick}
-          />
+        {userStorys.map((story) => (
+          <Story key={story.id} story={story} />
         ))}
       </div>
 
-      {/* Modal for Viewing Story Images */}
-      {isModalOpen && selectedStory && (
+      {isCreateStoryModalOpen && (
         <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 transition-all">
-          {/* Close Button */}
           <button
-            onClick={handleModalClose}
+            onClick={handleCreateStoryModelClose}
             className="top-4 right-4 z-10 fixed bg-gray-500 p-2 rounded-full text-white"
-            aria-label="Close Modal"
           >
-            <FaTimes className="text-2xl" />
+            <Close className="text-2xl" />
           </button>
 
           <div className="relative flex flex-col justify-center items-center bg-white shadow-lg rounded-md w-full max-w-md h-screen">
             <div className="top-7 sm:top-0 left-0 absolute flex gap-1 px-4 pt-2 w-full">
-              {userStorys.map((_, index) => (
+              {myStorys.map((_, index) => (
                 <div
                   key={index}
                   className={`h-1 flex-1 rounded-md transition-all ${
-                    index <= currentImageIndex ? "bg-blue-500" : "bg-gray-300"
+                    index <= currentIndex ? "bg-blue-500" : "bg-gray-300"
                   }`}
                 ></div>
               ))}
             </div>
 
-            {userStorys[currentImageIndex]?.isImage ? (
-              <img
-                src={userStorys[currentImageIndex]?.media}
-                alt={`Story image ${currentImageIndex + 1}`}
-                className="mb-4 rounded-md w-full object-contain"
-              />
-            ) : (
-              <video
-                src={userStorys[currentImageIndex]?.media}
-                autoPlay
-                className="mb-4 rounded-md w-full object-contain"
-              />
+            {currentIndex < myStorys.length - 1 && (
+              <button
+                className="top-6 right-1 absolute flex items-center space-x-1 px-4 pt-2 hover:text-red-500 hover:scale-110 transition duration-200 transform"
+                onClick={openDeleteModal}
+              >
+                <DeleteOutline
+                  sx={{
+                    fontSize: { xs: 25, sm: 28, md: 30 },
+                  }}
+                  className="text-gray-600 hover:text-red-500 cursor-pointer"
+                />
+              </button>
+            )}
+
+            {currentIndex < myStorys.length - 1 &&
+              (myStorys[currentIndex]?.imageUrl ? (
+                <img
+                  src={myStorys[currentIndex]?.imageUrl}
+                  alt={`Story image ${currentIndex + 1}`}
+                  className="mb-4 rounded-md w-full object-contain"
+                />
+              ) : (
+                <video
+                  src={myStorys[currentIndex]?.videoUrl}
+                  autoPlay
+                  className="mb-4 rounded-md w-full object-contain"
+                />
+              ))}
+
+            {currentIndex === myStorys.length - 1 && (
+              <>
+                {file === null && <p>no file is selected</p>}
+                {file?.type?.startsWith("image/") && (
+                  <img
+                    src={previewUrl}
+                    alt={`Story image ${currentIndex + 1}`}
+                    className="mb-4 rounded-md w-full object-contain"
+                  />
+                )}
+                {file?.type?.startsWith("video/") && (
+                  <video
+                    src={previewUrl}
+                    autoPlay
+                    className="mb-4 rounded-md w-full object-contain"
+                  />
+                )}
+              </>
             )}
 
             <div className="bottom-8 absolute px-4 py-2 w-full">
-              <div className="flex justify-between items-center bg-gray-800 bg-opacity-50 shadow-lg px-2 py-2 rounded-xl">
-                <div className="flex items-center bg-gray-600 bg-opacity-80 px-4 py-2 rounded-xl w-full sm:max-w-md h-12">
-                  <input
-                    type="text"
-                    placeholder="Write a reply..."
-                    className="flex-grow bg-transparent opacity-100 px-4 py-2 rounded-lg w-full text-white focus:outline-none placeholder-gray-400"
-                  />
-
-                  <button
-                    onClick={() => alert("Send clicked!")}
-                    className="flex items-center bg-transparent hover:bg-blue-500 hover:bg-opacity-70 ml-2 px-4 py-2 rounded-lg text-white hover:text-white transition-all"
-                  >
-                    <FaPaperPlane />
-                  </button>
-                </div>
-
-                <div className="flex space-x-2 ml-4">
-                  <button
-                    onClick={() => alert("Like clicked!")}
-                    className="flex items-center bg-transparent hover:bg-red-500 hover:bg-opacity-70 p-3 rounded-lg text-white text-xl hover:text-white transition-all"
-                  >
-                    <FaHeart />
-                  </button>
+              <div className="flex flex-col justify-center items-center bg-gray-800 bg-opacity-50 shadow-lg py-2 rounded-xl">
+                {isPending && (
+                  <div className="px-2 pb-3 w-full">
+                    <div className="bg-gray-200 rounded-full w-full h-2">
+                      <div
+                        className="bg-blue-600 rounded-full h-2 transition-all duration-300"
+                        style={{ width: `${uploadProgress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+                {isError && (
+                  <div className="px-2 pb-3 w-full">
+                    <div className="mt-2 text-red-500 text-sm text-center">
+                      {isError?.message}
+                    </div>
+                  </div>
+                )}
+                <div className="flex justify-center items-center space-x-2">
+                  {currentIndex < myStorys.length - 1 && (
+                    <button
+                      onClick={() => alert("Like clicked!")}
+                      className="flex items-center gap-2 bg-transparent hover:bg-red-500 hover:bg-opacity-70 p-3 rounded-lg text-white hover:text-white text-xl transition-all"
+                    >
+                      <Favorite />
+                      <span>{myStorys[currentIndex]?.likeCount}</span>
+                    </button>
+                  )}
+                  {currentIndex === myStorys.length - 1 && (
+                    <>
+                      <label className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 p-3 rounded-lg text-white transition-all cursor-pointer">
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/*,video/*"
+                          onChange={handleFileChange}
+                        />
+                        <span>Upload</span>
+                      </label>
+                      <button
+                        onClick={handleCreateStory}
+                        className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 p-3 rounded-lg text-white transition-all cursor-pointer"
+                      >
+                        Create Story
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
 
             <button
               onClick={previousImage}
-              className="top-1/2 left-2 absolute bg-gray-400 hover:bg-gray-700 opacity-50 shadow-lg p-3 rounded-full text-white transform -translate-y-1/2"
+              className="top-1/2 left-2 absolute bg-gray-400 hover:bg-gray-700 opacity-50 shadow-lg p-3 rounded-full text-white -translate-y-1/2 transform"
               aria-label="Previous Story"
             >
-              <FaChevronLeft className="text-2xl" />
+              <ChevronLeft className="text-2xl" />
             </button>
             <button
               onClick={nextImage}
-              className="top-1/2 right-2 absolute bg-gray-400 hover:bg-gray-700 opacity-50 shadow-lg p-3 rounded-full text-white transform -translate-y-1/2"
+              className="top-1/2 right-2 absolute bg-gray-400 hover:bg-gray-700 opacity-50 shadow-lg p-3 rounded-full text-white -translate-y-1/2 transform"
               aria-label="Next Story"
             >
-              <FaChevronRight className="text-2xl" />
+              <ChevronRight className="text-2xl" />
             </button>
           </div>
         </div>
       )}
 
-      {isCreateStoryModalOpen && (
-        <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 transition-all">
-          <div className="relative bg-white shadow-lg p-6 rounded-lg w-full max-w-md">
-            {/* Close Button */}
-            <button
-              onClick={handleCreateStoryModelClose}
-              className="top-4 right-4 absolute bg-gray-500 p-2 rounded-full text-white"
-              aria-label="Close Modal"
-            >
-              <FaTimes className="text-2xl" />
-            </button>
-
-            {/* Modal Header */}
-            <h2 className="mb-4 font-bold text-gray-800 text-xl">
-              Create Your Story
-            </h2>
-
-            {/* Story Input */}
-            <form onSubmit={handleCreateStorySubmit}>
-              {/* File Upload */}
-              <div className="mb-4">
-                <label
-                  htmlFor="story-file"
-                  className="block mb-2 font-medium text-gray-600 text-sm"
-                >
-                  Upload an Image or Video
-                </label>
-                <input
-                  type="file"
-                  id="story-file"
-                  accept="image/*,video/*"
-                  className="border-gray-300 p-2 border rounded-lg w-full cursor-pointer"
-                  onChange={handleStoryFileChange}
-                />
-              </div>
-
-              {/* File Preview */}
-              {storyPreview && (
-                <div className="mb-4">
-                  {isImage ? (
-                    <img
-                      src={storyPreview}
-                      alt="Story Preview"
-                      className="rounded-lg w-full object-cover"
-                    />
-                  ) : (
-                    <video
-                      src={storyPreview}
-                      controls
-                      className="rounded-lg w-full object-cover"
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg w-full text-white transition-all"
-              >
-                Post Story
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        closeModal={closeDeleteModal}
+        confirmDelete={confirmDelete}
+        isDeleting={isDeleting}
+      />
     </>
   );
 };
-
-function Story({ story, onClickHandler }) {
-  return (
-    <div
-      className="flex flex-col items-center text-center cursor-pointer"
-      onClick={() => onClickHandler(story)}
-    >
-      <div className="border-2 border-blue-500 rounded-full w-16 h-16 overflow-hidden">
-        <img
-          src={story.profileImage}
-          alt={`${story.username}'s profile`}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <p className="mt-2 w-20 text-gray-700 text-sm truncate">
-        {story.username}
-      </p>
-    </div>
-  );
-}
-
-Story.propTypes = {
-  story: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    username: PropTypes.string.isRequired,
-    profileImage: PropTypes.string.isRequired,
-  }).isRequired,
-  onClickHandler: PropTypes.func.isRequired,
-};
-
-const stories = [
-  {
-    id: 1,
-    username: "sahilkanojiya_sureshbhai",
-    profileImage: "/profileImage/default.png",
-  },
-  {
-    id: 2,
-    username: "user2",
-    profileImage: "/profileImage/default.png",
-  },
-  {
-    id: 3,
-    username: "user3",
-    profileImage: "/profileImage/default.png",
-  },
-];
 
 export default Stories;

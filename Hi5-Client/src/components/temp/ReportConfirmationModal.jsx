@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
-// Enum mapping to display-friendly strings
 const reportReasonsEnum = {
   HARASSMENT_BULLYING: "Harassment or Bullying",
   HATE_SPEECH: "Hate Speech",
@@ -28,18 +27,22 @@ const ReportConfirmationModal = ({
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const handleEscape = (event) => {
+    const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         closeModal();
       }
     };
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
     }
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleEscape);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "auto";
     };
-  }, [isOpen, closeModal]);
+  }, [isOpen]);
 
   const handleOutsideClick = (event) => {
     if (event.target === event.currentTarget) {
@@ -90,7 +93,7 @@ const ReportConfirmationModal = ({
             <p className="mb-6 text-gray-700 dark:text-gray-300">
               Please select a reason for reporting this post:
             </p>
-            <div className="border-2 mb-4 px-4 py-3 rounded-lg max-h-60 overflow-y-auto hide-scrollbar">
+            <div className="mb-4 px-4 py-3 border-2 rounded-lg max-h-60 overflow-y-auto hide-scrollbar">
               {Object.keys(reportReasonsEnum).map((key) => (
                 <div key={key} className="flex items-center mb-3">
                   <input
@@ -117,7 +120,7 @@ const ReportConfirmationModal = ({
               ))}
             </div>
 
-            <div className="mb-3 text-red-700 text-xs dark:text-red-400">
+            <div className="mb-3 text-red-700 dark:text-red-400 text-xs">
               {error}
             </div>
             <div className="flex justify-end gap-4">

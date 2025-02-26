@@ -11,26 +11,29 @@ export default defineConfig({
         target: "http://localhost:8080",
         changeOrigin: true,
       },
-      "/user/": {
+      "/resource/user/": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },
-      "/post/": {
+      "/resource/post/": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },
-      "/story/": {
+      "/resource/story/": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },
-      "/reel/": {
+      "/resource/reel/": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },
-      "/chat/": {
+      "/resource/chat/": {
         target: "http://localhost:8080",
         changeOrigin: true,
       },
     },
+  },
+  define: {
+    global: "window",
   },
 });

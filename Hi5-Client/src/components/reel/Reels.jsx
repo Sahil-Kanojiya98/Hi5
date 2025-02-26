@@ -19,6 +19,10 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
     switch ({ feedType, userId }) {
       case "Random":
         return `/reel`;
+      // case "posts":
+      //   return `/post/user/${userId}?page=${page}`;
+      // case "saved":
+      //   return `/post/saved?pageNo=${page}&pageSize=10`;
       default:
         return `/reel`;
     }
@@ -27,7 +31,11 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
   const fetchReels = async () => {
     try {
       const endpoint = getReelEndpoint();
-      const response = await axiosInstance.get(endpoint);
+      const response = await axiosInstance.get(endpoint, {
+        params: {
+          size: 10,
+        },
+      });
       console.log(response.data);
       if (response.data.length === 0) {
         setHasMore(false);

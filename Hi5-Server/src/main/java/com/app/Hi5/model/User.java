@@ -85,11 +85,11 @@ public class User {
 
     @Field("profile_image_url")
     @Builder.Default
-    private String profileImageUrl = "/user/profileImage/default.png";
+    private String profileImageUrl = "/resource/user/profileImage/default.png";
 
     @Field("cover_image_url")
     @Builder.Default
-    private String coverImageUrl = "/user/coverImage/default.png";
+    private String coverImageUrl = "/resource/user/coverImage/default.png";
 
     //  Settings
     @Builder.Default

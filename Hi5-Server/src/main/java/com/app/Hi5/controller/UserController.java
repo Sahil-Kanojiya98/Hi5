@@ -1,25 +1,18 @@
 package com.app.Hi5.controller;
 
-import com.app.Hi5.dto.request.UpdateUserRequest;
-import com.app.Hi5.dto.response.FollowUserResponse;
-import com.app.Hi5.dto.response.GetMeResponse;
-import com.app.Hi5.dto.response.UpdateImagesResponse;
-import com.app.Hi5.dto.response.UserProfileResponse;
+import com.app.Hi5.dto.response.*;
 import com.app.Hi5.model.User;
 import com.app.Hi5.security.UserDetailsImpl;
 import com.app.Hi5.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.util.List;
 
 
 @Slf4j
@@ -37,6 +30,13 @@ public class UserController {
         User user = userDetails.getUser();
         log.info("User details fetched successfully for username: {}", user.getUsername());
         return GetMeResponse.builder().id(user.getId().toHexString()).email(user.getEmail()).username(user.getUsername()).role(user.getRole()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).status(HttpStatus.OK).statusCode(HttpStatus.OK.value()).build().toResponseEntity();
+    }
+
+    @GetMapping("/search/{keyword}")
+    @PreAuthorize("principal.isAccountNonLocked()")
+    public ResponseEntity<List<UserSearchResponse>> getUsersByPrefix(@PathVariable("keyword") String keyword, @RequestParam("page") Integer page, @RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<UserSearchResponse> responses = userService.getUsersByKeyword(keyword,page,size);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
 //    @GetMapping("/{userId}")

@@ -13,7 +13,7 @@ const register = async (body) => {
 };
 
 const registerVerifyOtp = async (otp, body) => {
-  return axiosInstance.post(`/auth/register/${otp}`, body);
+  return axiosInstance.post(`/auth/register/${encodeURIComponent(otp)}`, body);
 };
 
 const activateUser = async (token, body) => {
@@ -33,7 +33,7 @@ const login = async (body) => {
 };
 
 const loginVerifyOTP = async (otp, token) => {
-  return axiosInstance.post(`/auth/login/${otp}`, null, {
+  return axiosInstance.post(`/auth/login/${encodeURIComponent(otp)}`, null, {
     headers: {
       IdentificationToken: token,
     },
@@ -45,24 +45,27 @@ const forgotPassword = async (body) => {
 };
 
 const forgotPasswordVerifyOTP = async (otp, body) => {
-  return axiosInstance.post(`/auth/forget-password/${otp}`, body);
+  return axiosInstance.post(
+    `/auth/forget-password/${encodeURIComponent(otp)}`,
+    body
+  );
 };
 
-// const deletePost = async (postId) => {
-//   return axiosInstance.delete(`/post/${postId}`);
-// };
+const deletePost = async (postId) => {
+  return axiosInstance.delete(`/post/${encodeURIComponent(postId)}`);
+};
 
-// const reportPost = async (body) => {
-//   return axiosInstance.post("/report", body);
-// };
+const deleteReel = async (reelId) => {
+  return axiosInstance.delete(`/reel/${encodeURIComponent(reelId)}`);
+};
 
-// const likePost = async (postId) => {
-//   return axiosInstance.post(`/post/${postId}/like`);
-// };
+const deleteStory = async (storyId) => {
+  return axiosInstance.delete(`/story/${encodeURIComponent(storyId)}`);
+};
 
-// const unlikePost = async (postId) => {
-//   return axiosInstance.delete(`/like/${postId}/like`);
-// };
+const deleteComment = async (commentId) => {
+  return axiosInstance.delete(`/comment/${encodeURIComponent(commentId)}`);
+};
 
 const save = async (body) => {
   return axiosInstance.post("/save", body);
@@ -78,9 +81,9 @@ const unsave = async (body) => {
 //   return axiosInstance.get(`/shared/post?postId=${postId}`);
 // };
 
-// const getUserProfile = async (userId) => {
-//   return axiosInstance.get(`/user/${userId}`);
-// };
+const getUserProfile = async (userId) => {
+  return axiosInstance.get(`/user/${userId}`);
+};
 
 const makeComment = async (body) => {
   return axiosInstance.post("/comment", body);
@@ -96,9 +99,31 @@ const unlikeEntity = async (body) => {
   });
 };
 
-const reportEntity = async (body)=>{
+const reportEntity = async (body) => {
   return axiosInstance.post("/report", body);
-}
+};
+
+const getMyStorys = async () => {
+  return axiosInstance.get("/story/my");
+};
+
+const searchUsersByKeyword = async (keyword, body) => {
+  return axiosInstance.get(`/user/search/${encodeURIComponent(keyword)}`, {
+    params: body,
+  });
+};
+
+const createChat = async (userId) => {
+  return axiosInstance.post(`/chat/${userId}`);
+};
+
+const getMyChats = async () => {
+  return axiosInstance.get("/chat");
+};
+
+const getMessagesByChatId = async (chatId) => {
+  return axiosInstance.get(`/message/${chatId}`);
+};
 
 export {
   checkEmail,
@@ -111,16 +136,21 @@ export {
   loginVerifyOTP,
   forgotPassword,
   forgotPasswordVerifyOTP,
-  // deletePost,
-  // reportPost,
-  // likePost,
-  // unlikePost,
+  deletePost,
+  deleteReel,
+  deleteStory,
+  deleteComment,
   save,
   unsave,
   // getSharedPost,
-  // getUserProfile,
+  getUserProfile,
   makeComment,
   likeEntity,
   unlikeEntity,
   reportEntity,
+  getMyStorys,
+  searchUsersByKeyword,
+  getMyChats,
+  createChat,
+  getMessagesByChatId,
 };

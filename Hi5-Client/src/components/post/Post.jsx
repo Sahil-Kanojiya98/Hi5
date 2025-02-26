@@ -9,27 +9,21 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import ReportIcon from "@mui/icons-material/Report";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-// import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
+import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
 import ReportConfirmationModal from "../temp/ReportConfirmationModal";
 import TimeAgo from "../temp/TimeAgo";
 import CommentModel from "../comment/CommentModel";
-
 import {
+  deletePost,
   likeEntity,
   reportEntity,
   save,
   unlikeEntity,
   unsave,
-  // deletePost,
 } from "../../services/api";
 import { useSelector } from "react-redux";
 
-const Post = ({
-  post,
-  // removePost,
-  isMyProfilePosts,
-}) => {
-  
+const Post = ({ post, removePost, isMyProfilePosts }) => {
   const user = useSelector((state) => state.user.profile);
   const isMyPost = post.userId === user.id;
   console.log(post.userId + "   " + user.id);
@@ -42,26 +36,23 @@ const Post = ({
     setIsCommentModelOpen(false);
   };
 
-  // console.log(isPostModelOpen);
-
-  // const [isPostDeleteModalOpen, setIsPostDeleteModalOpen] = useState(false);
-  // const [isDeleting, setIsDeleting] = useState(false);
-  // const openPostDeleteModal = () => setIsPostDeleteModalOpen(true);
-  // const closePostDeleteModal = () => setIsPostDeleteModalOpen(false);
-  // const confirmDelete = async () => {
-  //   removePost();
-  // setIsDeleting(true);
-  // try {
-  //   await deletePost(post.id);
-  //   console.log("Post deleted: " + post.id);
-  //   removePost(post.id);
-  // } catch (error) {
-  //   console.error("Error deleting post: ", error);
-  // } finally {
-  //   setIsDeleting(false);
-  //   closePostDeleteModal();
-  // }
-  // };
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const openDeleteModal = () => setIsDeleteModalOpen(true);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deletePost(post.id);
+      console.log("Post deleted: " + post.id);
+      removePost(post.id);
+    } catch (error) {
+      console.error("Error deleting post: ", error);
+    } finally {
+      setIsDeleting(false);
+      closeDeleteModal();
+    }
+  };
 
   const [isReported, setIsReported] = useState(
     post.reportStatus === "REPORTED"
@@ -138,7 +129,7 @@ const Post = ({
         .share({
           title: "Check out this post!",
           text: "This is an interesting post I found.",
-          url: "http://localhost:3000/share/reel/" + post.id,
+          url: "http://localhost:3000/share/post/" + post.id,
         })
         .then(() => console.log("Share successful"))
         .catch((error) => console.error("Share failed:", error));
@@ -149,7 +140,6 @@ const Post = ({
 
   return (
     <div className="bg-white dark:bg-black shadow-md mx-auto mb-6 p-3 sm:p-4 rounded-lg w-full max-w-xl">
-      {/* Header Section */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-3">
           <img
@@ -170,11 +160,10 @@ const Post = ({
           </div>
         </div>
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* Delete button for the user's own post */}
           {isMyProfilePosts && (
             <button
               className="flex items-center space-x-1 hover:text-red-500 hover:scale-110 transition duration-200 transform"
-              // onClick={openPostDeleteModal}
+              onClick={openDeleteModal}
             >
               <DeleteOutlineOutlinedIcon className="text-gray-600 hover:text-red-500 cursor-pointer" />
             </button>
@@ -194,7 +183,6 @@ const Post = ({
               />
             ))}
 
-          {/* Save/Unsave button */}
           {isSaved ? (
             <BookmarkSharpIcon
               className="text-yellow-600 hover:scale-110 transition duration-200 cursor-pointer transform"
@@ -211,14 +199,12 @@ const Post = ({
         </div>
       </div>
 
-      {/* Content Section */}
-      <div className="mb-4">
-        <p className="text-gray-800 dark:text-gray-200 text-sm sm:text-base leading-relaxed">
+      <div className="mb-4 w-full">
+        <p className="px-2 w-full text-gray-800 dark:text-gray-200 text-sm sm:text-base break-words whitespace-pre-wrap">
           {post.content}
         </p>
       </div>
 
-      {/* Image/Video Section */}
       {post.imageUrl && (
         <div className="mb-4 w-full h-full">
           <img
@@ -238,10 +224,8 @@ const Post = ({
         </div>
       )}
 
-      {/* Actions Section */}
       <div className="flex justify-between items-center text-gray-500">
         <div className="flex items-center space-x-5 ml-2">
-          {/* Like Button */}
           <button
             className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
             onClick={likeClickHandler}
@@ -256,7 +240,6 @@ const Post = ({
             </span>
           </button>
 
-          {/* Comment Button */}
           <button
             className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
             onClick={openCommentModel}
@@ -267,7 +250,6 @@ const Post = ({
             </span>
           </button>
 
-          {/* Share Button */}
           <button
             className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
             onClick={shareClickHandler}
@@ -278,21 +260,18 @@ const Post = ({
         </div>
       </div>
 
-      {/* delete */}
-      {/* <DeleteConfirmationModal
-        isOpen={isPostDeleteModalOpen}
-        closeModal={closePostDeleteModal}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        closeModal={closeDeleteModal}
         confirmDelete={confirmDelete}
         isDeleting={isDeleting}
-      /> */}
-
+      />
       <ReportConfirmationModal
         isOpen={isReportModalOpen}
         closeModal={closeReportModal}
         reportPost={confirmReport}
         isReporting={isReporting}
       />
-
       <CommentModel
         isOpen={isCommentModelOpen}
         onClose={closeCommentModel}

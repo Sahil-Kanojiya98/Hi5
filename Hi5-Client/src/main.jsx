@@ -9,19 +9,22 @@ import App from "./App.jsx";
 import { BrowserRouter as Router } from "react-router-dom";
 import AuthProvider from "./components/providers/AuthProvider.jsx";
 import { ToastProvider } from "./components/providers/ToastProvider.jsx";
+import WebSocketProvider from "./socket/WebSocketProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
   <Suspense fallback={<Preloader />}>
     <StoreProvider>
       <AuthProvider>
-        <ThemeProvider>
-          <ToastProvider>
+        <WebSocketProvider>
+          <ThemeProvider>
             <Router>
-              <App />
+              <ToastProvider>
+                <App />
+              </ToastProvider>
             </Router>
-          </ToastProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </WebSocketProvider>
       </AuthProvider>
     </StoreProvider>
   </Suspense>

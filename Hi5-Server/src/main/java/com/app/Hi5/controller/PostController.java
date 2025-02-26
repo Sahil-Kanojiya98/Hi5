@@ -31,15 +31,15 @@ public class PostController {
         return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
-//    @DeleteMapping("/{post_id}")
-//    public ResponseEntity<String> deletePost(@PathVariable("post_id") String post_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        postService.deletePost(userDetails.getUser(), post_id);
-//        return new ResponseEntity<>("post deleted successfully!", HttpStatus.OK);
-//    }
+    @DeleteMapping("/{post_id}")
+    public ResponseEntity<String> deletePost(@PathVariable("post_id") String postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.deletePost(userDetails.getUser(), postId);
+        return new ResponseEntity<>("post deleted successfully!", HttpStatus.OK);
+    }
 
     @GetMapping
-    public List<PostResponse> getAllRandomPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.findRandomPosts(userDetails.getUser(), 10);
+    public List<PostResponse> getAllRandomPosts(@RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.findRandomPosts(userDetails.getUser(), size);
     }
 
 //    @GetMapping("/saved")

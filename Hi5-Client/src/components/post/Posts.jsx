@@ -4,7 +4,6 @@ import Post from "./Post";
 import PropTypes from "prop-types";
 import axiosInstance from "../../services/axios.config";
 import { useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
@@ -34,7 +33,11 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
   const fetchPosts = async () => {
     try {
       const endpoint = getPostEndpoint();
-      const response = await axiosInstance.get(endpoint);
+      const response = await axiosInstance.get(endpoint, {
+        params: {
+          size: 5,
+        },
+      });
       console.log(response.data);
       if (response.data.length === 0) {
         setHasMore(false);
@@ -75,8 +78,6 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
     });
   };
 
-  const getUniqueKey = () => uuidv4();
-
   return (
     <>
       <div className="mt-3 w-full">
@@ -112,7 +113,7 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
           >
             {posts.map((post) => (
               <Post
-                key={getUniqueKey()}
+                key={post.id}
                 post={post}
                 authUserId={user.id}
                 removePost={removePost}

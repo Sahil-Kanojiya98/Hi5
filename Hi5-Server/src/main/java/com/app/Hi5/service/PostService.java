@@ -59,27 +59,27 @@ public class PostService {
         }
     }
 
-//    public void deletePost(User user, String postId) {
-//        Post post = postRepository.findById(new ObjectId(postId)).orElseThrow(() -> new EntityNotFoundException("Post not found."));
-//        if (!post.getUserId().equals(user.getId().toHexString())) {
-//            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
-//        }
-//        try {
-//            if (post.getImageUrl() != null) {
-//                fileStorage.deleteFile(post.getImageUrl());
-//            }
-//            if (post.getVideoUrl() != null) {
-//                fileStorage.deleteFile(post.getVideoUrl());
-//            }
-//        } catch (IOException e) {
-//            log.error("Error while saving files for post: {}", e.getMessage(), e);
-//        } catch (Exception ex) {
-//            log.error("Unexpected error while creating post: {}", ex.getMessage(), ex);
-//        }
-//        user.getUserPostIds().remove(post.getId().toHexString());
-//        userRepository.save(user);
-//        postRepository.delete(post);
-//    }
+    public void deletePost(User user, String postId) {
+        Post post = postRepository.findById(new ObjectId(postId)).orElseThrow(() -> new EntityNotFoundException("Post not found."));
+        if (!post.getUserId().equals(user.getId().toHexString())) {
+            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
+        }
+        try {
+            if (post.getImageUrl() != null) {
+                fileStorage.deleteFile(post.getImageUrl());
+            }
+            if (post.getVideoUrl() != null) {
+                fileStorage.deleteFile(post.getVideoUrl());
+            }
+        } catch (IOException e) {
+            log.error("Error while saving files for post: {}", e.getMessage(), e);
+        } catch (Exception ex) {
+            log.error("Unexpected error while creating post: {}", ex.getMessage(), ex);
+        }
+        user.getUserPostIds().remove(post.getId().toHexString());
+        userRepository.save(user);
+        postRepository.delete(post);
+    }
 
     public List<PostResponse> findRandomPosts(User user, int numberOfPosts) {
         List<Post> randomPosts = postRepository.findRandomPosts(numberOfPosts);

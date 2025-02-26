@@ -4,6 +4,7 @@ import com.app.Hi5.dto.enums.LikeStatus;
 import com.app.Hi5.dto.enums.ReportStatus;
 import com.app.Hi5.dto.response.CommentResponse;
 import com.app.Hi5.exceptions.EntityNotFoundException;
+import com.app.Hi5.exceptions.UnauthorizedAccessException;
 import com.app.Hi5.exceptions.ValidationException;
 import com.app.Hi5.model.*;
 import com.app.Hi5.model.Enum.CommentType;
@@ -74,24 +75,24 @@ public class CommentService {
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-//    public void deleteComment(User user, String commentId) {
-//        Comment comment = commentRepository.findById(new ObjectId(commentId)).orElseThrow(() -> new EntityNotFoundException("Comment not found."));
-//        if (!comment.getUserId().equals(user.getId().toHexString())) {
-//            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
-//        }
-//        if (comment.getType().equals(CommentType.POST)){
-//            Post post=postRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(()->new EntityNotFoundException("Post not found"));
-//            post.getCommentIds().remove(comment.getId().toHexString());
-//            postRepository.save(post);
-//        } else if (comment.getType().equals(CommentType.REEL)) {
-//            Reel reel=reelRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(()->new EntityNotFoundException("Reel not found"));
-//            reel.getCommentIds().remove(comment.getId().toHexString());
-//            reelRepository.save(reel);
-//        }else {
-//            throw new ValidationException("Invalid Type");
-//        }
-//        commentRepository.delete(comment);
-//    }
+    public void deleteComment(User user, String commentId) {
+        Comment comment = commentRepository.findById(new ObjectId(commentId)).orElseThrow(() -> new EntityNotFoundException("Comment not found."));
+        if (!comment.getUserId().equals(user.getId().toHexString())) {
+            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
+        }
+        if (comment.getType().equals(CommentType.POST)){
+            Post post=postRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(()->new EntityNotFoundException("Post not found"));
+            post.getCommentIds().remove(comment.getId().toHexString());
+            postRepository.save(post);
+        } else if (comment.getType().equals(CommentType.REEL)) {
+            Reel reel=reelRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(()->new EntityNotFoundException("Reel not found"));
+            reel.getCommentIds().remove(comment.getId().toHexString());
+            reelRepository.save(reel);
+        }else {
+            throw new ValidationException("Invalid Type");
+        }
+        commentRepository.delete(comment);
+    }
 
 //    List<CommentResponseDTO> getComment(String postId, int page, int pageSize, User user);
 //

@@ -12,15 +12,13 @@ import ForgotPasswordPage from "./views/ForgotPasswordPage";
 import OAuth2Error from "./components/auth/OAuth2Error";
 import NotFound from "./components/temp/NotFound";
 import HomePage from "./views/HomePage";
-// import SearchPage from "./views/SearchPage";
 import ReelsPage from "./views/ReelsPage";
-// import ChatPage from "./views/ChatPage";
-// import NotificationsPage from "./views/NotificationsPage";
+import SearchPage from "./views/SearchPage";
+import ChatPage from "./views/ChatPage";
+import NotificationsPage from "./views/NotificationsPage";
 // import ProfilePage from "./views/ProfilePage";
 // import SettingsPage from "./views/SettingsPage";
 // import SharedMediaPage from "./views/SharedMediaPage";
-// import HomePage from "./pages/HomePage";
-// import ProfilePage from "./pages/ProfilePage";
 // import SavedPostsPage from "./pages/SavedPostsPage";
 // import SearchPage from "./pages/SearchPage";
 // import AdminPage from "./pages/AdminPage";
@@ -116,7 +114,7 @@ const RoutesConfig = () => {
         path="/search"
         element={
           <AuthGuard>
-            {/* <SearchPage /> */}
+            <SearchPage />
           </AuthGuard>
         }
       />
@@ -125,7 +123,16 @@ const RoutesConfig = () => {
         path="/chat"
         element={
           <AuthGuard>
-            {/* <ChatPage /> */}
+            <ChatPage />
+          </AuthGuard>
+        }
+      />
+
+      <Route
+        path="/chat/:userId"
+        element={
+          <AuthGuard>
+            <ChatPage />
           </AuthGuard>
         }
       />
@@ -142,17 +149,19 @@ const RoutesConfig = () => {
       <Route
         path="/profile/:userId"
         element={
-          <AuthGuard>
-            {/* <ProfilePage /> */}
-          </AuthGuard>
+          <></>
+          // <AuthGuard>
+          //   <ProfilePage />
+          //   </AuthGuard>
         }
       />
 
       <Route
         path="/notifications"
         element={
+          // <></>
           <AuthGuard>
-            {/* <NotificationsPage /> */}
+            <NotificationsPage />
           </AuthGuard>
         }
       />
@@ -160,18 +169,14 @@ const RoutesConfig = () => {
       <Route
         path="/settings"
         element={
-          <AuthGuard>
-            {/* <SettingsPage /> */}
-          </AuthGuard>
+          <></>
+          // <AuthGuard>
+          //   <SettingsPage />
+          // </AuthGuard>
         }
       />
 
       {/* <Route path="/share" element={<SharedMediaPage />} /> */}
-
-
-
-
-
 
       <Route
         path="/admin"
@@ -181,7 +186,6 @@ const RoutesConfig = () => {
           </AuthGuard>
         }
       />
-
 
       <Route path="*" element={<NotFound />} />
 

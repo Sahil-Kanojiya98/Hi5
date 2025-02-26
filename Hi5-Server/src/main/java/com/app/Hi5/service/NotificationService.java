@@ -1,4 +1,3 @@
-
 package com.app.Hi5.service;
 
 import com.app.Hi5.model.*;
@@ -101,6 +100,10 @@ public class NotificationService {
 
     public void makeNewReelSharedNotificationAndSend(User user) {
         log.info("notifiy network about new reel");
+    }
+
+    public void makeNewStorySharedNotificationAndSend(User user) {
+        log.info("notifiy network about new story");
     }
 
     public void makeCommentNotificationAndSend(User user, String relevantId, CommentType type) {

@@ -58,27 +58,27 @@ public class ReelService {
         }
     }
 
-//    public void deleteReel(User user, String postId) {
-//        Reel reel = reelRepository.findById(new ObjectId(postId)).orElseThrow(() -> new EntityNotFoundException("Reel not found."));
-//        if (!reel.getUserId().equals(user.getId().toHexString())) {
-//            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
-//        }
-//        try {
-//            if (reel.getThumbnailUrl() != null) {
-//                fileStorage.deleteFile(reel.getThumbnailUrl());
-//            }
-//            if (reel.getVideoUrl() != null) {
-//                fileStorage.deleteFile(reel.getVideoUrl());
-//            }
-//        } catch (IOException e) {
-//            log.error("Error while saving files for post: {}", e.getMessage(), e);
-//        } catch (Exception ex) {
-//            log.error("Unexpected error while creating post: {}", ex.getMessage(), ex);
-//        }
-//        user.getUserReelIds().remove(reel.getId().toHexString());
-//        userRepository.save(user);
-//        reelRepository.delete(reel);
-//    }
+    public void deleteReel(User user, String postId) {
+        Reel reel = reelRepository.findById(new ObjectId(postId)).orElseThrow(() -> new EntityNotFoundException("Reel not found."));
+        if (!reel.getUserId().equals(user.getId().toHexString())) {
+            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
+        }
+        try {
+            if (reel.getThumbnailUrl() != null) {
+                fileStorage.deleteFile(reel.getThumbnailUrl());
+            }
+            if (reel.getVideoUrl() != null) {
+                fileStorage.deleteFile(reel.getVideoUrl());
+            }
+        } catch (IOException e) {
+            log.error("Error while saving files for post: {}", e.getMessage(), e);
+        } catch (Exception ex) {
+            log.error("Unexpected error while creating post: {}", ex.getMessage(), ex);
+        }
+        user.getUserReelIds().remove(reel.getId().toHexString());
+        userRepository.save(user);
+        reelRepository.delete(reel);
+    }
 
     public List<ReelResponse> findRandomReels(User user, int numberOfPosts) {
         List<Reel> randomReels = reelRepository.findRandomReels(numberOfPosts);
@@ -87,7 +87,7 @@ public class ReelService {
             if (reelUser == null) {
                 return null;
             }
-            return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reelUser.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
+            return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 

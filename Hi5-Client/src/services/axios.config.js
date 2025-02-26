@@ -1,5 +1,7 @@
 import axios from "axios";
-import { getToken, removeToken } from "../utils/localStorage";
+import { getToken
+  // , removeToken
+ } from "../utils/localStorage";
 import { removeAuth } from "../redux/slices/authSlice";
 import store from "../redux/store";
 
@@ -55,9 +57,9 @@ axiosInstance.interceptors.response.use(
       }
 
       console.error("Token expired.");
-      removeToken();
-      store.dispatch(removeAuth());
-      window.location.href = "/login";
+      // removeToken();
+      // store.dispatch(removeAuth());
+      // window.location.href = "/login";
       return Promise.reject(error);
     }
     return Promise.reject(error);

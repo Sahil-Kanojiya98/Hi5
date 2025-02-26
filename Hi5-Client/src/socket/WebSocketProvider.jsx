@@ -1,0 +1,68 @@
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
+import WebSocketService from "./WebSocketService";
+
+const WebSocketContext = createContext(null);
+
+const WebSocketProvider = ({ children }) => {
+  console.log("WebSocketProvider");
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isInitializing = useSelector((state) => state.auth.isInitializing);
+  const userId = useSelector((state) => state?.user?.profile?.id);
+  const clientRef = useRef(null);
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated && !isInitializing && userId) {
+      console.log("Connecting WebSocket...");
+      clientRef.current = WebSocketService;
+      clientRef.current.connect(userId, () => {
+        setIsConnected(true);
+      });
+      return () => {
+        console.log("Disconnecting WebSocket...");
+        clientRef.current.disconnect();
+        setIsConnected(false);
+      };
+    }
+  }, [userId, isAuthenticated, isInitializing]);
+
+  const subscribeTopic = (topic, callback) => {
+    return clientRef.current.subscribeTopic(topic, callback);
+  };
+
+  const unsubscribeTopic = (subscription) => {
+    clientRef.current.unsubscribeTopic(subscription);
+  };
+
+  const publish = (path, body) => {
+    clientRef.current.publish(path, body);
+  };
+
+  if (!isAuthenticated && isInitializing && !isConnected) {
+    return null;
+  }
+
+  return (
+    <WebSocketContext.Provider
+      value={{
+        isConnected,
+        subscribeTopic,
+        unsubscribeTopic,
+        publish,
+      }}
+    >
+      {children}
+    </WebSocketContext.Provider>
+  );
+};
+
+WebSocketProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default WebSocketProvider;
+
+export const useWebSocket = () => useContext(WebSocketContext);

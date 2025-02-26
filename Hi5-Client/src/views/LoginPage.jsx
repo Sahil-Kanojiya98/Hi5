@@ -94,14 +94,14 @@ const LoginPage = () => {
 
   return (
     <section className="flex flex-col justify-center items-center bg-gray-100 dark:bg-gray-900 mx-auto px-6 py-8 min-h-screen">
-      <div className="relative border-gray-300 dark:border-gray-700 bg-white dark:bg-black shadow-lg sm:px-8 p-6 rounded-lg w-full max-w-md">
+      <div className="relative bg-white dark:bg-black shadow-lg p-6 sm:px-8 border-gray-300 dark:border-gray-700 rounded-lg w-full max-w-md">
         <div className="flex justify-center items-center mt-1 mb-3 text-center">
           <Link to="/">
             <img className="w-auto h-16" src={logo} alt="Hi5" />
           </Link>
         </div>
 
-        <h1 className="mb-4 font-bold text-center text-xl">
+        <h1 className="mb-4 font-bold text-xl text-center">
           {step === validationSchemas.length
             ? "Complete Your Profile"
             : "Login to Hi5"}
@@ -153,7 +153,7 @@ const LoginPage = () => {
                       <div>
                         <label
                           htmlFor="email"
-                          className="block font-medium text-gray-900 text-sm dark:text-white"
+                          className="block font-medium text-gray-900 dark:text-white text-sm"
                         >
                           Your Email
                         </label>
@@ -162,7 +162,7 @@ const LoginPage = () => {
                           type="email"
                           id="email"
                           placeholder="name@company.com"
-                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                          className="dark:bg-gray-700 mt-2 p-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 w-full dark:text-white"
                           disabled={isLoading}
                         />
                         {touched.email && errors.email && (
@@ -177,7 +177,7 @@ const LoginPage = () => {
                       <div>
                         <label
                           htmlFor="username"
-                          className="block font-medium text-gray-900 text-sm dark:text-white"
+                          className="block font-medium text-gray-900 dark:text-white text-sm"
                         >
                           Your Username
                         </label>
@@ -186,7 +186,7 @@ const LoginPage = () => {
                           type="text"
                           id="username"
                           placeholder="Enter your username"
-                          className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                          className="dark:bg-gray-700 mt-2 p-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 w-full dark:text-white"
                           disabled={isLoading}
                         />
                         {touched.username && errors.username && (
@@ -200,7 +200,7 @@ const LoginPage = () => {
                     <div>
                       <label
                         htmlFor="password"
-                        className="block font-medium text-gray-900 text-sm dark:text-white"
+                        className="block font-medium text-gray-900 dark:text-white text-sm"
                       >
                         Password
                       </label>
@@ -209,7 +209,7 @@ const LoginPage = () => {
                         type="password"
                         id="password"
                         placeholder="••••••••"
-                        className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                        className="dark:bg-gray-700 mt-2 p-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 w-full dark:text-white"
                         disabled={isLoading}
                       />
                       {touched.password && errors.password && (
@@ -225,7 +225,7 @@ const LoginPage = () => {
               {/* OTP Form Step */}
               {step === 1 && (
                 <>
-                  <p className="text-gray-600 text-sm dark:text-gray-400">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
                     A one-time password (OTP) has been sent to your email.
                     Please enter the 6-digit code below to verify your email
                     address.
@@ -233,7 +233,7 @@ const LoginPage = () => {
                   <div>
                     <label
                       htmlFor="otp"
-                      className="block font-medium text-gray-900 text-sm dark:text-white"
+                      className="block font-medium text-gray-900 dark:text-white text-sm"
                     >
                       OTP
                     </label>
@@ -242,7 +242,7 @@ const LoginPage = () => {
                       type="text"
                       id="otp"
                       placeholder="Choose a username"
-                      className="dark:border-gray-600 dark:bg-gray-700 mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-600 w-full dark:text-white focus:outline-none"
+                      className="dark:bg-gray-700 mt-2 p-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 w-full dark:text-white"
                       disabled={isLoading}
                     />
                     {touched.otp && errors.otp && (
@@ -256,16 +256,14 @@ const LoginPage = () => {
 
               {/* Show error from backend if exists */}
               {error && (
-                <div className="ml-1 text-red-700 text-xs">
-                  {error}
-                </div>
+                <div className="ml-1 text-red-700 text-xs">{error}</div>
               )}
 
               {/* Submit or Next Button */}
               <div className="flex justify-between items-center mt-4">
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 p-2 rounded-lg focus:ring-4 focus:ring-blue-300 w-full font-semibold text-white focus:outline-none"
+                  className="bg-blue-600 hover:bg-blue-700 p-2 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300 w-full font-semibold text-white"
                   disabled={isLoading}
                 >
                   {step === 0 ? "Login" : "Verify"}
@@ -274,7 +272,7 @@ const LoginPage = () => {
 
               {step == 0 && (
                 <>
-                  <p className="mt-2 text-gray-600 text-sm dark:text-gray-400">
+                  <p className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
                     Create a new account ?
                     <Link
                       to="/signup"
@@ -284,7 +282,7 @@ const LoginPage = () => {
                     </Link>
                   </p>
 
-                  <p className="mt-2 text-gray-600 text-sm dark:text-gray-400">
+                  <p className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
                     Forgot password ?
                     <Link
                       to="/forgot-password"

@@ -10,14 +10,15 @@ import ReportIcon from "@mui/icons-material/Report";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import ArrowBackSharpIcon from "@mui/icons-material/ArrowBackSharp";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import TimeAgo from "../temp/TimeAgo";
-// import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
+import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
 import ReportConfirmationModal from "../temp/ReportConfirmationModal";
-// import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import {
+  deleteReel,
   likeEntity,
   reportEntity,
   save,
@@ -33,8 +34,8 @@ const Reel = ({
   createReelModelOpenHandler,
   isMuted,
   toggleMute,
-  // removeReel
-  // isMyProfileReels,
+  removeReel,
+  isMyProfileReels,
 }) => {
   const user = useSelector((state) => state.user.profile);
   const isMyReel = reel.userId === user.id;
@@ -57,25 +58,34 @@ const Reel = ({
     }
   }, [isMuted]);
 
-  // const [followStatus, setFollowStatus] = useState(reel.followStatus);
-  // const [isReelDeleteModalOpen, setIsReelDeleteModalOpen] = useState(false);
-  // const [isDeleting, setIsDeleting] = useState(false);
-  // const openReelDeleteModal = () => setIsReelDeleteModalOpen(true);
-  // const closeReelDeleteModal = () => setIsReelDeleteModalOpen(false);
-  // const confirmDelete = async () => {
-  //   removeReel();
-  //   // setIsDeleting(true);
-  //   // try {
-  //   //   await deleteReel(post.id);
-  //   //   console.log("Post deleted: " + post.id);
-  //   //   removePost(post.id);
-  //   // } catch (error) {
-  //   //   console.error("Error deleting post: ", error);
-  //   // } finally {
-  //   //   setIsDeleting(false);
-  //   //   closePostDeleteModal();
-  //   // }
-  // };
+  const [followStatus, setFollowStatus] = useState(reel.followStatus);
+  const followUnfollowClick = () => {
+    if (followStatus === "FOLLOW") {
+      console.log(followStatus);
+    } else if (followStatus === "UNFOLLOW") {
+      console.log(followStatus);
+    } else {
+      console.log(followStatus);
+    }
+  };
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const openDeleteModal = () => setIsDeleteModalOpen(true);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteReel(reel.id);
+      console.log("Reel deleted: " + reel.id);
+      removeReel(reel.id);
+    } catch (error) {
+      console.error("Error deleting reel: ", error);
+    } finally {
+      setIsDeleting(false);
+      closeDeleteModal();
+    }
+  };
 
   const [isReported, setIsReported] = useState(
     reel.reportStatus === "REPORTED"
@@ -212,22 +222,26 @@ const Reel = ({
 
         <h3 className="font-bold text-lg">Reels</h3>
 
-        <span
-          className="mx-2 p-2 cursor-pointer"
-          onClick={createReelModelOpenHandler}
-        >
-          <AddCircleOutlineOutlinedIcon
-            sx={{
-              fontSize: { xs: 23, sm: 25, md: 27 },
-            }}
-          />
-        </span>
-        {/* <button
-          className="flex items-center space-x-1 hover:text-red-500 hover:scale-110 transition duration-200 transform"
-          // onClick={openReelDeleteModal}
-        >
-          <DeleteOutlineOutlinedIcon className="text-gray-600 hover:text-red-500 cursor-pointer" />
-        </button> */}
+        {!isMyProfileReels && (
+          <span
+            className="mx-2 p-2 text-black dark:text-white cursor-pointer"
+            onClick={createReelModelOpenHandler}
+          >
+            <AddCircleOutlineOutlinedIcon
+              sx={{
+                fontSize: { xs: 23, sm: 25, md: 27 },
+              }}
+            />
+          </span>
+        )}
+        {isMyProfileReels && (
+          <button
+            className="flex items-center space-x-1 text-black hover:text-red-500 dark:text-white hover:scale-110 transition duration-200 cursor-pointer transform"
+            onClick={openDeleteModal}
+          >
+            <DeleteOutlineOutlinedIcon />
+          </button>
+        )}
       </div>
 
       <video
@@ -366,21 +380,24 @@ const Reel = ({
             </div>
           </div>
 
-          {/* <button
-            className={`px-5 py-2 rounded-full text-sm font-semibold transition duration-300
+          {!isMyReel && (
+            <button
+              disabled={followStatus === "REQUEST_SENT"}
+              className={`px-5 py-2 rounded-full text-sm font-semibold transition duration-300
                 shadow-md ${
-                  followStatus === "NOT_FOLLOWED" ||
                   followStatus === "REQUEST_SENT"
                     ? "bg-gray-500 hover:bg-gray-600"
                     : "bg-blue-500 hover:bg-blue-600"
                 } text-white`}
-          >
-            {followStatus === "FOLLOW"
-              ? "Follow"
-              : followStatus === "REQUEST_SENT"
-              ? "Request Sent"
-              : "Unfollow"}
-          </button> */}
+              onClick={followUnfollowClick}
+            >
+              {followStatus === "FOLLOW"
+                ? "Unfollow"
+                : followStatus === "REQUEST_SENT"
+                ? "Request Sent"
+                : "Follow"}
+            </button>
+          )}
         </div>
         <div className="pt-2 w-full">
           <p
@@ -399,13 +416,12 @@ const Reel = ({
         </div>
       </div>
 
-      {/* delete */}
-      {/* <DeleteConfirmationModal
-        isOpen={isReelDeleteModalOpen}
-        closeModal={closeReelDeleteModal}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        closeModal={closeDeleteModal}
         confirmDelete={confirmDelete}
         isDeleting={isDeleting}
-      /> */}
+      />
 
       <ReportConfirmationModal
         isOpen={isReportModalOpen}

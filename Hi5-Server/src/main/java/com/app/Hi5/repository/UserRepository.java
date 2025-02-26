@@ -2,9 +2,13 @@ package com.app.Hi5.repository;
 
 import com.app.Hi5.model.User;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +21,36 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     Optional<User> findByUsername(String username);
 
     Optional<User> findByUsernameAndIsActiveTrue(String username);
+
+//    @Query(
+//            "{'$and': [ " +
+//                "{'role': 'USER'}, " +
+//                "{'$or': [ " +
+//                    " {'username': {$regex: '^?0', $options: 'i'}}, " +
+//                    " {'username': {$regex: '?0$', $options: 'i'}}, " +
+//                    " {'username': {$regex: '.*?0.*', $options: 'i'}}, " +
+//                    " {'full_name': {$regex: '^?0', $options: 'i'}}, " +
+//                    " {'full_name': {$regex: '?0$', $options: 'i'}}, " +
+//                    " {'full_name': {$regex: '.*?0.*', $options: 'i'}} " +
+//                "]}" +
+//            "]}"
+//    )
+//    List<User> findUsersByUsernameAndFullname(String keyword);
+
+    @Query(
+            "{'$and': [ " +
+                    "{'role': 'USER'}, " +
+                    "{'$or': [ " +
+                    " {'username': {$regex: '^?0', $options: 'i'}}, " +
+                    " {'username': {$regex: '?0$', $options: 'i'}}, " +
+                    " {'username': {$regex: '.*?0.*', $options: 'i'}}, " +
+                    " {'full_name': {$regex: '^?0', $options: 'i'}}, " +
+                    " {'full_name': {$regex: '?0$', $options: 'i'}}, " +
+                    " {'full_name': {$regex: '.*?0.*', $options: 'i'}} " +
+                    "]}" +
+                    "]}"
+    )
+    Page<User> findUsersByUsernameAndFullname(String keyword, PageRequest pageRequest);
 
 //    Optional<User> findByUsername(String username);
 //

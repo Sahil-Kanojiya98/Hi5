@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import axiosInstance from "../../services/axios.config";
-import { ReelCreatedToast as DisplayReelCreatedToast } from "../providers/ToastProvider";
+import { ReelCreatedToast as displayReelCreatedToast } from "../providers/ToastProvider";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 const ReelUploadModal = ({ isOpen, onClose }) => {
@@ -137,7 +137,7 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
       });
       console.log("Reel created:", response.data);
 
-      DisplayReelCreatedToast();
+      displayReelCreatedToast();
 
       clearAll();
       onClose();
@@ -167,7 +167,7 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-      <div className="relative bg-white dark:bg-gray-900 dark:outline-2 shadow-xl p-6 rounded-lg w-full max-w-xl max-h-[80vh] text-gray-800 dark:text-white animate-fadeIn overflow-y-auto hide-scrollbar dark:outline-white">
+      <div className="relative bg-white dark:bg-gray-900 shadow-xl p-6 rounded-lg dark:outline-2 dark:outline-white w-full max-w-xl max-h-[80vh] overflow-y-auto text-gray-800 dark:text-white animate-fadeIn hide-scrollbar">
         <button
           type="button"
           className="top-3 right-3 absolute text-gray-600 hover:text-gray-800 dark:text-gray-300"
@@ -184,7 +184,7 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
           />
         </button>
 
-        <h2 className="mb-4 font-semibold text-center text-xl">Upload Reel</h2>
+        <h2 className="mb-4 font-semibold text-xl text-center">Upload Reel</h2>
 
         {validationError && (
           <div className="text-red-600 text-sm">{validationError}</div>
@@ -230,7 +230,7 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
 
         <div className="flex flex-col gap-4 mt-2">
           <div
-            className="flex justify-center items-center dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-sm p-3 border rounded-md transition duration-200 cursor-pointer"
+            className="flex justify-center items-center hover:bg-gray-100 dark:hover:bg-gray-800 shadow-sm p-3 border dark:border-gray-800 rounded-md transition duration-200 cursor-pointer"
             onClick={() => videoInputRef.current.click()}
           >
             <span className="font-semibold">Select Video</span>
@@ -246,7 +246,7 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
           </div>
 
           <div
-            className="flex justify-center items-center dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-sm p-3 border rounded-md transition duration-200 cursor-pointer"
+            className="flex justify-center items-center hover:bg-gray-100 dark:hover:bg-gray-800 shadow-sm p-3 border dark:border-gray-800 rounded-md transition duration-200 cursor-pointer"
             onClick={() => thumbnailInputRef.current.click()}
           >
             <span className="font-semibold">Select Thumbnail (optional)</span>
@@ -263,7 +263,7 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
 
           <textarea
             disabled={isLoading}
-            className="dark:border-gray-800 p-3 border rounded-md dark:focus:ring-gray-800 w-full min-h-16 transition resize-none focus:outline-none dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 duration-200"
+            className="dark:bg-gray-800 p-3 border dark:border-gray-800 rounded-md focus:outline-none dark:focus:ring-gray-800 focus:ring-2 focus:ring-blue-500 w-full min-h-16 transition duration-200 resize-none"
             placeholder="Enter description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}

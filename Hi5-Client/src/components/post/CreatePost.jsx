@@ -5,7 +5,7 @@ import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import { useSelector } from "react-redux";
 import ReelUploadModal from "../reel/ReelUploadModel.jsx";
-import { PostCreatedToast as DisplayPostCreatedToast } from "../providers/ToastProvider.jsx";
+import { PostCreatedToast as displayPostCreatedToast } from "../providers/ToastProvider.jsx";
 
 const CreatePost = () => {
   const [text, setText] = useState("");
@@ -32,6 +32,11 @@ const CreatePost = () => {
     if (validationError) {
       return;
     }
+
+    if (file === null && !text.trim()) {
+      return;
+    }
+
     setIsPending(true);
     setIsError(null);
     setUploadProgress(0);
@@ -63,7 +68,7 @@ const CreatePost = () => {
       setFile(null);
       setFileURL(null);
 
-      DisplayPostCreatedToast();
+      displayPostCreatedToast();
 
       fileRef.current.value = null;
     } catch (error) {
@@ -183,7 +188,7 @@ const CreatePost = () => {
       </div>
       <form className="flex flex-col gap-3 w-full" onSubmit={handleSubmit}>
         <textarea
-          className="border-gray-200 dark:border-gray-800 bg-white dark:bg-black p-2 sm:p-3 border rounded-md text-xs sm:text-lg focus:outline-none resize-none"
+          className="bg-white dark:bg-black p-2 sm:p-3 border border-gray-200 dark:border-gray-800 rounded-md focus:outline-none text-xs sm:text-lg resize-none"
           placeholder="What's on your mind?"
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -195,7 +200,7 @@ const CreatePost = () => {
             </>
           )}
         </div>
-        <div className="w-full text-2xl text-gray-500">
+        <div className="w-full text-gray-500 text-2xl">
           {renderFilePreview()}
         </div>
         <div className="flex flex-col gap-2">
@@ -237,7 +242,7 @@ const CreatePost = () => {
             <div className="flex gap-2">
               <button
                 type="button"
-                className="bg-blue-600 hover:bg-blue-700 px-3 sm:px-6 py-2 rounded-full text-white whitespace-nowrap focus:outline-none text-xs sm:text-sm md:text-lg duration-300"
+                className="bg-blue-600 hover:bg-blue-700 px-3 sm:px-6 py-2 rounded-full focus:outline-none text-white text-xs sm:text-sm md:text-lg whitespace-nowrap duration-300"
                 onClick={() => setIsReelModalOpen(true)}
               >
                 Upload Reel

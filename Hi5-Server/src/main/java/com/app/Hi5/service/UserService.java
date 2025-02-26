@@ -1,24 +1,19 @@
 package com.app.Hi5.service;
 
-import com.app.Hi5.dto.response.FollowUserResponse;
-import com.app.Hi5.dto.response.UpdateImagesResponse;
-import com.app.Hi5.dto.response.UserProfileResponse;
-import com.app.Hi5.exceptions.EntityNotFoundException;
-import com.app.Hi5.model.Enum.Gender;
+import com.app.Hi5.dto.response.UserSearchResponse;
 import com.app.Hi5.model.User;
 import com.app.Hi5.repository.UserRepository;
 import com.app.Hi5.utility.FileStorage;
-import com.app.Hi5.utility.enums.FileType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,6 +22,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FileStorage fileStorage;
+
+    public List<UserSearchResponse> getUsersByKeyword(String keyword, Integer page, Integer size) {
+        Page<User> users = userRepository.findUsersByUsernameAndFullname(keyword, PageRequest.of(page, size));
+        System.out.println(users.getContent());
+        return users.getContent().stream().map(user -> UserSearchResponse.builder().id(user.getId().toHexString()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).build()).collect(Collectors.toList());
+//        return userRepository.findUsersByUsernameAndFullname(keyword).stream().map(user -> UserSearchResponse.builder().id(user.getId().toHexString()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).build()).collect(Collectors.toList());
+    }
+
 //    private final NotificationService notificationService;
 
 //    public UserProfileResponse getProfile(String userId, User user) {

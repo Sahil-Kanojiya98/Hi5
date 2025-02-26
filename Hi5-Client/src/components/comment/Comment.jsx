@@ -9,10 +9,34 @@ import {
   ReportGmailerrorred as ReportIcon,
   DeleteOutlineOutlined as DeleteIcon,
 } from "@mui/icons-material";
-import { likeEntity, reportEntity, unlikeEntity } from "../../services/api";
+import {
+  deleteComment,
+  likeEntity,
+  reportEntity,
+  unlikeEntity,
+} from "../../services/api";
+import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
 import ReportConfirmationModal from "../temp/ReportConfirmationModal";
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, removeComment }) => {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const openDeleteModal = () => setIsDeleteModalOpen(true);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteComment(comment.id);
+      console.log("comment deleted: " + comment.id);
+      removeComment(comment.id);
+    } catch (error) {
+      console.error("Error deleting post: ", error);
+    } finally {
+      setIsDeleting(false);
+      closeDeleteModal();
+    }
+  };
+
   const [likesCount, setLikesCount] = useState(comment.likesCount);
   const [isLiked, setIsLiked] = useState(comment.likeStatus === "LIKED");
 
@@ -110,15 +134,14 @@ const Comment = ({ comment }) => {
         {isMyComment && (
           <button
             className="flex items-center hover:text-red-500 hover:scale-105 transition duration-200"
-            // onClick={openPostDeleteModal}
+            onClick={openDeleteModal}
           >
             <DeleteIcon className="text-gray-600 hover:text-red-500 cursor-pointer" />
           </button>
         )}
 
-        {
-          // !isMyComment &&
-          isReported ? (
+        {!isMyComment &&
+          (isReported ? (
             <ReportedIcon
               className="text-red-500 transition duration-200 cursor-not-allowed transform"
               title="This comment has already been reported"
@@ -129,9 +152,14 @@ const Comment = ({ comment }) => {
               onClick={openReportModal}
               title="Report this comment"
             />
-          )
-        }
+          ))}
       </div>
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        closeModal={closeDeleteModal}
+        confirmDelete={confirmDelete}
+        isDeleting={isDeleting}
+      />
       <ReportConfirmationModal
         isOpen={isReportModalOpen}
         closeModal={closeReportModal}
@@ -155,6 +183,7 @@ Comment.propTypes = {
     likeStatus: PropTypes.string,
     reportStatus: PropTypes.string,
   }).isRequired,
+  removeComment: PropTypes.func.isRequired,
 };
 
 export default Comment;

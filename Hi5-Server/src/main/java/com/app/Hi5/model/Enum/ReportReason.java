@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum ReportReason {
-
     HARASSMENT_BULLYING("Harassment or Bullying"),
     HATE_SPEECH("Hate Speech"),
     SPAM("Spam"),
@@ -23,5 +22,4 @@ public enum ReportReason {
     ReportReason(String description) {
         this.description = description;
     }
-
 }

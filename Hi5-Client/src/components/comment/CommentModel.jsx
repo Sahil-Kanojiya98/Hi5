@@ -34,6 +34,9 @@ const CommentModel = ({
   };
 
   const handlePostComment = async () => {
+    if (!newComment.trim()) {
+      return;
+    }
     try {
       setIsPosting(true);
       const data = await makeComment({
@@ -100,6 +103,7 @@ const CommentModel = ({
   };
 
   const removeComment = (commentId) => {
+    updateCommentCount((prev) => prev - 1);
     setComments((prevComments) => {
       console.log(prevComments);
       const newPosts = prevComments.filter((post) => post.id !== commentId);
@@ -151,9 +155,9 @@ const CommentModel = ({
         <div className="max-h-60 overflow-y-auto">
           {!isLoading && comments.length > 0 && (
             <>
-              {comments.map((comment, index) => (
+              {comments.map((comment) => (
                 <Comment
-                  key={index}
+                  key={comment.id}
                   comment={comment}
                   removeComment={removeComment}
                 />

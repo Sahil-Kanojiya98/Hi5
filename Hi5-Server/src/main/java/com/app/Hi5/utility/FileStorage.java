@@ -23,11 +23,22 @@ public class FileStorage {
     @PostConstruct
     public void init() {
         try {
+//            Resource resource = new ClassPathResource("");
+//            baseDirectory = Paths.get(resource.getURI()).resolve("static");
+//            if (!Files.exists(baseDirectory)) {
+//                Files.createDirectories(baseDirectory);
+//            }
+
             Resource resource = new ClassPathResource("");
-            baseDirectory = Paths.get(resource.getURI()).resolve("static");
+            Path path = Paths.get(resource.getURI()).resolve("static");
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+            baseDirectory = path.resolve("resource");
             if (!Files.exists(baseDirectory)) {
                 Files.createDirectories(baseDirectory);
             }
+
             for (FileType fileType : FileType.values()) {
                 Path directory = baseDirectory.resolve(fileType.getDirectory());
                 if (!Files.exists(directory)) {
@@ -48,16 +59,16 @@ public class FileStorage {
         String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
         String filename = UUID.randomUUID().toString() + extension;
         Path destinationFile = directory.resolve(filename);
-        log.info("destination path of file: {}",destinationFile.toAbsolutePath());
+        log.info("destination path of file: {}", destinationFile.toAbsolutePath());
         file.transferTo(destinationFile);
-        String relativeFilePath = "/" + fileType.getDirectory() + "/" + filename;
+        String relativeFilePath = "/resource/" + fileType.getDirectory() + "/" + filename;
         log.info("Saved file: {}", relativeFilePath);
         return relativeFilePath;
     }
 
     public void deleteFile(String filePath) throws IOException {
-        Path fileToDelete = baseDirectory.resolve(filePath.substring(1));
-        log.info("trying to delete {}",filePath);
+        Path fileToDelete = baseDirectory.resolve(filePath.substring(10));
+        log.info("trying to delete {}", filePath);
         System.out.println(fileToDelete.toAbsolutePath());
         if (Files.exists(fileToDelete)) {
             Files.delete(fileToDelete);

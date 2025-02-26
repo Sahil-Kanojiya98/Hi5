@@ -43,15 +43,15 @@ public class ReelController {
         return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
-//    @DeleteMapping("/{reel_id}")
-//    public ResponseEntity<String> deletePost(@PathVariable("reel_id") String post_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        reelService.deleteReel(userDetails.getUser(), post_id);
-//        return new ResponseEntity<>("post deleted successfully!", HttpStatus.OK);
-//    }
+    @DeleteMapping("/{reel_id}")
+    public ResponseEntity<String> deletePost(@PathVariable("reel_id") String post_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        reelService.deleteReel(userDetails.getUser(), post_id);
+        return new ResponseEntity<>("post deleted successfully!", HttpStatus.OK);
+    }
 
     @GetMapping
-    public List<ReelResponse> getAllRandomPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return reelService.findRandomReels(userDetails.getUser(), 10);
+    public List<ReelResponse> getAllRandomPosts(@RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return reelService.findRandomReels(userDetails.getUser(), size);
     }
 
 }

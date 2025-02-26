@@ -94,7 +94,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/shared/**").permitAll()
                                 .requestMatchers("/api/dummy/**").permitAll()
                                 .requestMatchers("/hi5/ws","/hi5/ws/**").permitAll()
-                                .requestMatchers("/logo/**","/user/**","/post/**","/story/**","/reel/**","/chat/**").permitAll()
+                                .requestMatchers("/logo/**","/resource/**").permitAll()
 //                                .requestMatchers("/**").permitAll()
 //                                .requestMatchers("/error","/favicon.ico").permitAll()
 //                                .requestMatchers("/api/admin/**").hasRole("ADMIN")

@@ -37,11 +37,11 @@ public class CommentController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-//    @DeleteMapping("/{comment_id}")
-//    public ResponseEntity<String> deletePost(@PathVariable("comment_id") String post_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        commentService.deleteComment(userDetails.getUser(), post_id);
-//        return new ResponseEntity<>("post deleted successfully!", HttpStatus.OK);
-//    }
+    @DeleteMapping("/{comment_id}")
+    public ResponseEntity<String> deletePost(@PathVariable("comment_id") String post_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        commentService.deleteComment(userDetails.getUser(), post_id);
+        return new ResponseEntity<>("post deleted successfully!", HttpStatus.OK);
+    }
 
 //    @GetMapping("/{post_id}")
 //    public List<CommentResponseDTO> getComments(

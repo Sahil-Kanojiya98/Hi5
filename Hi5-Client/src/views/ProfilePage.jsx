@@ -1,18 +1,18 @@
 // import MainLayout from "../components/layout/MainLayout";
 // import {
-//   FaArrowLeft,
-//   FaLink,
-//   FaCalendarAlt,
-//   FaEdit,
-//   FaCog,
-// } from "react-icons/fa";
+//   ArrowBackSharp,
+//   Link as LinkIcon,
+//   CalendarToday,
+//   Edit,
+//   Settings,
+// } from "@mui/icons-material";
 // import Posts from "../components/post/Posts";
-// import { useEffect, useState } from "react";
-// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { Link, useEffect, useState } from "react";
+// import { useNavigate, useParams } from "react-router-dom";
 // import { getUserProfile } from "../services/api";
 
 // const ProfilePage = () => {
-//   const [profileData, setProfileData] = useState(null);
+//   const [profileData, setProfileData] = useState("data");
 
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
@@ -47,39 +47,37 @@
 
 //   const { userId } = useParams();
 //   console.log(userId);
-//   useEffect(() => {
-//     const fetchProfile = async () => {
-//       try {
-//         setLoading(true);
-//         const response = await getUserProfile(userId);
-//         const data = response.data;
-//         setProfileData(data);
-//         setCoverImage(data.coverPictureUrl);
-//         setProfileImage(data.profilePictureUrl);
-//       } catch (err) {
-//         console.log(err);
-//         setError("Failed to load user profile. Please try again later.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
 
-//     fetchProfile();
-//   }, [userId]);
+//   //   useEffect(() => {
+//   //     const fetchProfile = async () => {
+//   //       try {
+//   //         setLoading(true);
+//   //         const response = await getUserProfile(userId);
+//   //         const data = response.data;
+//   //         setProfileData(data);
+//   //         setCoverImage(data.coverPictureUrl);
+//   //         setProfileImage(data.profilePictureUrl);
+//   //       } catch (err) {
+//   //         console.log(err);
+//   //         setError("Failed to load user profile. Please try again later.");
+//   //       } finally {
+//   //         setLoading(false);
+//   //       }
+//   //     };
+//   //     fetchProfile();
+//   //   }, [userId]);
 
 //   return (
 //     <MainLayout>
 //       <div className="flex justify-center bg-gray-100 dark:bg-gray-900 mx-auto p-2 md:p-6 pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full">
 //         <div className="flex flex-col justify-center w-full max-w-3xl">
-//           {
-//             JSON.stringify(profileData)
-//           }
+//           {JSON.stringify(profileData)}
 //           {error && (
 //             <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg mt-[15dvh] p-6 rounded-lg w-full min-h-[200px]">
-//               <h1 className="mb-4 font-bold text-lg text-red-600">
+//               <h1 className="mb-4 font-bold text-red-600 text-lg">
 //                 Profile Not Found
 //               </h1>
-//               <p className="text-center text-gray-600 text-sm dark:text-gray-300">
+//               <p className="text-gray-600 dark:text-gray-300 text-sm text-center">
 //                 An error occurred while loading the profile, or the profile
 //                 doesn&apos;t exist. Please try again later or contact support.
 //               </p>
@@ -99,11 +97,13 @@
 //                     onClick={handleBackClick}
 //                     className="text-gray-500 cursor-pointer"
 //                   >
-//                     <FaArrowLeft className="text-2xl" />
+//                     <ArrowBackSharp className="text-2xl" />
 //                   </div>
 //                   <div className="flex flex-col">
 //                     <p className="font-bold text-xl">{profileData.fullname}</p>
-//                     <span className="text-gray-600 text-sm">{profileData.postsCount} posts</span>
+//                     <span className="text-gray-600 text-sm">
+//                       {profileData.postsCount} posts
+//                     </span>
 //                   </div>
 //                 </div>
 //                 {/* only if my profile */}
@@ -112,7 +112,7 @@
 //                   className="text-gray-500 dark:hover:text-gray-400 hover:text-gray-600 transition duration-200 cursor-pointer"
 //                   title="Settings"
 //                 >
-//                   <FaCog className="text-2xl" />
+//                   <SettingsIcon className="text-2xl" />
 //                 </Link> */}
 //               </div>
 
@@ -125,10 +125,10 @@
 //                   />
 //                   <label
 //                     htmlFor="cover-upload"
-//                     className="group-hover:block right-3 bottom-3 absolute hidden bg-black/50 p-2 rounded-full text-white cursor-pointer"
+//                     className="group-hover:block hidden right-3 bottom-3 absolute bg-black/50 p-2 rounded-full text-white cursor-pointer"
 //                     title="Change Cover"
 //                   >
-//                     <FaEdit />
+//                     <Edit />
 //                   </label>
 //                   <input
 //                     id="cover-upload"
@@ -147,10 +147,10 @@
 //                     />
 //                     <label
 //                       htmlFor="profile-upload"
-//                       className="group-hover:block right-3 bottom-3 absolute hidden bg-black/50 p-2 rounded-full text-white cursor-pointer"
+//                       className="group-hover:block hidden right-3 bottom-3 absolute bg-black/50 p-2 rounded-full text-white cursor-pointer"
 //                       title="Change Profile Picture"
 //                     >
-//                       <FaEdit />
+//                       <Edit />
 //                     </label>
 //                     <input
 //                       id="profile-upload"
@@ -164,10 +164,10 @@
 //               </div>
 
 //               <div className="flex justify-end mt-10 px-4">
-//                 <button className="bg-blue-500 hover:bg-blue-600 shadow-md px-4 py-2 rounded-full text-sm text-white transition duration-200">
+//                 <button className="bg-blue-500 hover:bg-blue-600 shadow-md px-4 py-2 rounded-full text-white text-sm transition duration-200">
 //                   Follow
 //                 </button>
-//                 <button className="bg-gray-800 hover:bg-gray-900 shadow-md ml-3 px-4 py-2 rounded-full text-sm text-white transition duration-200">
+//                 <button className="bg-gray-800 hover:bg-gray-900 shadow-md ml-3 px-4 py-2 rounded-full text-white text-sm transition duration-200">
 //                   Update
 //                 </button>
 //               </div>
@@ -175,14 +175,16 @@
 //               <div className="my-6 mt-8 px-4">
 //                 <div className="flex flex-col items-start gap-2">
 //                   <h1 className="font-bold text-2xl">{profileData.fullname}</h1>
-//                   <span className="text-gray-500 text-sm">@{profileData.username}</span>
-//                   <p className="text-gray-700 text-sm dark:text-gray-300">
-//                   {profileData.bio}
+//                   <span className="text-gray-500 text-sm">
+//                     @{profileData.username}
+//                   </span>
+//                   <p className="text-gray-700 dark:text-gray-300 text-sm">
+//                     {profileData.bio}
 //                   </p>
 //                 </div>
 //                 <div className="flex items-center gap-4 mt-4">
 //                   <div className="flex items-center gap-2">
-//                     <FaLink className="text-gray-500" />
+//                     <LinkIcon className="text-gray-500" />
 //                     <a
 //                       href="https://www.johndoe.com"
 //                       target="_blank"
@@ -193,9 +195,9 @@
 //                     </a>
 //                   </div>
 //                   <div className="flex items-center gap-2">
-//                     <FaCalendarAlt className="text-gray-500" />
+//                     <CalendarToday className="text-gray-500" />
 //                     <span className="text-gray-500 text-sm">
-//                     {profileData.createdAt}
+//                       {profileData.createdAt}
 //                     </span>
 //                   </div>
 //                 </div>
