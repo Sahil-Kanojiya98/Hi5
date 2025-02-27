@@ -62,7 +62,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowCredentials(true);
 
@@ -93,8 +93,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/shared/**").permitAll()
                                 .requestMatchers("/api/dummy/**").permitAll()
-                                .requestMatchers("/hi5/ws","/hi5/ws/**").permitAll()
-                                .requestMatchers("/logo/**","/resource/**").permitAll()
+                                .requestMatchers("/hi5/ws", "/hi5/ws/**").permitAll()
+                                .requestMatchers("/logo/**", "/resource/**").permitAll()
 //                                .requestMatchers("/**").permitAll()
 //                                .requestMatchers("/error","/favicon.ico").permitAll()
 //                                .requestMatchers("/api/admin/**").hasRole("ADMIN")

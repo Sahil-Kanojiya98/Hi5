@@ -2,6 +2,7 @@ package com.app.Hi5.model;
 
 import com.app.Hi5.model.Enum.Gender;
 import com.app.Hi5.model.Enum.IdentityProvider;
+import com.app.Hi5.model.Enum.ProfileType;
 import com.app.Hi5.model.Enum.Role;
 import lombok.*;
 import org.bson.types.ObjectId;
@@ -97,6 +98,10 @@ public class User {
     private Boolean twoFactorAuthentication = false;
 
     @Builder.Default
+    @Field("profile_type")
+    private ProfileType profileType = ProfileType.PUBLIC;
+
+    @Builder.Default
     @Field("follow_request_behaviour_auto")
     private Boolean followRequestBehaviourAuto = false;
 
@@ -115,7 +120,7 @@ public class User {
     //    User Activity Data
     @Field("follow_requests")
     @Builder.Default
-    private Set<String> followRequestUserIds  = new LinkedHashSet<>();
+    private Set<String> followRequestUserIds = new LinkedHashSet<>();
 
     @Field("followers")
     @Builder.Default

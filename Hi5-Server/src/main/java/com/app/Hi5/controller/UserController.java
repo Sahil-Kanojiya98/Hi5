@@ -1,9 +1,11 @@
 package com.app.Hi5.controller;
 
+import com.app.Hi5.dto.request.UpdateUserRequest;
 import com.app.Hi5.dto.response.*;
 import com.app.Hi5.model.User;
 import com.app.Hi5.security.UserDetailsImpl;
 import com.app.Hi5.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,23 +43,23 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable("userId") String userId) {
-        UserProfileResponse response = userService.getProfile(userId);
+    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable("userId") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserProfileResponse response = userService.getProfile(userId, userDetails.getUser());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-//    @PatchMapping("/update-images")
-//    public ResponseEntity<UpdateImagesResponse> updateUserImages(@RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture, @RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        UpdateImagesResponse response = userService.updateUserImages(userDetails.getUser(), profilePicture, coverPicture);
-//        return new ResponseEntity<>(response, HttpStatus.CREATED);
-//    }
-//
-//    @PutMapping
-//    public ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        userService.updateUser(userDetails.getUser(), request.getFullName(),request.getBio(),request.getLink(),request.getDateOfBirth(),request.getGender());
-//        return new ResponseEntity<>("User Updated Successfully.",HttpStatus.OK);
-//    }
-//
+    @PatchMapping("/update-images")
+    public ResponseEntity<UpdateImagesResponse> updateUserImages(@RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture, @RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UpdateImagesResponse response = userService.updateUserImages(userDetails.getUser(), profilePicture, coverPicture);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.updateUser(userDetails.getUser(), request.getFullname(),request.getBio(),request.getLink(),request.getDateOfBirth(),request.getGender());
+        return new ResponseEntity<>("User Updated Successfully.",HttpStatus.OK);
+    }
+
 //    @PostMapping("/follow/{user_id}")
 //    public ResponseEntity<FollowUserResponse> followUser(@PathVariable("user_id") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 //        FollowUserResponse response=userService.follow(userDetails.getUser(),userId);

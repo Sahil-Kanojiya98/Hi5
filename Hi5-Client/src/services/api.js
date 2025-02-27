@@ -138,6 +138,18 @@ const uploadMedia = async (formData, onUploadProgressHandler) => {
   });
 };
 
+const updateProfileAndCoverImage = async (formData) => {
+  return axiosInstance.patch("/user/update-images", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+const updateProfileInfo = async (body) => {
+  return axiosInstance.put("/user", body);
+};
+
 export {
   checkEmail,
   checkUsername,
@@ -168,4 +180,6 @@ export {
   getMessagesByChatId,
   uploadMedia,
   deleteMessagesByChatId,
+  updateProfileAndCoverImage,
+  updateProfileInfo,
 };

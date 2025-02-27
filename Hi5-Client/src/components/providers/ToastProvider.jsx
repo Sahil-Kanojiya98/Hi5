@@ -116,15 +116,13 @@ export const StoryCreatedToast = () => {
   ));
 };
 
-
-
 export const MessageToast = (messageData) => {
   t.custom((t) => (
     <Link to={`/chat/${messageData?.senderUserId}`}>
       <div
         className={`${
           t.visible ? "animate-toast-enter" : "animate-toast-leave"
-        } w-max max-w-sm bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex flex-col ring-1 ring-black dark:ring-white ring-opacity-5 p-4`}
+        } max-w-xs w-[320px] bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex flex-col ring-1 ring-black dark:ring-white ring-opacity-5 p-4`}
       >
         <div className="sm:hidden flex items-center space-x-2">
           <ChatBubble fontSize="small" className="text-blue-500" />
@@ -136,13 +134,13 @@ export const MessageToast = (messageData) => {
           </p>
         </div>
 
-        <div className="hidden sm:block">
+        <div className="hidden sm:block w-full">
           <div className="flex items-center space-x-3">
-              <img
-                src={messageData?.senderProfileImageUrl}
-                alt={`${messageData?.senderFullname}'s profile`}
-                className="border rounded-full w-10 h-10"
-              />
+            <img
+              src={messageData?.senderProfileImageUrl}
+              alt={`${messageData?.senderFullname}'s profile`}
+              className="border rounded-full w-10 h-10"
+            />
             <div>
               <p className="font-semibold text-gray-900 dark:text-gray-100">
                 {messageData?.senderFullname}

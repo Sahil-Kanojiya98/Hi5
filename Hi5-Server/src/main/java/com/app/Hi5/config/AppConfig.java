@@ -2,6 +2,7 @@ package com.app.Hi5.config;
 
 import com.app.Hi5.model.Enum.Gender;
 import com.app.Hi5.model.Enum.IdentityProvider;
+import com.app.Hi5.model.Enum.ProfileType;
 import com.app.Hi5.model.Enum.Role;
 import com.app.Hi5.model.User;
 import com.app.Hi5.repository.UserRepository;
@@ -35,7 +36,7 @@ public class AppConfig {
     @PostConstruct
     public void setup() {
         try {
-            if (userRepository.findByEmailAndIsActiveTrue("admin000@gmail.com").isEmpty()){
+            if (userRepository.findByEmailAndIsActiveTrue("admin000@gmail.com").isEmpty()) {
                 User user = userRepository.save(User.builder()
                         .email("admin000@gmail.com")
                         .password(passwordEncoder.encode("sksk1!SKSK"))
@@ -46,6 +47,7 @@ public class AppConfig {
                         .isAllowedPostNotification(false)
                         .isAllowedReelsNotification(false)
                         .isAllowedStoryNotification(false)
+                        .profileType(ProfileType.PRIVATE)
                         .build());
                 log.info("Admin user created with ID: {}", user.getId());
             }

@@ -17,7 +17,7 @@ import java.util.Date;
 public class UpdateUserRequest {
 
     @NotBlank(message = "Full name cannot be null or blank")
-    private String fullName;
+    private String fullname;
 
     @NotNull(message = "Username cannot be null")
     private String link;

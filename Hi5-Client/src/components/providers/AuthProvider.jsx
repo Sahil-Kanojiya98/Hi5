@@ -14,14 +14,21 @@ const AuthContext = ({ children }) => {
 
   useEffect(() => {
     const checkTokenValidity = async () => {
-      console.log("Auth:"+token)
+      console.log("Auth:" + token);
       try {
         if (token) {
           const res = await getMe();
           if (res.status === 200) {
             const userData = res.data;
             dispatch(
-              setUser(userData)
+              setUser({
+                id: userData?.id,
+                email: userData?.email,
+                username: userData?.username,
+                role: userData?.role,
+                fullname: userData?.fullname,
+                profilePictureUrl: userData?.profilePictureUrl,
+              })
             );
             dispatch(
               setAuth({
