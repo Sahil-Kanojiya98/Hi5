@@ -7,8 +7,8 @@ import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 
 const MobileNavbar = () => (
-  <div className="bottom-0 left-0 fixed flex justify-between md:hidden bg-white dark:bg-black shadow-inner p-3 w-full">
-    <ul className="flex justify-around items-center w-full">
+  <div className="md:hidden bottom-0 left-0 fixed flex justify-between bg-white dark:bg-black shadow-inner p-3 w-full">
+    <div className="flex justify-around items-center w-full">
       <MobileNavItem
         icon={<HomeRoundedIcon sx={{ fontSize: { xs: 25, sm: 30 } }} />}
         link="/home"
@@ -30,7 +30,7 @@ const MobileNavbar = () => (
         link="/notifications"
         sx={{ fontSize: { xs: 25, sm: 30 } }}
       />
-    </ul>
+    </div>
   </div>
 );
 

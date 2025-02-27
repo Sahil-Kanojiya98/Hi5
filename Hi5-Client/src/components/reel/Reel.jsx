@@ -421,6 +421,7 @@ const Reel = ({
         closeModal={closeDeleteModal}
         confirmDelete={confirmDelete}
         isDeleting={isDeleting}
+        type="REEL"
       />
 
       <ReportConfirmationModal
@@ -428,6 +429,7 @@ const Reel = ({
         closeModal={closeReportModal}
         reportPost={confirmReport}
         isReporting={isReporting}
+        type="REEL"
       />
 
       <CommentModel

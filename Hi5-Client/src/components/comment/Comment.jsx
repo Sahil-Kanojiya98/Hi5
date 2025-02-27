@@ -159,12 +159,14 @@ const Comment = ({ comment, removeComment }) => {
         closeModal={closeDeleteModal}
         confirmDelete={confirmDelete}
         isDeleting={isDeleting}
+        type="COMMENT"
       />
       <ReportConfirmationModal
         isOpen={isReportModalOpen}
         closeModal={closeReportModal}
         reportPost={confirmReport}
         isReporting={isReporting}
+        type="COMMENT"
       />
     </div>
   );

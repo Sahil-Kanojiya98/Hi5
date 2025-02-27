@@ -35,11 +35,22 @@ public class Message {
     @Field("message")
     private String message;
 
-    @Field("created_by_user")
-    private String createdByUserId;
+    @Field("sender_user")
+    private String senderUserId;
+
+    @Field("receiver_user")
+    private String receiverUserId;
 
     @CreatedDate
     @Field("created_at")
     private Date createdAt;
+
+    @Field("is_deleted_by_created_user")
+    @Builder.Default
+    private Boolean isDeletedBySender = false;
+
+    @Field("is_deleted_by_receiver_user")
+    @Builder.Default
+    private Boolean isDeletedByReceiver = false;
 
 }

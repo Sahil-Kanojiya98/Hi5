@@ -23,12 +23,6 @@ public class FileStorage {
     @PostConstruct
     public void init() {
         try {
-//            Resource resource = new ClassPathResource("");
-//            baseDirectory = Paths.get(resource.getURI()).resolve("static");
-//            if (!Files.exists(baseDirectory)) {
-//                Files.createDirectories(baseDirectory);
-//            }
-
             Resource resource = new ClassPathResource("");
             Path path = Paths.get(resource.getURI()).resolve("static");
             if (!Files.exists(path)) {

@@ -24,8 +24,8 @@ public class MessagePayload {
 
     private String message;
 
-    private String senderId;
+    private String senderUserId;
 
-    private String receiverId;
+    private String receiverUserId;
 
 }

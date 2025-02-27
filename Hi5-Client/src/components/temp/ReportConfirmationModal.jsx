@@ -22,6 +22,7 @@ const ReportConfirmationModal = ({
   closeModal,
   reportPost,
   isReporting,
+  type,
 }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [error, setError] = useState(null);
@@ -81,7 +82,7 @@ const ReportConfirmationModal = ({
               <button
                 onClick={closeModal}
                 className="text-gray-600 hover:text-gray-800 dark:hover:text-gray-100 dark:text-gray-300"
-                disabled={isReporting} // Disable the button if reporting
+                disabled={isReporting}
               >
                 <CloseRoundedIcon
                   sx={{
@@ -90,9 +91,21 @@ const ReportConfirmationModal = ({
                 />
               </button>
             </div>
-            <p className="mb-6 text-gray-700 dark:text-gray-300">
-              Please select a reason for reporting this post:
-            </p>
+            {type === "POST" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Please select a reason for reporting this post:
+              </p>
+            )}
+            {type === "REEL" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Please select a reason for reporting this reel:
+              </p>
+            )}
+            {type === "COMMENT" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Please select a reason for reporting this comment:
+              </p>
+            )}
             <div className="mb-4 px-4 py-3 border-2 rounded-lg max-h-60 overflow-y-auto hide-scrollbar">
               {Object.keys(reportReasonsEnum).map((key) => (
                 <div key={key} className="flex items-center mb-3">
@@ -100,7 +113,7 @@ const ReportConfirmationModal = ({
                     type="radio"
                     id={key}
                     name="reportReason"
-                    value={key} // Sending the enum value (e.g., "HARASSMENT_BULLYING")
+                    value={key}
                     checked={selectedReason === key}
                     onChange={() => {
                       setError(null);
@@ -109,12 +122,8 @@ const ReportConfirmationModal = ({
                     className="mr-2"
                     disabled={isReporting}
                   />
-                  <label
-                    htmlFor={key}
-                    className="text-gray-700 dark:text-gray-300"
-                  >
+                  <label className="text-gray-700 dark:text-gray-300">
                     {reportReasonsEnum[key]}{" "}
-                    {/* Display the string representation */}
                   </label>
                 </div>
               ))}
@@ -151,6 +160,7 @@ ReportConfirmationModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   reportPost: PropTypes.func.isRequired,
   isReporting: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default ReportConfirmationModal;

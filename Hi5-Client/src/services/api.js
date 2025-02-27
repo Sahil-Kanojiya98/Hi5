@@ -125,6 +125,19 @@ const getMessagesByChatId = async (chatId) => {
   return axiosInstance.get(`/message/${chatId}`);
 };
 
+const deleteMessagesByChatId = async (chatId) => {
+  return axiosInstance.delete(`/message/${chatId}`);
+};
+
+const uploadMedia = async (formData, onUploadProgressHandler) => {
+  return axiosInstance.post("/message/upload/media", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress: onUploadProgressHandler,
+  });
+};
+
 export {
   checkEmail,
   checkUsername,
@@ -153,4 +166,6 @@ export {
   getMyChats,
   createChat,
   getMessagesByChatId,
+  uploadMedia,
+  deleteMessagesByChatId,
 };

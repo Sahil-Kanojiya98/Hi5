@@ -116,6 +116,8 @@ export const StoryCreatedToast = () => {
   ));
 };
 
+
+
 export const MessageToast = (messageData) => {
   t.custom((t) => (
     <Link to={`/chat/${messageData?.senderUserId}`}>
@@ -136,13 +138,11 @@ export const MessageToast = (messageData) => {
 
         <div className="hidden sm:block">
           <div className="flex items-center space-x-3">
-            <Link to={`/profile/${messageData?.senderUserId}`}>
               <img
                 src={messageData?.senderProfileImageUrl}
                 alt={`${messageData?.senderFullname}'s profile`}
                 className="border rounded-full w-10 h-10"
               />
-            </Link>
             <div>
               <p className="font-semibold text-gray-900 dark:text-gray-100">
                 {messageData?.senderFullname}

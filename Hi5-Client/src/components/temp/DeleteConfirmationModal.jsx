@@ -7,6 +7,7 @@ const DeleteConfirmationModal = ({
   closeModal,
   confirmDelete,
   isDeleting,
+  type,
 }) => {
   useEffect(() => {
     const handleEscape = (event) => {
@@ -43,7 +44,7 @@ const DeleteConfirmationModal = ({
             }`}
           >
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-semibold text-red-600 text-xl dark:text-red-400">
+              <h3 className="font-semibold text-red-600 dark:text-red-400 text-xl">
                 Confirm Deletion
               </h3>
               <button
@@ -58,9 +59,31 @@ const DeleteConfirmationModal = ({
                 />
               </button>
             </div>
-            <p className="mb-6 text-gray-700 dark:text-gray-300">
-              Are you sure you want to delete this post?
-            </p>
+            {type === "POST" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Are you sure you want to delete this post?
+              </p>
+            )}
+            {type === "REEL" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Are you sure you want to delete this reel?
+              </p>
+            )}
+            {type === "STORY" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Are you sure you want to delete this story?
+              </p>
+            )}
+            {type === "COMMENT" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Are you sure you want to delete this comment?
+              </p>
+            )}
+            {type === "MESSAGES" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Are you sure you want to delete all messages?
+              </p>
+            )}
             <div className="flex justify-end gap-4">
               <button
                 onClick={closeModal}
@@ -97,6 +120,7 @@ DeleteConfirmationModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   confirmDelete: PropTypes.func.isRequired,
   isDeleting: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default DeleteConfirmationModal;

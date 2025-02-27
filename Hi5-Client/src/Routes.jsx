@@ -16,7 +16,7 @@ import ReelsPage from "./views/ReelsPage";
 import SearchPage from "./views/SearchPage";
 import ChatPage from "./views/ChatPage";
 import NotificationsPage from "./views/NotificationsPage";
-// import ProfilePage from "./views/ProfilePage";
+import ProfilePage from "./views/ProfilePage";
 // import SettingsPage from "./views/SettingsPage";
 // import SharedMediaPage from "./views/SharedMediaPage";
 // import SavedPostsPage from "./pages/SavedPostsPage";
@@ -149,10 +149,9 @@ const RoutesConfig = () => {
       <Route
         path="/profile/:userId"
         element={
-          <></>
-          // <AuthGuard>
-          //   <ProfilePage />
-          //   </AuthGuard>
+          <AuthGuard>
+            <ProfilePage />
+          </AuthGuard>
         }
       />
 

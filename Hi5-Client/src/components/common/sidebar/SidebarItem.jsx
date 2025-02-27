@@ -6,10 +6,10 @@ const SidebarItem = ({ icon, label, link }) => (
     to={link}
     className="flex justify-center lg:justify-start items-center hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded cursor-pointer"
   >
-    <li className="flex justify-center items-center text-xl">
+    <div className="flex justify-center items-center text-xl">
       <span className="lg:mr-2">{icon}</span>
       <span className="hidden lg:block">{label}</span>
-    </li>
+    </div>
   </Link>
 );
 

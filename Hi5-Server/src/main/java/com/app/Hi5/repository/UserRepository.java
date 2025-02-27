@@ -52,6 +52,15 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     )
     Page<User> findUsersByUsernameAndFullname(String keyword, PageRequest pageRequest);
 
+    @Query(
+            "{'$and': [ " +
+                    "{'role': 'USER'}, " +
+                    "{'id': ?0} " +
+                    "]}"
+    )
+    Optional<User> findUserById(ObjectId id);
+
+
 //    Optional<User> findByUsername(String username);
 //
 //    @Aggregation(pipeline = {

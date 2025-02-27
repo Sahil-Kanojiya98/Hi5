@@ -1,6 +1,7 @@
 package com.app.Hi5.dto.response;
 
 
+import com.app.Hi5.dto.enums.FollowStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,6 @@ public class UserProfileResponse {
     private Long followersCount;
     private Long followingsCount;
     private Long postsCount;
-    private Boolean followingFlag;
+    private FollowStatus followStatus;
 
 }

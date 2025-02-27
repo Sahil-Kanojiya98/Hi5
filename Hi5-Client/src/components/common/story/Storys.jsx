@@ -412,6 +412,7 @@ const Stories = () => {
         closeModal={closeDeleteModal}
         confirmDelete={confirmDelete}
         isDeleting={isDeleting}
+        type="STORY"
       />
     </>
   );

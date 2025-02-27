@@ -19,8 +19,8 @@ public class MessageService {
         return messageRepository.findByChatIdOrderByCreatedAtAsc(chatId);
     }
 
-    public Message save(String chatId, String imageUrl, String videoUrl, String message, String senderId) {
-        return messageRepository.save(Message.builder().chatId(chatId).imageUrl(imageUrl).videoUrl(videoUrl).message(message).createdByUserId(senderId).build());
+    public Message save(String chatId, String imageUrl, String videoUrl, String message, String senderUserId,String receiverUserId) {
+        return messageRepository.save(Message.builder().chatId(chatId).imageUrl(imageUrl).videoUrl(videoUrl).message(message).senderUserId(senderUserId).receiverUserId(receiverUserId).build());
     }
 
 }

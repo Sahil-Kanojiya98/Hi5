@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 const MobileNavItem = ({ icon, link }) => (
   <Link to={link}>
-    <li className="flex items-center text-2xl hover:text-gray-400 cursor-pointer">
+    <div className="flex items-center hover:text-gray-400 text-2xl cursor-pointer">
       {icon}
-    </li>
+    </div>
   </Link>
 );
 

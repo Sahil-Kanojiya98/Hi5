@@ -35,15 +35,15 @@ public class UserController {
     @GetMapping("/search/{keyword}")
     @PreAuthorize("principal.isAccountNonLocked()")
     public ResponseEntity<List<UserSearchResponse>> getUsersByPrefix(@PathVariable("keyword") String keyword, @RequestParam("page") Integer page, @RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<UserSearchResponse> responses = userService.getUsersByKeyword(keyword,page,size);
+        List<UserSearchResponse> responses = userService.getUsersByKeyword(keyword, page, size);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable("userId") String userId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        UserProfileResponse response=userService.getProfile(userId,userDetails.getUser());
-//        return new ResponseEntity<>(response,HttpStatus.OK);
-//    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable("userId") String userId) {
+        UserProfileResponse response = userService.getProfile(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 //    @PatchMapping("/update-images")
 //    public ResponseEntity<UpdateImagesResponse> updateUserImages(@RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture, @RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture, @AuthenticationPrincipal UserDetailsImpl userDetails) {

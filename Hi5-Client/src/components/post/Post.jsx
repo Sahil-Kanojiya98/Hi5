@@ -265,12 +265,14 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
         closeModal={closeDeleteModal}
         confirmDelete={confirmDelete}
         isDeleting={isDeleting}
+        type="POST"
       />
       <ReportConfirmationModal
         isOpen={isReportModalOpen}
         closeModal={closeReportModal}
         reportPost={confirmReport}
         isReporting={isReporting}
+        type="POST"
       />
       <CommentModel
         isOpen={isCommentModelOpen}
