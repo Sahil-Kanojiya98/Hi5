@@ -22,6 +22,7 @@ import {
   unsave,
 } from "../../services/api";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Post = ({ post, removePost, isMyProfilePosts }) => {
   const user = useSelector((state) => state.user.profile);
@@ -142,11 +143,13 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
     <div className="bg-white dark:bg-black shadow-md mx-auto mb-6 p-3 sm:p-4 rounded-lg w-full max-w-xl">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-3">
-          <img
-            src={post.profilePictureUrl}
-            alt={`${post.fullname}'s profile`}
-            className="rounded-full w-12 h-12 object-cover"
-          />
+          <Link to={`/profile/${post.userId}`}>
+            <img
+              src={post.profilePictureUrl}
+              alt={`${post.fullname}'s profile`}
+              className="rounded-full w-10 h-10 object-cover"
+            />
+          </Link>
           <div className="flex flex-col">
             <p className="font-semibold text-md sm:text-lg">{post.fullname}</p>
             <p className="flex sm:flex-row flex-col items-start sm:items-center space-x-1 text-gray-500 text-sm whitespace-nowrap">
@@ -270,7 +273,7 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
       <ReportConfirmationModal
         isOpen={isReportModalOpen}
         closeModal={closeReportModal}
-        reportPost={confirmReport}
+        report={confirmReport}
         isReporting={isReporting}
         type="POST"
       />

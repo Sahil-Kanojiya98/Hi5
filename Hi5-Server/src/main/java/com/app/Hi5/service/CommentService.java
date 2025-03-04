@@ -59,7 +59,6 @@ public class CommentService {
                 reelRepository.save(reel);
             }
         }
-
         notificationService.makeCommentNotificationAndSend(user, relevantId, type);
         return "Comment created successfully!";
     }

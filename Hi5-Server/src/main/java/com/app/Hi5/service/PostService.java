@@ -48,7 +48,7 @@ public class PostService {
             Post savedPost = postRepository.save(post);
             user.getUserPostIds().add(savedPost.getUserId());
             userRepository.save(user);
-            notificationService.makeNewPostSharedNotificationAndSend(user);
+            notificationService.makeNewPostSharedNotificationAndSend(user, savedPost);
             return "Post created successfully!";
         } catch (IOException e) {
             log.error("Error while saving files for post: {}", e.getMessage(), e);
@@ -92,69 +92,25 @@ public class PostService {
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-//    public void likePost(User user, String postId) {
-//        Post post = postRepository.findById(new ObjectId(postId)).orElseThrow(() -> new EntityNotFoundException("Post not found."));
-//        post.getLikedUserIds().add(user.getId().toHexString());
-//        postRepository.save(post);
-////        send notification to user.getId(); only once notification can be created for a post
-//    }
-//
-//    public void unlikePost(User user, String postId) {
-//        Post post = postRepository.findById(new ObjectId(postId)).orElseThrow(() -> new EntityNotFoundException("Post not found."));
-//        post.getLikedUserIds().remove(user.getId().toHexString());
-//        postRepository.save(post);
-//    }
+    public PostResponse findPost(String postId) {
+        return postRepository.findById(new ObjectId(postId)).map(post -> {
+            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElseThrow(() -> new EntityNotFoundException("user not found!"));
+            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(LikeStatus.NOT_LIKED).reportStatus(ReportStatus.NOT_REPORTED).saveStatus(SaveStatus.NOT_SAVED).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+        }).orElseThrow(() -> new EntityNotFoundException("Post not found!"));
+    }
 
-//    public void addSavedPost(User user, String postId) {
-//        Post post = postRepository.findById(new ObjectId(postId)).orElseThrow(() -> new EntityNotFoundException("Post not found."));
-//        Save savedContent= Save.builder().saveType()
-//        user.getSavedPostIds().add(postId);
-//        post.getSavedUserIds().add(user.getId().toHexString());
-//        postRepository.save(post);
-//        userRepository.save(user);
-//    }
-//
-//    public void removeSavedPost(User user, String postId) {
-//        Post post = postRepository.findById(new ObjectId(postId)).orElseThrow(() -> new EntityNotFoundException("Post not found."));
-//        user.getSavedPostIds().remove(postId);
-//        post.getSavedUserIds().remove(user.getId().toHexString());
-//        postRepository.save(post);
-//        userRepository.save(user);
-//    }
+    public PostResponse findPost(String postId, User user) {
+        return postRepository.findById(new ObjectId(postId)).map(post -> {
+            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElseThrow(() -> new EntityNotFoundException("user not found!"));
+            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+        }).orElseThrow(() -> new EntityNotFoundException("Post not found!"));
+    }
 
-//    public SharedPostResponse findPost(String postId) {
+//    public PostResponse findPost(String postId, User user) {
 //        return postRepository.findById(new ObjectId(postId)).map(post -> {
 //            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElseThrow(() -> new EntityNotFoundException("user not found!"));
-//            return SharedPostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+//            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
 //        }).orElseThrow(() -> new EntityNotFoundException("Post not found!"));
-//    }
-
-//    public List<PostResponse> findSavedPosts(User user, int pageNo, int pageSize) {
-//        List<ObjectId> savedPostsList = user.getSavedPostIds().stream().map(ObjectId::new).toList();
-//        Page<Post> savedPosts = postRepository.findAllByIdIn(savedPostsList, PageRequest.of(pageNo, pageSize));
-//        return savedPosts.map(post -> {
-//            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElse(null);
-//            if (postUser == null) {
-//                return null;
-//            }
-//            return PostResponse
-//                    .builder()
-//                    .id(post.getId().toHexString())
-//                    .userId(post.getUserId())
-//                    .content(post.getContent())
-//                    .imageUrl(post.getImageUrl())
-//                    .videoUrl(post.getVideoUrl())
-//                    .createdAt(post.getCreatedAt())
-//                    .likesCount(post.getLikedUserIds().size())
-//                    .commentsCount(post.getCommentIds().size())
-//                    .isLiked(post.getLikedUserIds().contains(user.getId().toHexString()))
-//                    .isReported(post.getReportedUsersIds().contains(user.getId().toHexString()))
-//                    .isSaved(post.getSavedUserIds().contains(user.getId().toHexString()))
-//                    .username(postUser.getUsername())
-//                    .fullname(postUser.getFullname())
-//                    .profilePictureUrl(postUser.getProfileImageUrl())
-//                    .build();
-//        }).filter(Objects::nonNull).stream().toList();
 //    }
 
 }

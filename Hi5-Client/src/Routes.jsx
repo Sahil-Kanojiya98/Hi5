@@ -18,7 +18,7 @@ import ChatPage from "./views/ChatPage";
 import NotificationsPage from "./views/NotificationsPage";
 import ProfilePage from "./views/ProfilePage";
 // import SettingsPage from "./views/SettingsPage";
-// import SharedMediaPage from "./views/SharedMediaPage";
+import SharedMediaPage from "./views/SharedMediaPage";
 // import SavedPostsPage from "./pages/SavedPostsPage";
 // import SearchPage from "./pages/SearchPage";
 // import AdminPage from "./pages/AdminPage";
@@ -175,7 +175,7 @@ const RoutesConfig = () => {
         }
       />
 
-      {/* <Route path="/share" element={<SharedMediaPage />} /> */}
+      <Route path="/share/:entity/:entityId" element={<SharedMediaPage />} />
 
       <Route
         path="/admin"

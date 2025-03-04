@@ -20,7 +20,7 @@ const reportReasonsEnum = {
 const ReportConfirmationModal = ({
   isOpen,
   closeModal,
-  reportPost,
+  report,
   isReporting,
   type,
 }) => {
@@ -54,7 +54,7 @@ const ReportConfirmationModal = ({
   const handleSubmit = () => {
     setError(null);
     if (selectedReason) {
-      reportPost(selectedReason);
+      report(selectedReason);
       closeModal();
     } else {
       setError("Please select a reason before submitting.");
@@ -158,7 +158,7 @@ const ReportConfirmationModal = ({
 ReportConfirmationModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
-  reportPost: PropTypes.func.isRequired,
+  report: PropTypes.func.isRequired,
   isReporting: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
 };

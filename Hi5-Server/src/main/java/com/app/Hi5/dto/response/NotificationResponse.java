@@ -1,4 +1,4 @@
-package com.app.Hi5.model;
+package com.app.Hi5.dto.response;
 
 import com.app.Hi5.model.Enum.NotificationType;
 import lombok.AllArgsConstructor;
@@ -8,36 +8,32 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "notifications")
-public class Notification {
+public class NotificationResponse {
 
-    @Id
-    private ObjectId id;
+    private String id;
 
-    @Field("user")
     private String notificationUserId;
 
-    @Field("user_id")
     private String userId;
 
-    @Field("type")
     private NotificationType type;
 
-    @Field("relevant")
     private String relevantId;
 
-    @Field("created_at")
-    @CreatedDate
     private Date createdAt;
+
+    private String username;
+
+    private String fullname;
+
+    private String profilePictureUrl;
 
 }

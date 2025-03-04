@@ -1,5 +1,5 @@
 import ReelUploadModal from "./ReelUploadModel";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import axiosInstance from "../../services/axios.config";
 import { useNavigate } from "react-router-dom";
 import Reel from "./Reel";
@@ -15,8 +15,8 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
   const [page, setPage] = useState(0);
   const [error, setError] = useState(null);
 
-  const getReelEndpoint = () => {
-    switch ({ feedType, userId }) {
+  const getReelEndpoint = useCallback(() => {
+    switch (feedType) {
       case "Random":
         return `/reel`;
       // case "posts":
@@ -26,9 +26,9 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
       default:
         return `/reel`;
     }
-  };
+  }, [feedType]);
 
-  const fetchReels = async () => {
+  const fetchReels = useCallback(async () => {
     try {
       const endpoint = getReelEndpoint();
       const response = await axiosInstance.get(endpoint, {
@@ -47,7 +47,7 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getReelEndpoint, setReels, setHasMore, setError, setIsLoading]);
 
   useEffect(() => {
     setReels([]);
@@ -59,13 +59,13 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
 
   useEffect(() => {
     fetchReels();
-  }, [page, feedType, userId]);
+  }, [page, feedType, userId, fetchReels]);
 
-  const loadMoreReels = () => {
+  const loadMoreReels = useCallback(() => {
     if (!isLoading && hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
-  };
+  }, [isLoading, hasMore, setPage]);
 
   const loaderRef = useRef(null);
   useEffect(() => {
@@ -122,6 +122,16 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
         id="video-container"
         className="bg-white dark:bg-black mt-14 md:mt-0 w-full max-w-md h-[87dvh] md:h-screen overflow-scroll snap-mandatory snap-y hide-scrollbar"
       >
+        {!hasMore && !isLoading && reels.length === 0 && (
+          <div className="flex justify-center items-center px-20 sm:px-40 !w-full !h-full p">
+            <div className="bg-white shadow-md px-4 py-2 rounded-lg text-center">
+              <p className="font-semibold text-gray-500 text-lg">
+                No reels exist
+              </p>
+            </div>
+          </div>
+        )}
+
         {!isLoading && reels.length > 0 && (
           <>
             {reels.map((reel) => (

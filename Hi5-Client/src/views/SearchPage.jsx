@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Search, Visibility, PersonAdd, Email } from "@mui/icons-material";
-import { Link, useSearchParams } from "react-router-dom";
+import { Search } from "@mui/icons-material";
+import { useSearchParams } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 import { searchUsersByKeyword } from "../services/api";
+import UserSearchCard from "../components/temp/UserSearchCard";
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -58,10 +59,10 @@ const SearchPage = () => {
   const handleSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearchTerm(newSearchTerm);
-    setSearchParams({ query: newSearchTerm });
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
+      setSearchParams({ query: newSearchTerm }, { replace: true });
       setDebouncedSearchTerm(newSearchTerm);
     }, 500);
   };
@@ -114,66 +115,25 @@ const SearchPage = () => {
               </div>
             </div>
             <div className="bg-slate-200 dark:bg-slate-800 mx-3 rounded-lg h-1"></div>
-            <div className="flex flex-col space-y-4 mt-0 mb-10 sm:mb-3 sm:p-4 pb-4 h-[calc(100dvh-160px)] overflow-y-auto hide-scrollbar">
+            <div className="flex flex-col space-y-4 mt-0 mb-10 sm:mb-3 min-[450px]:p-4 pb-4 h-[calc(100dvh-160px)] overflow-y-auto hide-scrollbar">
               {!isLoading && users.length === 0 && (
                 <p className="text-center">No users found.</p>
               )}
               {users.length > 0 && (
                 <>
                   {users.map((user) => (
-                    <div
-                      key={user?.id}
-                      className="flex justify-between items-center bg-white dark:bg-black mx-3 sm:mx-0 p-3 rounded-lg transition"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="rounded-full w-10 h-10 overflow-hidden">
-                          <img
-                            src={user?.profilePictureUrl}
-                            alt={`${user?.fullname}'s profile`}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div>
-                          <p className="font-semibold sm:text-md text-sm">
-                            {user?.fullname}
-                          </p>
-                          <p className="text-gray-400 text-sm">
-                            @{user?.username}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Link
-                          to={`/profile/${user?.id}`}
-                          className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-3 sm:px-4 py-1 sm:py-2 rounded-lg text-white transition"
-                        >
-                          <Visibility />
-                          <span className="hidden md:inline">View</span>
-                        </Link>
-                        <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-3 sm:px-4 py-1 sm:py-2 rounded-lg text-white transition">
-                          <PersonAdd />
-                          <span className="hidden md:inline">Follow</span>
-                        </button>
-                        <Link
-                          to={`/chat/${user?.id}`}
-                          className="flex items-center gap-2 bg-teal-500 hover:bg-teal-600 px-3 sm:px-4 py-1 sm:py-2 rounded-lg text-white transition"
-                        >
-                          <Email />
-                          <span className="hidden md:inline">Message</span>
-                        </Link>
-                      </div>
-                    </div>
+                    <UserSearchCard key={user.id} user={user} />
                   ))}
-                  {isLoading && users.length === 0 && (
-                    <div className="flex flex-col justify-center">
-                      <p className="text-center">Loading...</p>
-                    </div>
-                  )}
-                  <div ref={loaderRef}></div>
-                  {!isLoading && error && (
-                    <p className="my-4 text-red-500 text-center">{error}</p>
-                  )}
                 </>
+              )}
+              {isLoading && users.length === 0 && (
+                <div className="flex flex-col justify-center">
+                  <p className="text-center">Loading...</p>
+                </div>
+              )}
+              <div ref={loaderRef}></div>
+              {!isLoading && error && (
+                <p className="my-4 text-red-500 text-center">{error}</p>
               )}
             </div>
           </div>

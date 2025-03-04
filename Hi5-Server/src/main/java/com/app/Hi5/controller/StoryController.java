@@ -1,7 +1,7 @@
 package com.app.Hi5.controller;
 
-import com.app.Hi5.dto.response.StoryResponse;
-import com.app.Hi5.model.Story;
+import com.app.Hi5.dto.response.MyStoryResponse;
+import com.app.Hi5.dto.response.UserStorysResponse;
 import com.app.Hi5.security.UserDetailsImpl;
 import com.app.Hi5.service.StoryService;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +37,14 @@ public class StoryController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<StoryResponse>> getMyActiveStorys(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<StoryResponse> response = storyService.getMyActiveStorys(userDetails.getUser());
+    public ResponseEntity<List<MyStoryResponse>> getMyActiveStorys(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<MyStoryResponse> response = storyService.getMyActiveStorys(userDetails.getUser());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserStorysResponse>> getMyFolloingsActiveStorys(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<UserStorysResponse> response = storyService.getMyFollowingsActiveStories(userDetails.getUser());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -1,5 +1,6 @@
 package com.app.Hi5.dto.response;
 
+import com.app.Hi5.dto.enums.FollowStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class UserSearchResponse {
     private String username;
     private String fullname;
     private String profilePictureUrl;
+    private FollowStatus followStatus;
 
 }

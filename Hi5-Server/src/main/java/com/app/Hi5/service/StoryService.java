@@ -1,6 +1,9 @@
 package com.app.Hi5.service;
 
+import com.app.Hi5.dto.enums.LikeStatus;
+import com.app.Hi5.dto.response.MyStoryResponse;
 import com.app.Hi5.dto.response.StoryResponse;
+import com.app.Hi5.dto.response.UserStorysResponse;
 import com.app.Hi5.exceptions.EntityNotFoundException;
 import com.app.Hi5.exceptions.UnauthorizedAccessException;
 import com.app.Hi5.model.Story;
@@ -16,9 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,8 +46,8 @@ public class StoryService {
                 String videoUrl = fileStorage.saveFile(videoFile, FileType.STORY_VIDEO);
                 story.setVideoUrl(videoUrl);
             }
-            storyRepository.save(story);
-            notificationService.makeNewStorySharedNotificationAndSend(user);
+            Story savedStory = storyRepository.save(story);
+            notificationService.makeNewStorySharedNotificationAndSend(user, savedStory);
             return "Story created successfully";
         } catch (IOException e) {
             log.error("Error while saving files for story: {}", e.getMessage(), e);
@@ -74,12 +78,28 @@ public class StoryService {
         storyRepository.delete(story);
     }
 
-    public List<StoryResponse> getMyActiveStorys(User user) {
+    public List<MyStoryResponse> getMyActiveStorys(User user) {
         Date now = new Date();
         Date last24Hours = new Date(now.getTime() - (24 * 60 * 60 * 1000));
         List<Story> storiesFromLast24Hours = storyRepository.findStoriesFromLast24Hours(user.getId().toHexString(), last24Hours, now);
         System.out.println(storiesFromLast24Hours);
-        return storiesFromLast24Hours.stream().map(story -> StoryResponse.builder().id(story.getId().toHexString()).imageUrl(story.getImageUrl()).videoUrl(story.getVideoUrl()).createdAt(story.getCreatedAt()).likeCount(story.getLikedUserIds().size()).build()).collect(Collectors.toList());
+        return storiesFromLast24Hours.stream().map(story -> MyStoryResponse.builder().id(story.getId().toHexString()).imageUrl(story.getImageUrl()).videoUrl(story.getVideoUrl()).createdAt(story.getCreatedAt()).likeCount(story.getLikedUserIds().size()).build()).collect(Collectors.toList());
+    }
+
+    public List<UserStorysResponse> getMyFollowingsActiveStories(User user) {
+        Date now = new Date();
+        Date last24Hours = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+        List<ObjectId> followingIds = user.getFollowingUserIds().stream().map(ObjectId::new).toList();
+        List<User> followingUsers = userRepository.findAllById(followingIds);
+        Map<String, User> userMap = followingUsers.stream().collect(Collectors.toMap(u -> u.getId().toHexString(), u -> u));
+        List<UserStorysResponse> userStorysResponses = followingIds.stream().map(userId -> {
+            User followingUser = userMap.get(userId.toHexString());
+            if (followingUser == null) return null;
+            List<StoryResponse> stories = storyRepository.findStoriesFromLast24Hours(userId.toHexString(), last24Hours, now).stream().map(story -> StoryResponse.builder().id(story.getId().toHexString()).imageUrl(story.getImageUrl()).videoUrl(story.getVideoUrl()).likeStatus(story.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).build()).toList();
+            return stories.isEmpty() ? null : UserStorysResponse.builder().id(userId.toHexString()).fullname(followingUser.getFullname()).profilePictureUrl(followingUser.getProfileImageUrl()).storys(stories).build();
+        }).filter(Objects::nonNull).toList();
+        System.out.println(userStorysResponses);
+        return userStorysResponses;
     }
 
 }

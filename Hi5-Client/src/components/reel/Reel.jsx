@@ -1,16 +1,21 @@
-import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
-import VolumeOffOutlinedIcon from "@mui/icons-material/VolumeOffOutlined";
-import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
-import FavoriteBorderSharpIcon from "@mui/icons-material/FavoriteBorderSharp";
-import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
-import ShareSharpIcon from "@mui/icons-material/ShareSharp";
-import BookmarkSharpIcon from "@mui/icons-material/BookmarkSharp";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import ReportIcon from "@mui/icons-material/Report";
-import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import ArrowBackSharpIcon from "@mui/icons-material/ArrowBackSharp";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import {
+  PersonAdd,
+  CheckCircle,
+  HourglassEmpty,
+  DeleteOutlineOutlined,
+  ArrowBackSharp,
+  AddCircleOutlineOutlined,
+  ReportGmailerrorred,
+  Report,
+  BookmarkBorderOutlined,
+  BookmarkSharp,
+  ShareSharp,
+  CommentOutlined,
+  FavoriteBorderSharp,
+  FavoriteSharp,
+  VolumeOffOutlined,
+  VolumeUpOutlined,
+} from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
@@ -19,9 +24,11 @@ import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
 import ReportConfirmationModal from "../temp/ReportConfirmationModal";
 import {
   deleteReel,
+  follow,
   likeEntity,
   reportEntity,
   save,
+  unfollow,
   unlikeEntity,
   unsave,
 } from "../../services/api";
@@ -59,13 +66,27 @@ const Reel = ({
   }, [isMuted]);
 
   const [followStatus, setFollowStatus] = useState(reel.followStatus);
-  const followUnfollowClick = () => {
-    if (followStatus === "FOLLOW") {
-      console.log(followStatus);
-    } else if (followStatus === "UNFOLLOW") {
-      console.log(followStatus);
+
+  const followStatusClickHandler = async () => {
+    console.log(followStatus);
+    if (followStatus === "FOLLOWED") {
+      try {
+        const response = await unfollow(reel.userId);
+        setFollowStatus(response.data?.currentStatus);
+      } catch (e) {
+        console.log(e);
+      }
+    } else if (followStatus === "NOT_FOLLOWED") {
+      try {
+        const response = await follow(reel.userId);
+        setFollowStatus(response.data?.currentStatus);
+      } catch (e) {
+        console.log(e);
+      }
+    } else if (followStatus === "REQUEST_SENT") {
+      console.log("already request sent");
     } else {
-      console.log(followStatus);
+      console.log("Invalid Status");
     }
   };
 
@@ -213,7 +234,7 @@ const Reel = ({
     <div className="relative w-full h-full snap-start">
       <div className="top-0 left-1/2 z-10 absolute flex justify-between items-center mt-6 sm:mt-4 md:mt-2 lg:mt-4 mb-3 px-4 sm:px-5 md:px-6 lg:px-7 w-full text-black dark:text-white -translate-x-1/2 transform">
         <span onClick={handleBackClick} className="mx-2 p-2 cursor-pointer">
-          <ArrowBackSharpIcon
+          <ArrowBackSharp
             sx={{
               fontSize: { xs: 23, sm: 25, md: 27 },
             }}
@@ -227,7 +248,7 @@ const Reel = ({
             className="mx-2 p-2 text-black dark:text-white cursor-pointer"
             onClick={createReelModelOpenHandler}
           >
-            <AddCircleOutlineOutlinedIcon
+            <AddCircleOutlineOutlined
               sx={{
                 fontSize: { xs: 23, sm: 25, md: 27 },
               }}
@@ -239,7 +260,7 @@ const Reel = ({
             className="flex items-center space-x-1 text-black hover:text-red-500 dark:text-white hover:scale-110 transition duration-200 cursor-pointer transform"
             onClick={openDeleteModal}
           >
-            <DeleteOutlineOutlinedIcon />
+            <DeleteOutlineOutlined />
           </button>
         )}
       </div>
@@ -260,13 +281,13 @@ const Reel = ({
         onClick={toggleMute}
       >
         {isMuted ? (
-          <VolumeOffOutlinedIcon
+          <VolumeOffOutlined
             sx={{
               fontSize: { xs: 21, sm: 23, md: 25 },
             }}
           />
         ) : (
-          <VolumeUpOutlinedIcon
+          <VolumeUpOutlined
             sx={{
               fontSize: { xs: 21, sm: 23, md: 25 },
             }}
@@ -280,14 +301,14 @@ const Reel = ({
           onClick={likeClickHandler}
         >
           {isLiked ? (
-            <FavoriteSharpIcon
+            <FavoriteSharp
               sx={{
                 fontSize: { xs: 21, sm: 23, md: 25 },
               }}
               className="w-5 sm:w-6 h-5 sm:h-6 text-red-600 transition-colors duration-200"
             />
           ) : (
-            <FavoriteBorderSharpIcon
+            <FavoriteBorderSharp
               sx={{
                 fontSize: { xs: 21, sm: 23, md: 25 },
               }}
@@ -297,7 +318,7 @@ const Reel = ({
           <span className="font-medium text-xs sm:text-sm">{likesCount}</span>
         </button>
         <button className="group flex flex-col items-center space-y-2 hover:scale-110 transition duration-200 transform">
-          <CommentOutlinedIcon
+          <CommentOutlined
             sx={{
               fontSize: { xs: 21, sm: 23, md: 25 },
             }}
@@ -310,7 +331,7 @@ const Reel = ({
           className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
           onClick={shareClickHandler}
         >
-          <ShareSharpIcon
+          <ShareSharp
             sx={{
               fontSize: { xs: 21, sm: 23, md: 25 },
             }}
@@ -322,14 +343,14 @@ const Reel = ({
           onClick={saveClickHandler}
         >
           {isSaved ? (
-            <BookmarkSharpIcon
+            <BookmarkSharp
               sx={{
                 fontSize: { xs: 21, sm: 23, md: 25 },
               }}
               className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-600 transition-colors duration-200"
             />
           ) : (
-            <BookmarkBorderOutlinedIcon
+            <BookmarkBorderOutlined
               sx={{
                 fontSize: { xs: 21, sm: 23, md: 25 },
               }}
@@ -340,7 +361,7 @@ const Reel = ({
 
         {!isMyReel &&
           (isReported ? (
-            <ReportIcon
+            <Report
               sx={{
                 fontSize: { xs: 21, sm: 23, md: 25 },
               }}
@@ -348,7 +369,7 @@ const Reel = ({
               title="This post has already been reported"
             />
           ) : (
-            <ReportGmailerrorredIcon
+            <ReportGmailerrorred
               sx={{
                 fontSize: { xs: 21, sm: 23, md: 25 },
               }}
@@ -359,49 +380,78 @@ const Reel = ({
           ))}
       </div>
 
-      <div className="bottom-8 left-1/2 z-10 absolute flex flex-col justify-between items-center bg-white/10 dark:bg-black/20 shadow-lg backdrop-blur-sm p-2 px-4 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-white dark:text-black text-xs -translate-x-1/2 transform">
+      <div className="bottom-8 left-1/2 z-10 absolute flex flex-col justify-between items-center bg-white/10 dark:bg-black/20 shadow-lg backdrop-blur-sm p-2 px-3 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-white dark:text-black text-xs -translate-x-1/2 transform">
         <div className="flex justify-between items-center w-full">
-          <div className="flex flex-wrap justify-center items-center gap-x-2 sm:gap-x-3 md:gap-x-4">
-            <Link to={`/profile/${reel.userId}`}>
+          <div className="flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4">
+            <Link
+              to={`/profile/${reel.userId}`}
+              className="flex-shrink-0 w-10 sm:w-12 lg:w-14 h-10 sm:h-12 lg:h-14"
+            >
               <img
                 src={reel.profilePictureUrl}
                 alt={`${reel.username}'s profile image`}
-                className="shadow-md border-2 border-gray-800 dark:border-gray-200 rounded-full w-10 sm:w-12 lg:w-14 h-10 sm:h-12 lg:h-14 hover:scale-110 transition-transform duration-300"
+                className="shadow-md border-2 border-gray-800 dark:border-gray-200 rounded-full w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
             </Link>
             <div className="flex flex-col text-black dark:text-white">
-              <span className="w-full font-semibold text-sm sm:text-lg md:text-lg truncate">
+              <span className="font-semibold text-sm sm:text-lg md:text-lg truncate">
                 {reel.fullname}
               </span>
-              <span className="flex sm:flex-row flex-col gap-1 sm:gap-2 md:gap-4 lg:gap-6 w-full text-gray-600 dark:text-gray-400 text-xs sm:text-sm truncate">
+              <span className="flex sm:flex-row flex-col flex-wrap gap-1 text-gray-600 dark:text-gray-400 text-xs sm:text-sm truncate">
                 <span>@{reel.username}</span>
                 <TimeAgo date={reel.createdAt} />
               </span>
             </div>
           </div>
 
+          {/* Follow/Unfollow Button */}
           {!isMyReel && (
             <button
-              disabled={followStatus === "REQUEST_SENT"}
-              className={`px-5 py-2 rounded-full text-sm font-semibold transition duration-300
-                shadow-md ${
-                  followStatus === "REQUEST_SENT"
-                    ? "bg-gray-500 hover:bg-gray-600"
-                    : "bg-blue-500 hover:bg-blue-600"
-                } text-white`}
-              onClick={followUnfollowClick}
+              onClick={followStatusClickHandler}
+              className={`flex items-center gap-2 min-[410px]:px-4  px-2 py-2 rounded-full text-white text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md
+                  ${
+                    followStatus === "FOLLOWED"
+                      ? "bg-green-500 hover:bg-green-600"
+                      : ""
+                  }
+                  ${
+                    followStatus === "NOT_FOLLOWED"
+                      ? "bg-blue-500 hover:bg-blue-600"
+                      : ""
+                  }
+                  ${
+                    followStatus === "REQUEST_SENT"
+                      ? "bg-yellow-500 hover:bg-yellow-600"
+                      : ""
+                  }
+              `}
             >
-              {followStatus === "FOLLOW"
-                ? "Unfollow"
-                : followStatus === "REQUEST_SENT"
-                ? "Request Sent"
-                : "Follow"}
+              {followStatus === "FOLLOWED" && (
+                <>
+                  <CheckCircle className="w-5 h-5 text-white" />
+                  <span className="hidden md:inline">Following</span>
+                </>
+              )}
+              {followStatus === "NOT_FOLLOWED" && (
+                <>
+                  <PersonAdd className="w-5 h-5 text-white" />
+                  <span className="hidden md:inline">Follow</span>
+                </>
+              )}
+              {followStatus === "REQUEST_SENT" && (
+                <>
+                  <HourglassEmpty className="w-5 h-5 text-white" />
+                  <span className="hidden md:inline">Requested</span>
+                </>
+              )}
             </button>
           )}
         </div>
+
+        {/* Description Section */}
         <div className="pt-2 w-full">
           <p
-            className={`w-full text-black dark:text-white text-xs ${
+            className={`w-full text-black dark:text-white text-xs sm:text-sm ${
               expanded ? "" : "line-clamp-1"
             }`}
           >
@@ -409,7 +459,7 @@ const Reel = ({
           </p>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="float-end mt-1 text-blue-500 text-xs"
+            className="float-end mt-1 text-blue-500 text-xs sm:text-sm"
           >
             {expanded ? "See Less" : "See More"}
           </button>
@@ -427,7 +477,7 @@ const Reel = ({
       <ReportConfirmationModal
         isOpen={isReportModalOpen}
         closeModal={closeReportModal}
-        reportPost={confirmReport}
+        report={confirmReport}
         isReporting={isReporting}
         type="REEL"
       />

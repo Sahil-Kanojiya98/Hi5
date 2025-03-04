@@ -1,7 +1,7 @@
 import CreatePost from "../components/post/CreatePost";
 import MainLayout from "../components/layout/MainLayout";
 import RightPanel from "../components/common/panel/RightPanel";
-import Storys from "../components/common/story/Storys";
+// import Storys from "../components/common/story/Storys";
 import Posts from "../components/post/Posts";
 import { useState } from "react";
 
@@ -20,7 +20,7 @@ const HomePage = () => {
       <MainLayout>
         <div className="flex justify-center items-start gap-5 bg-gray-100 dark:bg-gray-900 mx-auto mt-[60px] sm:mt-[50px] md:mt-[10px] p-2 sm:p-4 md:pt-[0px] md:pl-[70px] lg:pl-[260px] w-full">
           <div className="flex flex-col items-center px-2 sm:px-3 xl:px-4 w-full lg:max-w-xl max-w-2xl">
-            <Storys />
+            {/* <Storys /> */}
 
             <CreatePost />
 

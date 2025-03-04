@@ -8,20 +8,25 @@ import {
   Male,
   Female,
   Transgender,
-  HelpOutline,
+  CheckCircle,
+  PersonAdd,
+  HourglassEmpty,
+  Email,
 } from "@mui/icons-material";
 import * as Yup from "yup";
-// import Posts from "../components/post/Posts";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
+  follow,
   getUserProfile,
+  unfollow,
   updateProfileAndCoverImage,
   updateProfileInfo,
 } from "../services/api";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { setUser } from "../redux/slices/userSlice";
+// import Posts from "../components/post/Posts";
 
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState("");
@@ -177,8 +182,43 @@ const ProfilePage = () => {
 
   const [followStatus, setFollowStatus] = useState("NOT_FOLLOWED");
 
-  const followStatusClickHandler = () => {
+  const followStatusClickHandler = async () => {
     console.log(followStatus);
+    if (followStatus === "FOLLOWED") {
+      try {
+        const response = await unfollow(profileData.id);
+        if (response.data?.currentStatus === "NOT_FOLLOWED") {
+          setProfileData((prev) => {
+            return {
+              ...prev,
+              followersCount: prev?.followersCount - 1,
+            };
+          });
+        }
+        setFollowStatus(response.data?.currentStatus);
+      } catch (e) {
+        console.log(e);
+      }
+    } else if (followStatus === "NOT_FOLLOWED") {
+      try {
+        const response = await follow(profileData.id);
+        if (response.data?.currentStatus === "FOLLOWED") {
+          setProfileData((prev) => {
+            return {
+              ...prev,
+              followersCount: prev?.followersCount + 1,
+            };
+          });
+        }
+        setFollowStatus(response.data?.currentStatus);
+      } catch (e) {
+        console.log(e);
+      }
+    } else if (followStatus === "REQUEST_SENT") {
+      console.log("already request sent");
+    } else {
+      console.log("Invalid Status");
+    }
   };
 
   const myId = useSelector((state) => state?.user?.profile?.id);
@@ -213,6 +253,14 @@ const ProfilePage = () => {
     } else {
       navigate("/");
     }
+  };
+
+  const handleCancel = () => {
+    setCoverImage(profileData?.coverPictureUrl);
+    setProfileImage(profileData?.profilePictureUrl);
+    setCoverImageFile(null);
+    setProfileImageFile(null);
+    setIsEditable(false);
   };
 
   return (
@@ -327,12 +375,11 @@ const ProfilePage = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end items-center gap-1 mt-10 px-6 h-10">
+              <div className="flex justify-end items-center gap-3 mt-10 px-6 h-10">
                 {!isMyProfile && (
                   <button
                     onClick={followStatusClickHandler}
-                    className={`
-                      px-5 py-2 rounded-full text-white text-sm font-medium transition duration-200 transform hover:scale-105 shadow-md
+                    className={`flex items-center gap-2 min-[410px]:px-4  px-2 py-2 rounded-full text-white text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md
                       ${
                         followStatus === "FOLLOWED"
                           ? "bg-green-500 hover:bg-green-600"
@@ -348,23 +395,60 @@ const ProfilePage = () => {
                           ? "bg-yellow-500 hover:bg-yellow-600"
                           : ""
                       }
-                    `}
+                  `}
                   >
-                    {followStatus === "FOLLOWED" && "Following"}
-                    {followStatus === "NOT_FOLLOWED" && "Follow"}
-                    {followStatus === "REQUEST_SENT" && "Requested"}
+                    {followStatus === "FOLLOWED" && (
+                      <>
+                        <CheckCircle className="w-5 h-5 text-white" />
+                        <span className="hidden md:inline">Following</span>
+                      </>
+                    )}
+                    {followStatus === "NOT_FOLLOWED" && (
+                      <>
+                        <PersonAdd className="w-5 h-5 text-white" />
+                        <span className="hidden md:inline">Follow</span>
+                      </>
+                    )}
+                    {followStatus === "REQUEST_SENT" && (
+                      <>
+                        <HourglassEmpty className="w-5 h-5 text-white" />
+                        <span className="hidden md:inline">Requested</span>
+                      </>
+                    )}
                   </button>
+                )}
+
+                {!isMyProfile && (
+                  <Link to={`/chat/${profileData.id}`}>
+                    <button className="flex items-center gap-2 bg-gray-800 hover:bg-gray-900 shadow-md px-5 py-2 rounded-full font-medium text-white text-sm hover:scale-105 transition duration-200 transform">
+                      <Email />
+                      Message
+                    </button>
+                  </Link>
                 )}
 
                 {isMyProfile &&
                   (profileImageFile || coverImageFile || isEditable) && (
                     <button
-                      className="bg-gray-800 hover:bg-gray-900 shadow-md ml-3 px-4 py-2 rounded-full text-white text-sm transition duration-200"
+                      className="flex items-center gap-2 bg-gray-800 hover:bg-gray-900 shadow-md ml-3 px-4 py-2 rounded-full text-white text-sm transition duration-200"
                       onClick={updateHandler}
+                      aria-label="Update profile"
                     >
                       Update
                     </button>
                   )}
+
+                {isMyProfile &&
+                  (profileImageFile || coverImageFile || isEditable) && (
+                    <button
+                      className="flex items-center gap-2 bg-gray-800 hover:bg-gray-900 shadow-md px-4 py-2 rounded-full text-white text-sm transition duration-200"
+                      onClick={handleCancel}
+                      aria-label="Cancel changes"
+                    >
+                      Cancel
+                    </button>
+                  )}
+
                 {isMyProfile && (
                   <div
                     className="hover:bg-gray-200 p-2 rounded-full"
@@ -393,113 +477,135 @@ const ProfilePage = () => {
                 <span className="px-1 text-gray-500 text-sm">
                   @{profileData?.username}
                 </span>
-                <p className="mt-2 px-1 text-gray-700 dark:text-gray-300">
-                  {profileData?.email}
-                </p>
 
-                {!isEditable && profileData?.bio && (
-                  <p className="mt-2 p-1 text-gray-700 dark:text-gray-300 text-sm">
-                    {profileData?.bio}
+                {(isMyProfile || profileType === "PUBLIC") && (
+                  <p className="mt-2 px-1 text-gray-700 dark:text-gray-300">
+                    {profileData?.email}
                   </p>
                 )}
-                {isMyProfile && isEditable && (
-                  <textarea
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                    className="bg-gray-200 mt-2 p-1 rounded-lg outline-none w-full text-gray-700 dark:text-gray-300 text-sm"
-                  />
+
+                {(isMyProfile || profileType === "PUBLIC") && (
+                  <>
+                    {!isEditable && profileData?.bio && (
+                      <p className="mt-2 p-1 text-gray-700 dark:text-gray-300 text-sm">
+                        {profileData?.bio}
+                      </p>
+                    )}
+                    {isMyProfile && isEditable && (
+                      <textarea
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                        className="bg-gray-200 mt-2 p-1 rounded-lg outline-none w-full text-gray-700 dark:text-gray-300 text-sm"
+                      />
+                    )}
+                  </>
                 )}
 
-                <div className="flex items-center gap-6 pt-2">
-                  {(profileData?.link || (isMyProfile && isEditable)) && (
-                    <div>
-                      {!isEditable && profileData?.link && (
-                        <a
-                          href={profileData.link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center gap-2 p-1 rounded-lg text-blue-500 text-sm hover:underline"
-                        >
-                          <LinkIcon className="text-gray-500" />
-                          {profileData.link}
-                        </a>
-                      )}
-                      {isMyProfile && isEditable && (
-                        <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
-                          <LinkIcon className="text-gray-500" />
-                          <input
-                            type="text"
-                            value={link}
-                            onChange={(e) => setLink(e.target.value)}
-                            className="bg-transparent outline-none w-full text-blue-500"
-                            placeholder="Enter your link"
-                          />
+                <div className="flex sm:flex-row flex-col items-start sm:items-center gap-6 pt-2">
+                  {(isMyProfile || profileType === "PUBLIC") && (
+                    <>
+                      {(profileData?.link || (isMyProfile && isEditable)) && (
+                        <div>
+                          {!isEditable && profileData?.link && (
+                            <a
+                              href={profileData.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex items-center gap-2 p-1 rounded-lg text-blue-500 text-sm hover:underline"
+                            >
+                              <LinkIcon className="text-gray-500" />
+                              {profileData.link}
+                            </a>
+                          )}
+                          {isMyProfile && isEditable && (
+                            <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
+                              <LinkIcon className="text-gray-500" />
+                              <input
+                                type="text"
+                                value={link}
+                                onChange={(e) => setLink(e.target.value)}
+                                className="bg-transparent outline-none w-full text-blue-500"
+                                placeholder="Enter your link"
+                              />
+                            </div>
+                          )}
                         </div>
                       )}
-                    </div>
+                    </>
                   )}
 
-                  {(profileData?.dateOfBirth ||
-                    (isMyProfile && isEditable)) && (
-                    <div>
-                      {!isEditable && profileData?.dateOfBirth && (
-                        <div className="flex items-center gap-2 text-gray-500 text-sm">
-                          <CalendarToday />
-                          <span>
-                            DOB{" "}
-                            {new Date(
-                              profileData?.dateOfBirth
-                            ).toLocaleDateString()}
-                          </span>
+                  {(isMyProfile || profileType === "PUBLIC") && (
+                    <>
+                      {(profileData?.dateOfBirth ||
+                        (isMyProfile && isEditable)) && (
+                        <div>
+                          {!isEditable && profileData?.dateOfBirth && (
+                            <div className="flex items-center gap-2 text-gray-500 text-sm">
+                              <CalendarToday />
+                              <span>
+                                DOB{" "}
+                                {new Date(
+                                  profileData?.dateOfBirth
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                          {isMyProfile && isEditable && (
+                            <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
+                              <CalendarToday className="text-gray-500" />
+                              <input
+                                type="date"
+                                value={dateOfBirth}
+                                onChange={(e) => setDateOfBirth(e.target.value)}
+                                className="bg-transparent outline-none w-full text-blue-500"
+                              />
+                            </div>
+                          )}
                         </div>
                       )}
-                      {isMyProfile && isEditable && (
-                        <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
-                          <CalendarToday className="text-gray-500" />
-                          <input
-                            type="date"
-                            value={dateOfBirth}
-                            onChange={(e) => setDateOfBirth(e.target.value)}
-                            className="bg-transparent outline-none w-full text-blue-500"
-                          />
-                        </div>
-                      )}
-                    </div>
+                    </>
                   )}
 
-                  {(profileData?.gender || (isMyProfile && isEditable)) && (
-                    <div>
-                      {!isEditable && profileData?.gender && (
-                        <div className="flex items-center gap-1 text-gray-500 text-sm">
-                          <span>
-                            {profileData.gender === "MALE" && <Male />}
-                            {profileData.gender === "FEMALE" && <Female />}
-                            {profileData.gender === "OTHER" && <Transgender />}
-                            {profileData.gender === "PREFER_NOT_TO_SAY" && (
-                              <HelpOutline />
+                  {(isMyProfile || profileType === "PUBLIC") && (
+                    <>
+                      {(profileData?.gender || (isMyProfile && isEditable)) && (
+                        <div>
+                          {!isEditable &&
+                            profileData?.gender &&
+                            profileData.gender !== "PREFER_NOT_TO_SAY" && (
+                              <div className="flex items-center gap-1 text-gray-500 text-sm">
+                                <span>
+                                  {profileData.gender === "MALE" && <Male />}
+                                  {profileData.gender === "FEMALE" && (
+                                    <Female />
+                                  )}
+                                  {profileData.gender === "OTHER" && (
+                                    <Transgender />
+                                  )}
+                                  {" " + profileData.gender}
+                                </span>
+                              </div>
                             )}
-                            {" " + profileData.gender}
-                          </span>
+                          {isMyProfile && isEditable && (
+                            <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
+                              <span>Gender:</span>
+                              <select
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                                className="bg-transparent outline-none text-blue-500"
+                              >
+                                <option value="MALE">Male</option>
+                                <option value="FEMALE">Female</option>
+                                <option value="OTHER">Other</option>
+                                <option value="PREFER_NOT_TO_SAY">
+                                  Prefer not to say
+                                </option>
+                              </select>
+                            </div>
+                          )}
                         </div>
                       )}
-                      {isMyProfile && isEditable && (
-                        <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
-                          <span>Gender:</span>
-                          <select
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                            className="bg-transparent outline-none text-blue-500"
-                          >
-                            <option value="MALE">Male</option>
-                            <option value="FEMALE">Female</option>
-                            <option value="OTHER">Other</option>
-                            <option value="PREFER_NOT_TO_SAY">
-                              Prefer not to say
-                            </option>
-                          </select>
-                        </div>
-                      )}
-                    </div>
+                    </>
                   )}
                 </div>
 

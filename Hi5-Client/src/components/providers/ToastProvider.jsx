@@ -3,7 +3,16 @@ import { Toaster, toast as t } from "react-hot-toast";
 import { useEffect } from "react";
 import { useWebSocket } from "../../socket/WebSocketProvider";
 import { useSelector } from "react-redux";
-import { Image, PlayCircle, ChatBubble } from "@mui/icons-material";
+import {
+  Favorite,
+  PostAdd,
+  PlayCircle,
+  Collections,
+  Image,
+  ChatBubble,
+  CheckCircle,
+  PersonAdd,
+} from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 export const ToastProvider = ({ children }) => {
@@ -19,8 +28,28 @@ export const ToastProvider = ({ children }) => {
           `/notification/${userId}`,
           (message) => {
             const msg = JSON.parse(message);
-            console.log(msg);
-            GeneralToast(message);
+            const pathname = window.location.pathname;
+            if (pathname == "/notifications") {
+              return;
+            }
+            const type = msg?.type;
+            switch (type) {
+              case "NETWORK_NEW_POST":
+              case "NETWORK_NEW_REEL":
+              case "NETWORK_NEW_STORY":
+                return NewContentNotification(type, msg?.username);
+              case "LIKE_POST":
+              case "LIKE_REEL":
+              case "LIKE_STORY":
+              case "LIKE_COMMENT":
+                return LikeNotification(type, msg?.username);
+              case "COMMENT_POST":
+              case "COMMENT_REEL":
+                return CommentNotification(type, msg?.username);
+              case "FOLLOW":
+              case "FOLLOW_REQUEST":
+                return FollowNotification(type, msg?.username);
+            }
           }
         );
         chatSubscription = subscribeTopic(`/chat/${userId}`, (message) => {
@@ -73,13 +102,12 @@ export const PostCreatedToast = () => {
     <div
       className={`${
         t.visible ? "animate-toast-enter" : "animate-toast-leave"
-      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black dark:ring-white ring-opacity-5`}
+      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
     >
-      <div className="flex-1 p-4 w-">
-        <p className="font-medium text-gray-900 dark:text-gray-100 text-sm text-center">
-          Post Created Successfully!
-        </p>
-      </div>
+      <CheckCircle className="text-green-500 dark:text-green-400" />
+      <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+        Post Created Successfully!
+      </p>
     </div>
   ));
 };
@@ -89,13 +117,12 @@ export const ReelCreatedToast = () => {
     <div
       className={`${
         t.visible ? "animate-toast-enter" : "animate-toast-leave"
-      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black dark:ring-white ring-opacity-5`}
+      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
     >
-      <div className="flex-1 p-4 w-">
-        <p className="font-medium text-gray-900 dark:text-gray-100 text-sm text-center">
-          Reel Created Successfully!
-        </p>
-      </div>
+      <CheckCircle className="text-blue-500 dark:text-blue-400" />
+      <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+        Reel Created Successfully!
+      </p>
     </div>
   ));
 };
@@ -105,13 +132,12 @@ export const StoryCreatedToast = () => {
     <div
       className={`${
         t.visible ? "animate-toast-enter" : "animate-toast-leave"
-      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black dark:ring-white ring-opacity-5`}
+      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
     >
-      <div className="flex-1 p-4 w-">
-        <p className="font-medium text-gray-900 dark:text-gray-100 text-sm text-center">
-          Story Added Successfully!
-        </p>
-      </div>
+      <CheckCircle className="text-purple-500 dark:text-purple-400" />
+      <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+        Story Added Successfully!
+      </p>
     </div>
   ));
 };
@@ -185,4 +211,135 @@ export const MessageToast = (messageData) => {
       </div>
     </Link>
   ));
+};
+
+export const LikeNotification = (type, username) => {
+  t.custom((t) => (
+    <Link to={"/notification"}>
+      <div
+        className={`${
+          t.visible ? "animate-toast-enter" : "animate-toast-leave"
+        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+      >
+        <Favorite className="text-red-500 dark:text-red-400" />
+        <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+          {username} {getLikeMessage(type)}
+        </p>
+      </div>
+    </Link>
+  ));
+};
+
+const getLikeMessage = (type) => {
+  switch (type) {
+    case "LIKE_POST":
+      return "liked your post.";
+    case "LIKE_REEL":
+      return "liked your reel.";
+    case "LIKE_STORY":
+      return "liked your story.";
+    case "LIKE_COMMENT":
+      return "liked your comment.";
+    default:
+      return "";
+  }
+};
+
+export const CommentNotification = (type, username) => {
+  t.custom((t) => (
+    <Link to={"/notification"}>
+      <div
+        className={`${
+          t.visible ? "animate-toast-enter" : "animate-toast-leave"
+        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+      >
+        <ChatBubble className="text-blue-500 dark:text-blue-400" />
+        <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+          {username} {getCommentMessage(type)}
+        </p>
+      </div>
+    </Link>
+  ));
+};
+
+const getCommentMessage = (type) => {
+  switch (type) {
+    case "COMMENT_POST":
+      return "commented on your post.";
+    case "COMMENT_REEL":
+      return "commented on your reel.";
+    default:
+      return "";
+  }
+};
+
+export const FollowNotification = (type, username) => {
+  t.custom((t) => (
+    <Link to={"/notification"}>
+      <div
+        className={`${
+          t.visible ? "animate-toast-enter" : "animate-toast-leave"
+        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+      >
+        <PersonAdd className="text-green-500 dark:text-green-400" />
+        <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+          {username} {getFollowMessage(type)}
+        </p>
+      </div>
+    </Link>
+  ));
+};
+
+const getFollowMessage = (type) => {
+  switch (type) {
+    case "FOLLOW":
+      return "started following you.";
+    case "FOLLOW_REQUEST":
+      return "sent you a follow request.";
+    default:
+      return "";
+  }
+};
+
+export const NewContentNotification = (type, username) => {
+  t.custom((t) => (
+    <Link to={"/notification"}>
+      <div
+        className={`${
+          t.visible ? "animate-toast-enter" : "animate-toast-leave"
+        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+      >
+        {getIcon(type)}
+        <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+          {username} {getContentMessage(type)}
+        </p>
+      </div>
+    </Link>
+  ));
+};
+
+const getIcon = (type) => {
+  switch (type) {
+    case "NETWORK_NEW_POST":
+      return <PostAdd className="text-gray-500 dark:text-gray-400" />;
+    case "NETWORK_NEW_REEL":
+      return <PlayCircle className="text-teal-500 dark:text-teal-400" />;
+    case "NETWORK_NEW_STORY":
+      return <Collections className="text-pink-500 dark:text-pink-400" />;
+    default:
+      return null;
+  }
+};
+
+const getContentMessage = (type) => {
+  switch (type) {
+    case "NETWORK_NEW_POST":
+      return "posted a new post.";
+    case "NETWORK_NEW_REEL":
+      return "uploaded a new reel.";
+    case "NETWORK_NEW_STORY":
+      return "shared a new story.";
+    default:
+      return "";
+  }
 };

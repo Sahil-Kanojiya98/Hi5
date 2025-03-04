@@ -6,6 +6,7 @@ import VideocamRoundedIcon from "@mui/icons-material/VideocamRounded";
 import { useSelector } from "react-redux";
 import ReelUploadModal from "../reel/ReelUploadModel.jsx";
 import { PostCreatedToast as displayPostCreatedToast } from "../providers/ToastProvider.jsx";
+import { Link } from "react-router-dom";
 
 const CreatePost = () => {
   const [text, setText] = useState("");
@@ -179,13 +180,17 @@ const CreatePost = () => {
 
   return (
     <div className="flex items-start gap-2 sm:gap-3 bg-white dark:bg-black shadow-md mt-4 mb-3 p-3 sm:p-4 rounded-lg w-full max-w-xl">
-      <div className="rounded-full w-10 overflow-hidden">
-        <img
-          alt="postImg"
-          src={user.profilePictureUrl}
-          className="w-full h-full object-cover"
-        />
+      <div className="flex flex-shrink-0 rounded-full w-10 sm:w-12 h-10 sm:h-12 overflow-hidden cursor-pointer">
+        <Link to={`/profile/${user?.id}`}>
+          <img
+            alt="Profile"
+            src={user?.profilePictureUrl}
+            className="w-full h-full object-cover aspect-square"
+            loading="lazy"
+          />
+        </Link>
       </div>
+
       <form className="flex flex-col gap-3 w-full" onSubmit={handleSubmit}>
         <textarea
           className="bg-white dark:bg-black p-2 sm:p-3 border border-gray-200 dark:border-gray-800 rounded-md focus:outline-none text-xs sm:text-lg resize-none"

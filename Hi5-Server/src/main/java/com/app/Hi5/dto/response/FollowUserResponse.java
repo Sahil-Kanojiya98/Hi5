@@ -1,5 +1,6 @@
 package com.app.Hi5.dto.response;
 
+import com.app.Hi5.dto.enums.FollowStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +14,7 @@ import org.springframework.http.ResponseEntity;
 @Builder
 public class FollowUserResponse {
 
-    private boolean isFollowed;
-    private boolean isFollowRequestSent;
+    private FollowStatus currentStatus;
     private String message;
     private HttpStatus status;
     private int statusCode;

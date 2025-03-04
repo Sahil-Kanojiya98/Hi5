@@ -15,7 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -105,17 +104,54 @@ public class User {
     @Field("follow_request_behaviour_auto")
     private Boolean followRequestBehaviourAuto = false;
 
-    @Builder.Default
-    @Field("is_allowed_reels_notification")
-    private Boolean isAllowedReelsNotification = true;
 
     @Builder.Default
-    @Field("is_allowed_post_notification")
-    private Boolean isAllowedPostNotification = true;
+    @Field("is_allowed_network_post_notification")
+    private Boolean isAllowedNetworkPostNotification = true;
 
     @Builder.Default
-    @Field("is_allowed_story_notification")
-    private Boolean isAllowedStoryNotification = true;
+    @Field("is_allowed_network_reel_notification")
+    private Boolean isAllowedNetworkReelNotification = true;
+
+    @Builder.Default
+    @Field("is_allowed_network_story_notification")
+    private Boolean isAllowedNetworkStoryNotification = true;
+
+
+    @Builder.Default
+    @Field("is_allowed_posts_like_notification")
+    private Boolean isAllowedPostsLikeNotification = true;
+
+    @Builder.Default
+    @Field("is_allowed_reels_like_notification")
+    private Boolean isAllowedReelsLikeNotification = true;
+
+    @Builder.Default
+    @Field("is_allowed_storys_like_notification")
+    private Boolean isAllowedStorysLikeNotification = true;
+
+    @Builder.Default
+    @Field("is_allowed_comments_like_notification")
+    private Boolean isAllowedCommentsLikeNotification = true;
+
+
+    @Builder.Default
+    @Field("is_allowed_posts_comment_notification")
+    private Boolean isAllowedPostsCommentNotification = true;
+
+    @Builder.Default
+    @Field("is_allowed_reels_comment_notification")
+    private Boolean isAllowedReelsCommentNotification = true;
+
+
+    @Builder.Default
+    @Field("is_allowed_users_follow_notification")
+    private Boolean isAllowedUsersFollowNotification = true;
+
+    @Builder.Default
+    @Field("is_allowed_users_follow_request_notification")
+    private Boolean isAllowedUsersFollowRequestNotification = true;
+
 
     //    User Activity Data
     @Field("follow_requests")

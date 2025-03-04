@@ -28,21 +28,18 @@ public class SaveService {
 
     public void save(User user, String relevantId, SaveType type) {
         switch (type) {
-            case POST -> postRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("post not found."));
-            case REEL -> reelRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("reel not found."));
+            case POST ->
+                    postRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("post not found."));
+            case REEL ->
+                    reelRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("reel not found."));
             default -> throw new ValidationException("Invalid Type");
         }
 
-        Save save = saveRepository.findByUserIdAndRelevantIdAndSaveType(user.getId().toHexString(), relevantId, type)
-                .orElse(Save.builder()
-                        .saveType(type)
-                        .userId(user.getId().toHexString())
-                        .relevantId(relevantId)
-                        .build());
+        Save save = saveRepository.findByUserIdAndRelevantIdAndSaveType(user.getId().toHexString(), relevantId, type).orElse(Save.builder().saveType(type).userId(user.getId().toHexString()).relevantId(relevantId).build());
         save.setIsSaved(true);
         saveRepository.save(save);
 
-        switch (type){
+        switch (type) {
             case POST -> {
                 Post post = postRepository.findById(new ObjectId(relevantId)).get();
                 user.getSavedPostIds().add(post.getId().toHexString());
@@ -62,17 +59,14 @@ public class SaveService {
 
     public void remove(User user, String relevantId, SaveType type) {
         switch (type) {
-            case POST -> postRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("post not found."));
-            case REEL -> reelRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("reel not found."));
+            case POST ->
+                    postRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("post not found."));
+            case REEL ->
+                    reelRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("reel not found."));
             default -> throw new ValidationException("Invalid Type");
         }
 
-        Save save = saveRepository.findByUserIdAndRelevantIdAndSaveType(user.getId().toHexString(), relevantId, type)
-                .orElse(Save.builder()
-                        .saveType(type)
-                        .userId(user.getId().toHexString())
-                        .relevantId(relevantId)
-                        .build());
+        Save save = saveRepository.findByUserIdAndRelevantIdAndSaveType(user.getId().toHexString(), relevantId, type).orElse(Save.builder().saveType(type).userId(user.getId().toHexString()).relevantId(relevantId).build());
         save.setIsSaved(false);
         saveRepository.save(save);
 

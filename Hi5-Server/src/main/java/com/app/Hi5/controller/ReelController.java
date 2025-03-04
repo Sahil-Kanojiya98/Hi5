@@ -54,4 +54,9 @@ public class ReelController {
         return reelService.findRandomReels(userDetails.getUser(), size);
     }
 
+    @GetMapping("/shared")
+    public ReelResponse getSharedReel(@RequestParam("reelId") String reelId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return reelService.findReel(reelId,userDetails.getUser());
+    }
+    
 }

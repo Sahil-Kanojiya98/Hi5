@@ -40,6 +40,7 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     @Query(
             "{'$and': [ " +
                     "{'role': 'USER'}, " +
+                    "{'active': true}, " +
                     "{'$or': [ " +
                     " {'username': {$regex: '^?0', $options: 'i'}}, " +
                     " {'username': {$regex: '?0$', $options: 'i'}}, " +

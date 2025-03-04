@@ -2,6 +2,7 @@ package com.app.Hi5.controller;
 
 
 import com.app.Hi5.dto.response.PostResponse;
+import com.app.Hi5.dto.response.ReelResponse;
 import com.app.Hi5.security.UserDetailsImpl;
 import com.app.Hi5.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,15 @@ public class PostController {
     public List<PostResponse> getAllRandomPosts(@RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.findRandomPosts(userDetails.getUser(), size);
     }
+
+    @GetMapping("/shared")
+    public PostResponse getSharedPost(@RequestParam("postId") String postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.findPost(postId,userDetails.getUser());
+    }
+
+
+
+
 
 //    @GetMapping("/saved")
 //    public List<PostResponse> getAllSavedPosts(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize, @AuthenticationPrincipal UserDetailsImpl userDetails) {

@@ -2,13 +2,15 @@ import PropTypes from "prop-types";
 import {
   ChevronLeft,
   ChevronRight,
-  Favorite,
   Send,
   Close,
+  FavoriteSharp,
+  FavoriteBorderSharp,
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
+// import { likeEntity, unlikeEntity } from "../../../services/api";
 
-const Story = ({ story }) => {
+const Story = ({ user }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,11 +24,11 @@ const Story = ({ story }) => {
 
   const nextImage = () => {
     setCurrentIndex((prevIndex) => {
-      if (prevIndex === story.data.length - 1) {
+      if (prevIndex === user.storys.length - 1) {
         handleModalClose();
         setCurrentIndex(0);
       }
-      return prevIndex < story.data.length - 1 ? prevIndex + 1 : prevIndex;
+      return prevIndex < user.storys.length - 1 ? prevIndex + 1 : prevIndex;
     });
   };
 
@@ -60,6 +62,28 @@ const Story = ({ story }) => {
     return () => clearInterval(timer);
   }, [isModalOpen]);
 
+  const [isLiked, setIsLiked] = useState(
+    user.storys[currentIndex]?.likeStatus === "LIKED"
+  );
+
+  // const likeClickHandler = async () => {
+  //   if (isLiked) {
+  //     unlikeEntity({
+  //       relevantId: story.storys[currentIndex]?.id,
+  //       type: "STORY",
+  //     });
+  //     setIsLiked(false);
+  //     console.log("unliked" + story?.id);
+  //   } else {
+  //     likeEntity({
+  //       relevantId: story.storys[currentIndex]?.id,
+  //       type: "POST",
+  //     });
+  //     setIsLiked(true);
+  //     console.log("liked" + story.id);
+  //   }
+  // };
+
   return (
     <>
       <div
@@ -68,13 +92,13 @@ const Story = ({ story }) => {
       >
         <div className="border-2 border-blue-500 rounded-full w-16 h-16 overflow-hidden">
           <img
-            src={story.profilePictureUrl}
-            alt={`${story.fullname}'s profile`}
+            src={user.profilePictureUrl}
+            alt={`${user.fullname}'s profile`}
             className="w-full h-full object-cover"
           />
         </div>
         <p className="mt-2 w-20 text-gray-700 text-sm truncate">
-          {story.fullname}
+          {user.fullname}
         </p>
       </div>
       {isModalOpen && (
@@ -87,8 +111,10 @@ const Story = ({ story }) => {
           </button>
 
           <div className="relative flex flex-col justify-center items-center bg-white shadow-lg rounded-md w-full max-w-md h-screen">
-            <div className="top-7 sm:top-0 left-0 absolute flex gap-1 px-4 pt-2 w-full">
-              {story.data.map((_, index) => (
+            
+
+            {/* <div className="top-7 sm:top-0 left-0 absolute flex gap-1 px-4 pt-2 w-full">
+              {user.storys.map((_, index) => (
                 <div
                   key={index}
                   className={`h-1 flex-1 rounded-md transition-all ${
@@ -96,23 +122,23 @@ const Story = ({ story }) => {
                   }`}
                 ></div>
               ))}
-            </div>
+            </div> */}
 
-            {story.data[currentIndex]?.isImage ? (
+            {/* {user.storys[currentIndex]?.imageUrl ? (
               <img
-                src={story.data[currentIndex]?.media}
+                src={user.storys[currentIndex]?.imageUrl}
                 alt={`Story image ${currentIndex + 1}`}
                 className="mb-4 rounded-md w-full object-contain"
               />
             ) : (
               <video
-                src={story.data[currentIndex]?.media}
+                src={user.storys[currentIndex]?.videoUrl}
                 autoPlay
                 className="mb-4 rounded-md w-full object-contain"
               />
-            )}
+            )} */}
 
-            <div className="bottom-8 absolute px-4 py-2 w-full">
+            {/* <div className="bottom-8 absolute px-4 py-2 w-full">
               <div className="flex justify-between items-center bg-gray-800 bg-opacity-50 shadow-lg px-2 py-2 rounded-xl">
                 <div className="flex items-center bg-gray-600 bg-opacity-80 px-4 py-2 rounded-xl w-full sm:max-w-md h-12">
                   <input
@@ -131,14 +157,18 @@ const Story = ({ story }) => {
 
                 <div className="flex space-x-2 ml-4">
                   <button
-                    onClick={() => alert("Like clicked!")}
-                    className="flex items-center bg-transparent hover:bg-red-500 hover:bg-opacity-70 p-3 rounded-lg text-white hover:text-white text-xl transition-all"
+                    className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
+                    // onClick={likeClickHandler}
                   >
-                    <Favorite />
+                    {isLiked ? (
+                      <FavoriteSharp className="w-5 h-5 text-red-600 transition-colors duration-200" />
+                    ) : (
+                      <FavoriteBorderSharp className="group-hover:text-red-600 w-5 h-5 text-gray-500 transition-colors duration-200" />
+                    )}
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <button
               onClick={previousImage}
@@ -162,14 +192,16 @@ const Story = ({ story }) => {
 };
 
 Story.propTypes = {
-  story: PropTypes.shape({
+  user: PropTypes.shape({
     id: PropTypes.number.isRequired,
     fullname: PropTypes.string.isRequired,
     profilePictureUrl: PropTypes.string.isRequired,
-    data: PropTypes.arrayOf(
+    storys: PropTypes.arrayOf(
       PropTypes.shape({
-        isImage: PropTypes.bool.isRequired,
-        media: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
+        imageUrl: PropTypes.string.isRequired,
+        videoUrl: PropTypes.string.isRequired,
+        likeStatus: PropTypes.string.isRequired,
       })
     ).isRequired,
   }).isRequired,

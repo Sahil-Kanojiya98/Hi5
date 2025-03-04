@@ -1,6 +1,7 @@
 package com.app.Hi5.service;
 
 import com.app.Hi5.dto.enums.FollowStatus;
+import com.app.Hi5.dto.response.FollowUserResponse;
 import com.app.Hi5.dto.response.UpdateImagesResponse;
 import com.app.Hi5.dto.response.UserProfileResponse;
 import com.app.Hi5.dto.response.UserSearchResponse;
@@ -9,6 +10,7 @@ import com.app.Hi5.exceptions.ValidationException;
 import com.app.Hi5.model.Enum.Gender;
 import com.app.Hi5.model.Enum.ProfileType;
 import com.app.Hi5.model.User;
+import com.app.Hi5.repository.NotificationRepository;
 import com.app.Hi5.repository.UserRepository;
 import com.app.Hi5.utility.FileStorage;
 import com.app.Hi5.utility.enums.FileType;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,11 +35,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FileStorage fileStorage;
+    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
 
-    public List<UserSearchResponse> getUsersByKeyword(String keyword, Integer page, Integer size) {
+    public List<UserSearchResponse> getUsersByKeyword(String keyword, Integer page, Integer size, User myUser) {
         Page<User> users = userRepository.findUsersByUsernameAndFullname(keyword, PageRequest.of(page, size));
-        System.out.println(users.getContent());
-        return users.getContent().stream().map(user -> UserSearchResponse.builder().id(user.getId().toHexString()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).build()).collect(Collectors.toList());
+        return users.getContent().stream().map(user -> UserSearchResponse.builder().id(user.getId().toHexString()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).followStatus(user.getFollowerUserIds().contains(myUser.getId().toHexString()) ? FollowStatus.FOLLOWED : (user.getFollowRequestUserIds().contains(myUser.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build()).collect(Collectors.toList());
     }
 
     public UserProfileResponse getProfile(String userId, User user) {
@@ -105,55 +109,52 @@ public class UserService {
         userRepository.save(user);
     }
 
-//    public FollowUserResponse follow(User user, String userToFollowId) {
-//        if (user.getId().toHexString().equals(userToFollowId)) {
-//            throw new IllegalStateException("You cannot follow yourself.");
-//        }
-//
-//        User userToFollow = userRepository.findById(new ObjectId(userToFollowId)).orElseThrow(() -> new EntityNotFoundException("User to follow not found!"));
-//        if (userToFollow.getFollowRequestBehaviourAuto()) {
-//            user.getFollowingUserIds().add(userToFollow.getId().toHexString());
-//            userToFollow.getFollowerUserIds().add(user.getId().toHexString());
-//
-//            userRepository.save(user);
-//            userRepository.save(userToFollow);
-//            return FollowUserResponse.builder().isFollowed(true).isFollowRequestSent(false).message("User followed successfully.").status(HttpStatus.OK).build();
-//        }
-//
-////        notificationService.makeFollowNotificationAndSend(user, userToFollow);
-//        return FollowUserResponse.builder().isFollowed(false).isFollowRequestSent(true).message("Follow Notification send successfully.").status(HttpStatus.ACCEPTED).build();
-//    }
-//
-//    public String unfollow(User user, String userToUnfollowId) {
-//        if (user.getId().toHexString().equals(userToUnfollowId)) {
-//            throw new IllegalStateException("You cannot unfollow yourself.");
-//        }
-//
-//        User userToUnfollow = userRepository.findById(new ObjectId(userToUnfollowId)).orElseThrow(() -> new EntityNotFoundException("User to follow not found!"));
-//        user.getFollowingUserIds().remove(userToUnfollow.getId().toHexString());
-//        userToUnfollow.getFollowerUserIds().remove(user.getId().toHexString());
-//        userRepository.save(user);
-//        userRepository.save(userToUnfollow);
-//
-//        return "User unfollowed successfully.";
-//    }
+    public FollowUserResponse follow(User user, String userToFollowId) {
+        if (user.getId().toHexString().equals(userToFollowId)) {
+            throw new IllegalStateException("You cannot follow yourself.");
+        }
+        User userToFollow = userRepository.findById(new ObjectId(userToFollowId)).orElseThrow(() -> new EntityNotFoundException("User to follow not found!"));
+        if (userToFollow.getFollowRequestBehaviourAuto()) {
+            user.getFollowingUserIds().add(userToFollow.getId().toHexString());
+            userToFollow.getFollowerUserIds().add(user.getId().toHexString());
+            userRepository.save(user);
+            userRepository.save(userToFollow);
+            notificationService.makeFollowNotificationAndSend(user, userToFollow, FollowStatus.FOLLOWED);
+            return FollowUserResponse.builder().currentStatus(FollowStatus.FOLLOWED).message("User followed successfully.").status(HttpStatus.OK).build();
+        } else {
+            userToFollow.getFollowRequestUserIds().add(user.getId().toHexString());
+            userRepository.save(userToFollow);
+            notificationService.makeFollowNotificationAndSend(user, userToFollow, FollowStatus.REQUEST_SENT);
+            return FollowUserResponse.builder().currentStatus(FollowStatus.REQUEST_SENT).message("Follow Notification send successfully.").status(HttpStatus.ACCEPTED).build();
+        }
+    }
 
-//    User getUserByEmail(String email);
-//
-//    User updateUser(User user, UpdateUserRequest updateUserRequest);
-//
-//    ImageUpdateResponseDTO updateUserImages(User user, MultipartFile profilePicture, MultipartFile coverPicture) throws RuntimeException;
-//
-//    List<PostResponseDTO> getAllSavedPosts(User user, int page, int pageSize);
-//
-//    void addSavedPost(User user, String postId);
-//
-//    void removeSavedPost(User user, String postId);
-//
+    public FollowUserResponse unfollow(User user, String userToUnfollowId) {
+        if (user.getId().toHexString().equals(userToUnfollowId)) {
+            throw new IllegalStateException("You cannot unfollow yourself.");
+        }
+        User userToUnfollow = userRepository.findById(new ObjectId(userToUnfollowId)).orElseThrow(() -> new EntityNotFoundException("User to follow not found!"));
+        user.getFollowingUserIds().remove(userToUnfollow.getId().toHexString());
+        userToUnfollow.getFollowerUserIds().remove(user.getId().toHexString());
+        userRepository.save(user);
+        userRepository.save(userToUnfollow);
+        return FollowUserResponse.builder().currentStatus(FollowStatus.NOT_FOLLOWED).message("User unfollowed successfully.").status(HttpStatus.ACCEPTED).build();
+    }
+
+    public void allowFollowRequest(String notificationId) {
+        if (ObjectId.isValid(notificationId)) {
+            throw new ValidationException("Invalid Id Exception");
+        }
+        // delete the notification   and    remove enter from followRequests   of aother user  and add enter in follower and following
+    }
+
+    public void denyFollowRequest(String notificationId) {
+        if (ObjectId.isValid(notificationId)) {
+            throw new ValidationException("Invalid Id Exception");
+        }
+        // delete the notification   and    remove enter from followRequests   of aother user  and add enter in follower and following
+    }
+    
 //    List<UserDescResponse> suggest();
-//
-//    UserProfileResponse getProfile(String userId, String myid);
-//
-//    Page<User> searchUsers(String pattern, int page, int size);
 
 }

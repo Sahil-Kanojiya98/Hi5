@@ -1,21 +1,23 @@
 package com.app.Hi5.dto.response;
 
-
-import com.app.Hi5.dto.enums.LikeStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StoryResponse {
+public class MyStoryResponse {
 
     private String id;
     private String imageUrl;
     private String videoUrl;
-    private LikeStatus likeStatus;
+    private Date createdAt;
+    private Integer likeCount;
 
 }

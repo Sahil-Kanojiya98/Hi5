@@ -59,10 +59,6 @@ const deleteReel = async (reelId) => {
   return axiosInstance.delete(`/reel/${encodeURIComponent(reelId)}`);
 };
 
-const deleteStory = async (storyId) => {
-  return axiosInstance.delete(`/story/${encodeURIComponent(storyId)}`);
-};
-
 const deleteComment = async (commentId) => {
   return axiosInstance.delete(`/comment/${encodeURIComponent(commentId)}`);
 };
@@ -77,9 +73,21 @@ const unsave = async (body) => {
   });
 };
 
-// const getSharedPost = async (postId) => {
-//   return axiosInstance.get(`/shared/post?postId=${postId}`);
-// };
+const getSharedPost = async (postId) => {
+  return axiosInstance.get(`/post/shared?postId=${postId}`);
+};
+
+const getSharedReel = async (reelId) => {
+  return axiosInstance.get(`/reel/shared?reelId=${reelId}`);
+};
+
+const getSharedPostWithoutAuth = async (postId) => {
+  return axiosInstance.get(`/shared/post?postId=${postId}`);
+};
+
+const getSharedReelWithoutAuth = async (reelId) => {
+  return axiosInstance.get(`/shared/reel?reelId=${reelId}`);
+};
 
 const getUserProfile = async (userId) => {
   return axiosInstance.get(`/user/${userId}`);
@@ -101,10 +109,6 @@ const unlikeEntity = async (body) => {
 
 const reportEntity = async (body) => {
   return axiosInstance.post("/report", body);
-};
-
-const getMyStorys = async () => {
-  return axiosInstance.get("/story/my");
 };
 
 const searchUsersByKeyword = async (keyword, body) => {
@@ -150,6 +154,24 @@ const updateProfileInfo = async (body) => {
   return axiosInstance.put("/user", body);
 };
 
+const follow = async (userId) => {
+  return axiosInstance.post(`/user/follow/${userId}`);
+};
+
+const unfollow = async (userId) => {
+  return axiosInstance.post(`/user/unfollow/${userId}`);
+};
+
+// const getMyStorys = async () => {
+//   return axiosInstance.get("/story/my");
+// };
+// const getFollowingUsersStorys = async () => {
+//   return axiosInstance.get("/story");
+// };
+// const deleteStory = async (storyId) => {
+//   return axiosInstance.delete(`/story/${encodeURIComponent(storyId)}`);
+// };
+
 export {
   checkEmail,
   checkUsername,
@@ -163,17 +185,18 @@ export {
   forgotPasswordVerifyOTP,
   deletePost,
   deleteReel,
-  deleteStory,
   deleteComment,
   save,
   unsave,
-  // getSharedPost,
+  getSharedPost,
+  getSharedReel,
+  getSharedPostWithoutAuth,
+  getSharedReelWithoutAuth,
   getUserProfile,
   makeComment,
   likeEntity,
   unlikeEntity,
   reportEntity,
-  getMyStorys,
   searchUsersByKeyword,
   getMyChats,
   createChat,
@@ -182,4 +205,9 @@ export {
   deleteMessagesByChatId,
   updateProfileAndCoverImage,
   updateProfileInfo,
+  follow,
+  unfollow,
+  // getMyStorys,
+  // getFollowingUsersStorys,
+  // deleteStory,
 };

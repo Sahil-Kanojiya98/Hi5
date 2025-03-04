@@ -1,5 +1,6 @@
 package com.app.Hi5.controller;
 
+import com.app.Hi5.dto.request.FollowRequestActionRequest;
 import com.app.Hi5.dto.request.UpdateUserRequest;
 import com.app.Hi5.dto.response.*;
 import com.app.Hi5.model.User;
@@ -38,7 +39,7 @@ public class UserController {
     @GetMapping("/search/{keyword}")
     @PreAuthorize("principal.isAccountNonLocked()")
     public ResponseEntity<List<UserSearchResponse>> getUsersByPrefix(@PathVariable("keyword") String keyword, @RequestParam("page") Integer page, @RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<UserSearchResponse> responses = userService.getUsersByKeyword(keyword, page, size);
+        List<UserSearchResponse> responses = userService.getUsersByKeyword(keyword, page, size, userDetails.getUser());
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
@@ -56,21 +57,34 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<String> updateUser(@RequestBody @Valid UpdateUserRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.updateUser(userDetails.getUser(), request.getFullname(),request.getBio(),request.getLink(),request.getDateOfBirth(),request.getGender());
-        return new ResponseEntity<>("User Updated Successfully.",HttpStatus.OK);
+        userService.updateUser(userDetails.getUser(), request.getFullname(), request.getBio(), request.getLink(), request.getDateOfBirth(), request.getGender());
+        return new ResponseEntity<>("User Updated Successfully.", HttpStatus.OK);
     }
 
-//    @PostMapping("/follow/{user_id}")
-//    public ResponseEntity<FollowUserResponse> followUser(@PathVariable("user_id") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        FollowUserResponse response=userService.follow(userDetails.getUser(),userId);
-//        return response.toResponseEntity();
-//    }
-//
-//    @PostMapping("/unfollow/{user_id}")
-//    public ResponseEntity<String> unfollowUser(@PathVariable("user_id") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        String message=userService.unfollow(userDetails.getUser(),userId);
-//        return new ResponseEntity<>(message,HttpStatus.OK);
-//    }
+    @PostMapping("/follow/{user_id}")
+    public ResponseEntity<FollowUserResponse> followUser(@PathVariable("user_id") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        FollowUserResponse response = userService.follow(userDetails.getUser(), userId);
+        return response.toResponseEntity();
+    }
+
+    @PostMapping("/unfollow/{user_id}")
+    public ResponseEntity<FollowUserResponse> unfollowUser(@PathVariable("user_id") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        FollowUserResponse response = userService.unfollow(userDetails.getUser(), userId);
+        return response.toResponseEntity();
+    }
+
+
+    @PostMapping("/follow/allow")
+    public ResponseEntity<String> allowFollowRequest(@RequestBody FollowRequestActionRequest request) {
+        userService.allowFollowRequest(request.getNotificationId());
+        return ResponseEntity.ok("Follow request allowed");
+    }
+
+    @PostMapping("/follow/deny")
+    public ResponseEntity<String> denyFollowRequest(@RequestBody FollowRequestActionRequest request) {
+        userService.denyFollowRequest(request.getNotificationId());
+        return ResponseEntity.ok("Follow request denied");
+    }
 
 //    on user accoun delete remove all the posts and its all history
 //    @GetMapping("/{userId}")

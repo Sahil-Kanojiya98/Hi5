@@ -164,7 +164,7 @@ const Comment = ({ comment, removeComment }) => {
       <ReportConfirmationModal
         isOpen={isReportModalOpen}
         closeModal={closeReportModal}
-        reportPost={confirmReport}
+        report={confirmReport}
         isReporting={isReporting}
         type="COMMENT"
       />
