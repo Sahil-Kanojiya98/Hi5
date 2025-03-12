@@ -17,7 +17,7 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
 
   const getReelEndpoint = useCallback(() => {
     switch (feedType) {
-      case "Random":
+      case "RANDOM":
         return `/reel`;
       // case "posts":
       //   return `/post/user/${userId}?page=${page}`;

@@ -18,6 +18,7 @@ import {
   BookmarkSharp,
   CheckCircle,
   CommentOutlined,
+  CommentsDisabled,
   DarkMode,
   FavoriteBorderSharp,
   FavoriteSharp,
@@ -68,8 +69,12 @@ const SharedMediaPage = () => {
             setData(response.data);
           }
         } catch (err) {
-          console.log(err);
-          setError("Failed to load post. Please try again later.");
+          if (err?.response?.data?.statusCode === 400) {
+            console.log("error set");
+            setError(err?.response?.data?.message);
+          } else {
+            setError("Failed to load post. Please try again later.");
+          }
         } finally {
           setIsLoading(false);
         }
@@ -353,7 +358,7 @@ const SharedMediaPage = () => {
         </div>
       </header>
 
-      <div className="flex justify-center items-center space-x-2 min-h-[calc(100dvh-80px)]">
+      <div className="flex justify-center items-center space-x-2 pt-5 min-h-[calc(100dvh-80px)]">
         {isLoading && (
           <>
             <div className="border-4 border-t-transparent border-blue-500 rounded-full w-5 h-5 animate-spin"></div>
@@ -472,15 +477,30 @@ const SharedMediaPage = () => {
                     </span>
                   </button>
 
-                  <button
-                    className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
-                    onClick={openCommentModel}
-                  >
-                    <CommentOutlined className="group-hover:text-blue-500 w-5 h-5 text-gray-500 transition-colors duration-200" />
-                    <span className="group-hover:text-blue-500 font-medium text-sm">
-                      {commentCount}
-                    </span>
-                  </button>
+                  {entityData?.isCommentsDisabled === true ? (
+                    <button className="flex items-center space-x-2 cursor-not-allowed">
+                      <CommentsDisabled
+                        sx={{
+                          fontSize: { xs: 21, sm: 23, md: 25 },
+                        }}
+                        className="w-5 sm:w-6 h-5 sm:h-6"
+                      />
+                      <span className="font-medium text-xs sm:text-sm">0</span>
+                    </button>
+                  ) : (
+                    <button className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform">
+                      <CommentOutlined
+                        sx={{
+                          fontSize: { xs: 21, sm: 23, md: 25 },
+                        }}
+                        className="w-5 sm:w-6 h-5 sm:h-6 hover:text-blue-500 transition-colors duration-200"
+                        onClick={openCommentModel}
+                      />
+                      <span className="font-medium text-xs sm:text-sm">
+                        {commentCount}
+                      </span>
+                    </button>
+                  )}
 
                   <button
                     className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
@@ -501,7 +521,7 @@ const SharedMediaPage = () => {
                 isReporting={isReporting}
                 type={entity.toUpperCase()}
               />
-              {isAuthenticated && (
+              {isAuthenticated && entityData?.isCommentsDisabled !== true && (
                 <>
                   <CommentModel
                     isOpen={isCommentModelOpen}
@@ -523,8 +543,8 @@ const SharedMediaPage = () => {
               className="bg-white dark:bg-black w-full max-w-md h-[87dvh] md:h-screen overflow-scroll snap-mandatory snap-y hide-scrollbar"
             >
               <div className="relative w-full h-full snap-start">
-                <div className="top-0 left-1/2 z-10 absolute flex justify-between items-center mt-6 sm:mt-4 md:mt-2 lg:mt-4 mb-3 px-4 sm:px-5 md:px-6 lg:px-7 w-full text-black dark:text-white -translate-x-1/2 transform">
-                  <h3 className="font-bold text-lg">Reels</h3>
+                <div className="top-0 left-1/2 z-10 absolute flex justify-center items-center bg-white/15 dark:bg-black/20 mt-6 sm:mt-4 md:mt-2 lg:mt-4 mb-3 p-2 px-4 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-black dark:text-white text-xs -translate-x-1/2 transform">
+                  <p className="font-bold text-lg text-center">Reels</p>
                 </div>
 
                 <video
@@ -581,18 +601,32 @@ const SharedMediaPage = () => {
                       {likesCount}
                     </span>
                   </button>
-                  <button className="group flex flex-col items-center space-y-2 hover:scale-110 transition duration-200 transform">
-                    <CommentOutlined
-                      sx={{
-                        fontSize: { xs: 21, sm: 23, md: 25 },
-                      }}
-                      className="w-5 sm:w-6 h-5 sm:h-6 hover:text-blue-500 transition-colors duration-200"
-                      onClick={openCommentModel}
-                    />
-                    <span className="font-medium text-xs sm:text-sm">
-                      {commentCount}
-                    </span>
-                  </button>
+
+                  {entityData?.isCommentsDisabled === true ? (
+                    <button className="flex flex-col items-center space-y-1 cursor-not-allowed">
+                      <CommentsDisabled
+                        sx={{
+                          fontSize: { xs: 21, sm: 23, md: 25 },
+                        }}
+                        className="w-5 sm:w-6 h-5 sm:h-6"
+                      />
+                      <span className="font-medium text-xs sm:text-sm">0</span>
+                    </button>
+                  ) : (
+                    <button className="group flex flex-col items-center space-y-2 hover:scale-110 transition duration-200 transform">
+                      <CommentOutlined
+                        sx={{
+                          fontSize: { xs: 21, sm: 23, md: 25 },
+                        }}
+                        className="w-5 sm:w-6 h-5 sm:h-6 hover:text-blue-500 transition-colors duration-200"
+                        onClick={openCommentModel}
+                      />
+                      <span className="font-medium text-xs sm:text-sm">
+                        {commentCount}
+                      </span>
+                    </button>
+                  )}
+
                   <button
                     className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
                     onClick={shareClickHandler}
@@ -646,7 +680,7 @@ const SharedMediaPage = () => {
                     ))}
                 </div>
 
-                <div className="bottom-8 left-1/2 z-10 absolute flex flex-col justify-between items-center bg-white/10 dark:bg-black/20 shadow-lg backdrop-blur-sm p-2 px-3 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-white dark:text-black text-xs -translate-x-1/2 transform">
+                <div className="bottom-8 left-1/2 z-10 absolute flex flex-col justify-between items-center bg-white/15 dark:bg-black/20 p-2 px-3 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-white dark:text-black text-xs -translate-x-1/2 transform">
                   <div className="flex justify-between items-center w-full">
                     <div className="flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4">
                       <Link
@@ -742,7 +776,7 @@ const SharedMediaPage = () => {
                   type={entity.toUpperCase()}
                 />
 
-                {isAuthenticated && (
+                {isAuthenticated && entityData?.isCommentsDisabled !== true && (
                   <>
                     <CommentModel
                       isOpen={isCommentModelOpen}

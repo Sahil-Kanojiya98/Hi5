@@ -3,6 +3,7 @@ package com.app.Hi5.service;
 import com.app.Hi5.dto.enums.LikeStatus;
 import com.app.Hi5.dto.enums.ReportStatus;
 import com.app.Hi5.dto.response.CommentResponse;
+import com.app.Hi5.exceptions.ActionNotAllowedException;
 import com.app.Hi5.exceptions.EntityNotFoundException;
 import com.app.Hi5.exceptions.UnauthorizedAccessException;
 import com.app.Hi5.exceptions.ValidationException;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,12 +39,21 @@ public class CommentService {
     private final NotificationService notificationService;
 
 
+    @Transactional
     public String makeComment(User user, String relevantId, CommentType type, String content) {
         switch (type) {
-            case POST ->
-                    postRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("post not found."));
-            case REEL ->
-                    reelRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("reel not found."));
+            case POST -> {
+                Post post = postRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("post not found."));
+                if (post.getIsCommentsDisabled()) {
+                    throw new ActionNotAllowedException("comment is disabled on this post");
+                }
+            }
+            case REEL -> {
+                Reel reel = reelRepository.findById(new ObjectId(relevantId)).orElseThrow(() -> new EntityNotFoundException("reel not found."));
+                if (reel.getIsCommentsDisabled()) {
+                    throw new ActionNotAllowedException("comment is disabled on this post");
+                }
+            }
             default -> throw new ValidationException("Invalid Type");
         }
         Comment comment = Comment.builder().content(content).userId(user.getId().toHexString()).relevantId(relevantId).type(type).build();
@@ -79,15 +90,15 @@ public class CommentService {
         if (!comment.getUserId().equals(user.getId().toHexString())) {
             throw new UnauthorizedAccessException("You are not authorized to delete this post.");
         }
-        if (comment.getType().equals(CommentType.POST)){
-            Post post=postRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(()->new EntityNotFoundException("Post not found"));
+        if (comment.getType().equals(CommentType.POST)) {
+            Post post = postRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(() -> new EntityNotFoundException("Post not found"));
             post.getCommentIds().remove(comment.getId().toHexString());
             postRepository.save(post);
         } else if (comment.getType().equals(CommentType.REEL)) {
-            Reel reel=reelRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(()->new EntityNotFoundException("Reel not found"));
+            Reel reel = reelRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(() -> new EntityNotFoundException("Reel not found"));
             reel.getCommentIds().remove(comment.getId().toHexString());
             reelRepository.save(reel);
-        }else {
+        } else {
             throw new ValidationException("Invalid Type");
         }
         commentRepository.delete(comment);

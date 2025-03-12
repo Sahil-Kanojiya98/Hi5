@@ -154,9 +154,13 @@ public class User {
 
 
     //    User Activity Data
-    @Field("follow_requests")
+    @Field("follow_requests_sent")
     @Builder.Default
-    private Set<String> followRequestUserIds = new LinkedHashSet<>();
+    private Set<String> followRequestSentUserIds = new LinkedHashSet<>();
+
+    @Field("follow_requests_received")
+    @Builder.Default
+    private Set<String> followRequestReceivedUserIds = new LinkedHashSet<>();
 
     @Field("followers")
     @Builder.Default

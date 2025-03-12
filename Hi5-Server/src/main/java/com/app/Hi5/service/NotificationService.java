@@ -162,7 +162,7 @@ public class NotificationService {
         Optional<User> optionalUser = userRepository.findById(new ObjectId(notification.getNotificationUserId()));
         if (optionalUser.isPresent()) {
             User notificationUser = optionalUser.get();
-            if (!notificationRepository.existsByNotificationUserIdAndUserIdAndRelevantId(notification.getNotificationUserId(), notification.getUserId(), notification.getRelevantId())) {
+            if (!notificationRepository.existsByNotificationUserIdAndUserIdAndRelevantIdAndType(notification.getNotificationUserId(), notification.getUserId(), notification.getRelevantId(), notification.getType())) {
                 if ((notification.getType().equals(NotificationType.COMMENT_POST) && notificationUser.getIsAllowedPostsCommentNotification()) || (notification.getType().equals(NotificationType.COMMENT_REEL) && notificationUser.getIsAllowedReelsCommentNotification())) {
                     Notification savedNotification = notificationRepository.save(notification);
                     sendNotification(notification.getNotificationUserId(), NotificationPayload.convertToPayload(savedNotification, user));
@@ -182,13 +182,29 @@ public class NotificationService {
         notification.setRelevantId(user.getId().toHexString());
         notification.setUserId(user.getId().toHexString());
 
-        if (!notificationRepository.existsByNotificationUserIdAndUserIdAndRelevantId(notification.getNotificationUserId(), notification.getUserId(), notification.getRelevantId())) {
+        if (!notificationRepository.existsByNotificationUserIdAndUserIdAndRelevantIdAndType(notification.getNotificationUserId(), notification.getUserId(), notification.getRelevantId(), notification.getType())) {
             if ((followStatus.equals(FollowStatus.FOLLOWED) && userToFollow.getIsAllowedUsersFollowNotification()) || (followStatus.equals(FollowStatus.REQUEST_SENT) && userToFollow.getIsAllowedUsersFollowRequestNotification())) {
                 Notification savedNotification = notificationRepository.save(notification);
                 sendNotification(notification.getNotificationUserId(), NotificationPayload.convertToPayload(savedNotification, user));
             }
         }
     }
+
+    @Async
+    public void makeFollowReqAcceptedNotificationAndSend(User requestedUser, User followedUser) {
+        Notification notification = new Notification();
+        notification.setNotificationUserId(requestedUser.getId().toHexString());
+        notification.setType(NotificationType.FOLLOW_REQUEST_ACCEPT);
+        notification.setRelevantId(followedUser.getId().toHexString());
+        notification.setUserId(followedUser.getId().toHexString());
+        if (!notificationRepository.existsByNotificationUserIdAndUserIdAndRelevantIdAndType(notification.getNotificationUserId(), notification.getUserId(), notification.getRelevantId(), notification.getType())) {
+            if (requestedUser.getIsAllowedUsersFollowNotification()) {
+                Notification savedNotification = notificationRepository.save(notification);
+                sendNotification(notification.getNotificationUserId(), NotificationPayload.convertToPayload(savedNotification, followedUser));
+            }
+        }
+    }
+
 
     void sendNotification(String userId, NotificationPayload notification) {
         log.info("Sending notification to userId: {}, message: {}", userId, notification);

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
@@ -39,6 +40,13 @@ public class ReelResponse {
 
     @JsonProperty("followStatus")
     private FollowStatus followStatus;
+
+    @JsonProperty("isPrivate")
+    private Boolean isPrivate;
+
+    @JsonProperty("isCommentsDisabled")
+    private Boolean isCommentsDisabled;
+
 
     private String userId;
     private String username;

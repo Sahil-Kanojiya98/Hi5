@@ -9,6 +9,7 @@ public enum NotificationType {
     COMMENT_REEL,
     FOLLOW,
     FOLLOW_REQUEST,
+    FOLLOW_REQUEST_ACCEPT,
     NETWORK_NEW_POST,
     NETWORK_NEW_REEL,
     NETWORK_NEW_STORY,

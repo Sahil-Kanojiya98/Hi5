@@ -2,13 +2,22 @@ import PropTypes from "prop-types";
 import { formatDistanceToNow } from "date-fns";
 
 const TimeAgo = ({ date, className = "" }) => {
-  const dateObj = new Date(date);
-  const timeAgo = formatDistanceToNow(dateObj, { addSuffix: true });
+  let dateObj;
+  if (typeof date === "number") {
+    dateObj = new Date(Number(date));
+  } else {
+    dateObj = new Date(date);
+  }
+
+  const timeAgo = isNaN(dateObj.getTime())
+    ? "Invalid date"
+    : formatDistanceToNow(dateObj, { addSuffix: true });
+
   return <span className={className}>{timeAgo}</span>;
 };
 
 TimeAgo.propTypes = {
-  date: PropTypes.string.isRequired,
+  date: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   className: PropTypes.string,
 };
 

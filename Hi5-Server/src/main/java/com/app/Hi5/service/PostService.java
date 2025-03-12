@@ -15,6 +15,9 @@ import com.app.Hi5.utility.enums.FileType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,8 +37,8 @@ public class PostService {
     private final FileStorage fileStorage;
     private final NotificationService notificationService;
 
-    public String makePost(User user, String content, MultipartFile imageFile, MultipartFile videoFile) {
-        Post post = Post.builder().content(content).userId(user.getId().toHexString()).build();
+    public String makePost(User user, String content, MultipartFile imageFile, MultipartFile videoFile, Boolean isPrivate, Boolean isCommentsDisabled) {
+        Post post = Post.builder().content(content).userId(user.getId().toHexString()).isPrivate(isPrivate).isCommentsDisabled(isCommentsDisabled).build();
         try {
             if (imageFile != null && !imageFile.isEmpty()) {
                 String imageUrl = fileStorage.saveFile(imageFile, FileType.POST_IMAGE);
@@ -88,22 +91,39 @@ public class PostService {
             if (postUser == null) {
                 return null;
             }
-            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public PostResponse findPost(String postId) {
         return postRepository.findById(new ObjectId(postId)).map(post -> {
-            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElseThrow(() -> new EntityNotFoundException("user not found!"));
-            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(LikeStatus.NOT_LIKED).reportStatus(ReportStatus.NOT_REPORTED).saveStatus(SaveStatus.NOT_SAVED).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
-        }).orElseThrow(() -> new EntityNotFoundException("Post not found!"));
+            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElseThrow(() -> new EntityNotFoundException("User not found."));
+            if (!post.getIsPrivate()) {
+                return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(LikeStatus.NOT_LIKED).reportStatus(ReportStatus.NOT_REPORTED).saveStatus(SaveStatus.NOT_SAVED).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+            }
+            return null;
+        }).orElseThrow(() -> new EntityNotFoundException("Post not found."));
     }
 
     public PostResponse findPost(String postId, User user) {
         return postRepository.findById(new ObjectId(postId)).map(post -> {
-            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElseThrow(() -> new EntityNotFoundException("user not found!"));
-            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
-        }).orElseThrow(() -> new EntityNotFoundException("Post not found!"));
+            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElseThrow(() -> new EntityNotFoundException("User not found."));
+            if (!post.getIsPrivate()) {
+                return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+            }
+            return null;
+        }).orElseThrow(() -> new EntityNotFoundException("Post not found."));
+    }
+
+    public List<PostResponse> findFollowigsPosts(User user, Integer size, Integer page) {
+        Page<Post> posts = postRepository.findByUserIdInOrderByCreatedAtDesc(user.getFollowingUserIds(), PageRequest.of(page, size));
+        return posts.getContent().stream().map(post -> {
+            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElse(null);
+            if (postUser == null) {
+                return null;
+            }
+            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+        }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 //    public PostResponse findPost(String postId, User user) {

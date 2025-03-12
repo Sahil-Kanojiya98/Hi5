@@ -11,6 +11,7 @@ import {
   BookmarkSharp,
   ShareSharp,
   CommentOutlined,
+  CommentsDisabled,
   FavoriteBorderSharp,
   FavoriteSharp,
   VolumeOffOutlined,
@@ -231,8 +232,8 @@ const Reel = ({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="relative w-full h-full snap-start">
-      <div className="top-0 left-1/2 z-10 absolute flex justify-between items-center mt-6 sm:mt-4 md:mt-2 lg:mt-4 mb-3 px-4 sm:px-5 md:px-6 lg:px-7 w-full text-black dark:text-white -translate-x-1/2 transform">
+    <div className="relative flex w-full h-full snap-start">
+      <div className="top-0 left-1/2 z-10 absolute flex justify-between items-center bg-white/15 dark:bg-black/20 mt-6 sm:mt-4 md:mt-2 lg:mt-4 mb-3 p-2 px-4 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-black dark:text-white text-xs -translate-x-1/2 transform">
         <span onClick={handleBackClick} className="mx-2 p-2 cursor-pointer">
           <ArrowBackSharp
             sx={{
@@ -241,7 +242,7 @@ const Reel = ({
           />
         </span>
 
-        <h3 className="font-bold text-lg">Reels</h3>
+        <h3 className="font-bold text-lg select-none">Reels</h3>
 
         {!isMyProfileReels && (
           <span
@@ -266,7 +267,7 @@ const Reel = ({
       </div>
 
       <video
-        className="w-full h-full object-cover"
+        className="flex-1 w-full object-cover"
         poster={reel.thumbnailUrl}
         src={reel.videoUrl}
         // muted={isMuted}
@@ -317,27 +318,45 @@ const Reel = ({
           )}
           <span className="font-medium text-xs sm:text-sm">{likesCount}</span>
         </button>
-        <button className="group flex flex-col items-center space-y-2 hover:scale-110 transition duration-200 transform">
-          <CommentOutlined
-            sx={{
-              fontSize: { xs: 21, sm: 23, md: 25 },
-            }}
-            className="w-5 sm:w-6 h-5 sm:h-6 hover:text-blue-500 transition-colors duration-200"
-            onClick={openCommentModel}
-          />
-          <span className="font-medium text-xs sm:text-sm">{commentCount}</span>
-        </button>
-        <button
-          className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
-          onClick={shareClickHandler}
-        >
-          <ShareSharp
-            sx={{
-              fontSize: { xs: 21, sm: 23, md: 25 },
-            }}
-            className="w-5 sm:w-6 h-5 sm:h-6 hover:text-green-500 transition-colors duration-200"
-          />
-        </button>
+
+        {reel?.isCommentsDisabled === true ? (
+          <button className="flex flex-col items-center space-y-1 cursor-not-allowed">
+            <CommentsDisabled
+              sx={{
+                fontSize: { xs: 21, sm: 23, md: 25 },
+              }}
+              className="w-5 sm:w-6 h-5 sm:h-6"
+            />
+            <span className="font-medium text-xs sm:text-sm">0</span>
+          </button>
+        ) : (
+          <button className="group flex flex-col items-center space-y-2 hover:scale-110 transition duration-200 transform">
+            <CommentOutlined
+              sx={{
+                fontSize: { xs: 21, sm: 23, md: 25 },
+              }}
+              className="w-5 sm:w-6 h-5 sm:h-6 hover:text-blue-500 transition-colors duration-200"
+              onClick={openCommentModel}
+            />
+            <span className="font-medium text-xs sm:text-sm">
+              {commentCount}
+            </span>
+          </button>
+        )}
+
+        {reel?.isPrivate === false && (
+          <button
+            className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
+            onClick={shareClickHandler}
+          >
+            <ShareSharp
+              sx={{
+                fontSize: { xs: 21, sm: 23, md: 25 },
+              }}
+              className="w-5 sm:w-6 h-5 sm:h-6 hover:text-green-500 transition-colors duration-200"
+            />
+          </button>
+        )}
         <button
           className="group flex flex-col items-center space-y-2 hover:scale-110 transition duration-200 transform"
           onClick={saveClickHandler}
@@ -380,12 +399,12 @@ const Reel = ({
           ))}
       </div>
 
-      <div className="bottom-8 left-1/2 z-10 absolute flex flex-col justify-between items-center bg-white/10 dark:bg-black/20 shadow-lg backdrop-blur-sm p-2 px-3 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-white dark:text-black text-xs -translate-x-1/2 transform">
+      <div className="bottom-8 left-1/2 z-10 absolute flex flex-col justify-between items-center bg-white/15 dark:bg-black/20 p-2 px-3 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-white dark:text-black text-xs -translate-x-1/2 transform">
         <div className="flex justify-between items-center w-full">
-          <div className="flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4">
+          <div className="flex items-center gap-x-1 sm:gap-x-2 md:gap-x-3">
             <Link
               to={`/profile/${reel.userId}`}
-              className="flex-shrink-0 w-10 sm:w-12 lg:w-14 h-10 sm:h-12 lg:h-14"
+              className="flex-shrink-0 w-10 sm:w-12 h-10 sm:h-12"
             >
               <img
                 src={reel.profilePictureUrl}
@@ -482,14 +501,16 @@ const Reel = ({
         type="REEL"
       />
 
-      <CommentModel
-        isOpen={isCommentModelOpen}
-        onClose={closeCommentModel}
-        type={"REEL"}
-        relevantId={reel.id}
-        updateCommentCount={setCommentCount}
-        commentCount={commentCount}
-      />
+      {reel?.isCommentsDisabled !== true && (
+        <CommentModel
+          isOpen={isCommentModelOpen}
+          onClose={closeCommentModel}
+          type={"REEL"}
+          relevantId={reel.id}
+          updateCommentCount={setCommentCount}
+          commentCount={commentCount}
+        />
+      )}
     </div>
   );
 };
@@ -510,6 +531,8 @@ Reel.propTypes = {
     commentsCount: PropTypes.number.isRequired,
     createdAt: PropTypes.string.isRequired,
     followStatus: PropTypes.string.isRequired,
+    isPrivate: PropTypes.bool.isRequired,
+    isCommentsDisabled: PropTypes.bool.isRequired,
     description: PropTypes.string.isRequired,
   }),
   handleBackClick: PropTypes.func.isRequired,

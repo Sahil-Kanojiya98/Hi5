@@ -12,6 +12,8 @@ import {
   PersonAdd,
   HourglassEmpty,
   Email,
+  Lock,
+  Send,
 } from "@mui/icons-material";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
@@ -26,6 +28,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { setUser } from "../redux/slices/userSlice";
+import RequestsModel from "../components/temp/RequestsModel";
+import ConnectionsModel from "../components/temp/ConnectionsModel";
 // import Posts from "../components/post/Posts";
 
 const ProfilePage = () => {
@@ -80,10 +84,6 @@ const ProfilePage = () => {
     setGender(profileData?.gender);
     setIsEditable((prev) => !prev);
   };
-
-  useEffect(() => {
-    console.log(dateOfBirth);
-  }, [dateOfBirth]);
 
   const profileSchema = Yup.object().shape({
     fullname: Yup.string()
@@ -223,7 +223,8 @@ const ProfilePage = () => {
 
   const myId = useSelector((state) => state?.user?.profile?.id);
   const { userId } = useParams();
-  const [isMyProfile] = useState(myId === userId);
+
+  const isMyProfile = myId === userId;
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -263,6 +264,43 @@ const ProfilePage = () => {
     setIsEditable(false);
   };
 
+  const [isSentRequestsModelOpen, setIsSentRequestsModelOpen] = useState(false);
+  const handleSentRequestsModelOpen = () => {
+    setIsSentRequestsModelOpen(true);
+  };
+  const handleSentRequestsModelClose = () => {
+    setIsSentRequestsModelOpen(false);
+  };
+  const [isReceivedRequestsModelOpen, setIsReceivedRequestsModelOpen] =
+    useState(false);
+  const handleReceivedRequestsModelOpen = () => {
+    setIsReceivedRequestsModelOpen(true);
+  };
+  const handleReceivedRequestsModelClose = () => {
+    setIsReceivedRequestsModelOpen(false);
+  };
+  const [isFollowersModelOpen, setIsFollowersModelOpen] = useState(false);
+  const handleFollowersModelOpen = () => {
+    setIsFollowersModelOpen(true);
+  };
+  const handleFollowersModelClose = () => {
+    setIsFollowersModelOpen(false);
+  };
+  const [isFollowingsModelOpen, setIsFollowingsModelOpen] = useState(false);
+  const handleFollowingsModelOpen = () => {
+    setIsFollowingsModelOpen(true);
+  };
+  const handleFollowingsModelClose = () => {
+    setIsFollowingsModelOpen(false);
+  };
+
+  useEffect(() => {
+    handleSentRequestsModelClose();
+    handleReceivedRequestsModelClose();
+    handleFollowersModelClose();
+    handleFollowingsModelClose();
+  }, [userId]);
+
   return (
     <MainLayout>
       <div className="flex justify-center bg-gray-100 dark:bg-gray-900 mx-auto p-2 md:p-6 pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full">
@@ -293,7 +331,7 @@ const ProfilePage = () => {
               </div>
             </div>
           )}
-          {profileData && (
+          {!error && !loading && profileData && (
             <div className="flex flex-col bg-white dark:bg-black shadow-md mt-5 rounded-lg min-h-screen">
               <div className="flex justify-between items-center gap-4 p-4">
                 <div className="flex items-center gap-4">
@@ -312,15 +350,54 @@ const ProfilePage = () => {
                   </div>
                 </div>
 
-                {isMyProfile && (
-                  <Link
-                    to="/settings"
-                    className="text-gray-500 dark:hover:text-gray-400 hover:text-gray-600 transition duration-200 cursor-pointer"
-                  >
-                    <Settings className="text-2xl" />
-                  </Link>
-                )}
+                <div className="flex justify-center items-center gap-4">
+                  {isMyProfile && (
+                    <div className="flex justify-center gap-4 px-5">
+                      <div className="group relative">
+                        <button
+                          className="flex justify-center items-center gap-2 p-1 rounded-full font-medium text-slate-500 text-sm transition"
+                          onClick={handleReceivedRequestsModelOpen}
+                        >
+                          <Send className="w-2 h-2 rotate-180" />
+                        </button>
+                        <span className="-top-8 left-1/2 absolute bg-gray-800 opacity-0 group-hover:opacity-100 px-2 py-1 rounded-md text-white text-xs whitespace-nowrap transition -translate-x-1/2 duration-200">
+                          Received Requests
+                        </span>
+                      </div>
+
+                      <div className="group relative">
+                        <button
+                          className="flex justify-center items-center gap-2 p-1 rounded-full font-medium text-slate-500 text-sm transition"
+                          onClick={handleSentRequestsModelOpen}
+                        >
+                          <Send className="w-2 h-2" />
+                        </button>
+                        <span className="-top-8 left-1/2 absolute bg-gray-800 opacity-0 group-hover:opacity-100 px-2 py-1 rounded-md text-white text-xs whitespace-nowrap transition -translate-x-1/2 duration-200">
+                          Sent Requests
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {isMyProfile && (
+                    <Link
+                      to="/settings"
+                      className="text-gray-500 dark:hover:text-gray-400 hover:text-gray-600 transition duration-200 cursor-pointer"
+                    >
+                      <Settings className="text-2xl" />
+                    </Link>
+                  )}
+                </div>
               </div>
+
+              {!isMyProfile && profileType === "PRIVATE" && (
+                <div className="flex justify-center items-center gap-2 bg-gray-100 dark:bg-gray-900 mt-4 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Lock fontSize="small" />
+                    <p className="font-medium">This Profile is Private</p>
+                  </div>
+                </div>
+              )}
 
               <div className="relative">
                 <div className="group relative">
@@ -468,6 +545,7 @@ const ProfilePage = () => {
                 {isMyProfile && isEditable && (
                   <input
                     type="text"
+                    placeholder="Fullname"
                     value={fullname}
                     onChange={(e) => setFullname(e.target.value)}
                     className="block bg-gray-200 px-1 pb-1 rounded-lg font-bold text-2xl"
@@ -478,13 +556,13 @@ const ProfilePage = () => {
                   @{profileData?.username}
                 </span>
 
-                {(isMyProfile || profileType === "PUBLIC") && (
+                {profileType === "PUBLIC" && profileData?.email && (
                   <p className="mt-2 px-1 text-gray-700 dark:text-gray-300">
                     {profileData?.email}
                   </p>
                 )}
 
-                {(isMyProfile || profileType === "PUBLIC") && (
+                {profileType === "PUBLIC" && (
                   <>
                     {!isEditable && profileData?.bio && (
                       <p className="mt-2 p-1 text-gray-700 dark:text-gray-300 text-sm">
@@ -494,6 +572,7 @@ const ProfilePage = () => {
                     {isMyProfile && isEditable && (
                       <textarea
                         value={bio}
+                        placeholder="Bio"
                         onChange={(e) => setBio(e.target.value)}
                         className="bg-gray-200 mt-2 p-1 rounded-lg outline-none w-full text-gray-700 dark:text-gray-300 text-sm"
                       />
@@ -502,7 +581,7 @@ const ProfilePage = () => {
                 )}
 
                 <div className="flex sm:flex-row flex-col items-start sm:items-center gap-6 pt-2">
-                  {(isMyProfile || profileType === "PUBLIC") && (
+                  {profileType === "PUBLIC" && (
                     <>
                       {(profileData?.link || (isMyProfile && isEditable)) && (
                         <div>
@@ -525,7 +604,7 @@ const ProfilePage = () => {
                                 value={link}
                                 onChange={(e) => setLink(e.target.value)}
                                 className="bg-transparent outline-none w-full text-blue-500"
-                                placeholder="Enter your link"
+                                placeholder="Link"
                               />
                             </div>
                           )}
@@ -534,7 +613,7 @@ const ProfilePage = () => {
                     </>
                   )}
 
-                  {(isMyProfile || profileType === "PUBLIC") && (
+                  {profileType === "PUBLIC" && (
                     <>
                       {(profileData?.dateOfBirth ||
                         (isMyProfile && isEditable)) && (
@@ -566,7 +645,7 @@ const ProfilePage = () => {
                     </>
                   )}
 
-                  {(isMyProfile || profileType === "PUBLIC") && (
+                  {profileType === "PUBLIC" && (
                     <>
                       {(profileData?.gender || (isMyProfile && isEditable)) && (
                         <div>
@@ -610,40 +689,89 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="flex gap-4 mt-4">
-                  <div className="flex items-center gap-1 text-sm">
-                    <span className="font-bold">
-                      {profileData?.followingsCount}
-                    </span>
-                    Following
-                  </div>
-                  <div className="flex items-center gap-1 text-sm">
-                    <span className="font-bold">
-                      {profileData?.followersCount}
-                    </span>
-                    Followers
-                  </div>
+                  {isMyProfile ? (
+                    <>
+                      <div
+                        className="flex items-center gap-1 text-sm cursor-pointer"
+                        onClick={handleFollowingsModelOpen}
+                      >
+                        <span className="font-bold">
+                          {profileData?.followingsCount}
+                        </span>
+                        Following
+                      </div>
+                      <div
+                        className="flex items-center gap-1 text-sm cursor-pointer"
+                        onClick={handleFollowersModelOpen}
+                      >
+                        <span className="font-bold">
+                          {profileData?.followersCount}
+                        </span>
+                        Followers
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-1 text-sm">
+                        <span className="font-bold">
+                          {profileData?.followingsCount}
+                        </span>
+                        Following
+                      </div>
+                      <div className="flex items-center gap-1 text-sm">
+                        <span className="font-bold">
+                          {profileData?.followersCount}
+                        </span>
+                        Followers
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
               {/* <div className="flex flex-col items-center">
-                <div className="flex gap-3 mt-6">
-                  <div className="relative flex-1 py-3 font-semibold text-blue-500 text-center cursor-pointer">
-                    Posts
-                    <div className="bottom-0 left-0 absolute bg-blue-500 w-full h-1"></div>
-                  </div>
-                  <div className="relative flex-1 py-3 font-semibold text-blue-500 text-center cursor-pointer">
-                    Reels
-                    <div className="bottom-0 left-0 absolute bg-blue-500 w-full h-1"></div>
-                  </div>
-                </div>
-                <div className="mt-8 px-4 pb-8 w-full max-w-xl">
-                  <Posts feedType="saved" />
-                </div>
+                {!isMyProfile && profileType === "PRIVATE" && (
+                  <>
+                    <div className="flex gap-3 mt-6">
+                      <div className="relative flex-1 py-3 font-semibold text-blue-500 text-center cursor-pointer">
+                        Posts
+                        <div className="bottom-0 left-0 absolute bg-blue-500 w-full h-1"></div>
+                      </div>
+                      <div className="relative flex-1 py-3 font-semibold text-blue-500 text-center cursor-pointer">
+                        Reels
+                        <div className="bottom-0 left-0 absolute bg-blue-500 w-full h-1"></div>
+                      </div>
+                    </div>
+                    <div className="mt-8 px-4 pb-8 w-full max-w-xl">
+                      <Posts feedType="saved" />
+                    </div>
+                  </>
+                )}
               </div> */}
             </div>
           )}
         </div>
       </div>
+      <RequestsModel
+        type="SENT"
+        isOpen={isSentRequestsModelOpen}
+        closeModal={handleSentRequestsModelClose}
+      />
+      <RequestsModel
+        type="RECEIVED"
+        isOpen={isReceivedRequestsModelOpen}
+        closeModal={handleReceivedRequestsModelClose}
+      />
+      <ConnectionsModel
+        type="FOLLOWER"
+        isOpen={isFollowersModelOpen}
+        closeModal={handleFollowersModelClose}
+      />
+      <ConnectionsModel
+        type="FOLLOWING"
+        isOpen={isFollowingsModelOpen}
+        closeModal={handleFollowingsModelClose}
+      />
     </MainLayout>
   );
 };

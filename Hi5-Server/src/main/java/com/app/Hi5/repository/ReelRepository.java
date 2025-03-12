@@ -1,6 +1,6 @@
 package com.app.Hi5.repository;
 
-import com.app.Hi5.model.Post;
+
 import com.app.Hi5.model.Reel;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -13,6 +13,7 @@ import java.util.List;
 public interface ReelRepository extends MongoRepository<Reel, ObjectId> {
 
     @Aggregation(pipeline = {
+            "{ $match: { is_private : false } }",
             "{ $sample: { size: ?0 } }"
     })
     List<Reel> findRandomReels(int numberOfReels);

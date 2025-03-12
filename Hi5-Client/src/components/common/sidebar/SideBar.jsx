@@ -25,7 +25,7 @@ const Sidebar = () => {
   const user = useSelector((state) => state.user.profile);
 
   return (
-    <div className="hidden top-0 left-0 fixed md:flex flex-col justify-between md:items-center lg:items-start bg-white dark:bg-black p-4 md:w-20 lg:w-52 xl:w-64 h-full">
+    <div className="hidden top-0 left-0 z-10 fixed md:flex flex-col justify-between md:items-center lg:items-start bg-white dark:bg-black p-4 md:w-20 lg:w-52 xl:w-64 h-full">
       <Link to="/" className="flex items-center space-x-3 mx-2 mt-3 mb-8">
         <img src={logo} alt="Logo" className="w-10" />
         <p className="md:hidden lg:block font-lobster text-4xl">Hi5</p>

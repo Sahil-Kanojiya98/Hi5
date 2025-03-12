@@ -16,7 +16,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/chat")
-@PreAuthorize("principal.isAccountNonLocked()")
 @RequiredArgsConstructor
 public class ChatController {
 

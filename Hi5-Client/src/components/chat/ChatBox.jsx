@@ -24,6 +24,9 @@ const ChatBox = ({ chatId, receiverId }) => {
   useEffect(() => {
     setMessage("");
     setError(null);
+    setFile(null);
+    setFileError(null);
+    setFileURL(null);
     if (!chatId) return;
 
     let subscription;
@@ -230,17 +233,23 @@ const ChatBox = ({ chatId, receiverId }) => {
           <p className="text-gray-400 text-center">Loading...</p>
         )}
         {error && <p className="text-red-400 text-center">{error}</p>}
-        {chatId &&
-          !isMessagesLoading &&
-          !error &&
-          (messages.length > 0 ? (
-            messages.map((msg, index) => (
-              <div key={index}>
-                {/* <div className="flex justify-center">
-                        <div className="bg-gray-400 dark:bg-gray-600 bg-opacity-10 px-3 py-1 rounded-lg max-w-xs text-sm">
-                          <p className="font-medium">1-10-2025</p>
-                        </div>
-                      </div> */}
+
+        {chatId && !isMessagesLoading && !error && messages.length > 0 ? (
+          messages.map((msg, index) => {
+            const currentMessageDate = formatDate(msg.createdAt);
+            const previousMessageDate =
+              index > 0 ? formatDate(messages[index - 1].createdAt) : null;
+            const showDateHeader = currentMessageDate !== previousMessageDate;
+
+            return (
+              <div key={msg.id}>
+                {showDateHeader && (
+                  <div className="flex justify-center my-2">
+                    <div className="bg-gray-400 dark:bg-gray-600 bg-opacity-10 px-3 py-1 rounded-lg max-w-xs text-sm">
+                      <p className="font-medium">{currentMessageDate}</p>
+                    </div>
+                  </div>
+                )}
                 <div
                   className={`flex gap-1 ${
                     msg?.senderUserId === myId ? "justify-end" : "justify-start"
@@ -283,12 +292,11 @@ const ChatBox = ({ chatId, receiverId }) => {
                   </div>
                 </div>
               </div>
-            ))
-          ) : (
-            <p className="text-gray-400 text-center">
-              No messages yet. Say hi!
-            </p>
-          ))}
+            );
+          })
+        ) : (
+          <p className="text-gray-400 text-center">No messages yet. Say hi!</p>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -320,6 +328,12 @@ const ChatBox = ({ chatId, receiverId }) => {
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
                 placeholder={
                   chatId ? "Type a message..." : "Select a user to chat"
                 }
@@ -331,6 +345,7 @@ const ChatBox = ({ chatId, receiverId }) => {
               <div className="flex items-center gap-2 pr-2">
                 <button
                   className="flex justify-center items-center hover:bg-gray-300 dark:hover:bg-gray-700 p-2 rounded-full w-10 h-10 transition"
+                  disabled={chatId === undefined}
                   onClick={() => {
                     fileRef.current.accept = "image/*";
                     fileRef.current.click();
@@ -344,6 +359,7 @@ const ChatBox = ({ chatId, receiverId }) => {
 
                 <button
                   className="flex justify-center items-center hover:bg-gray-300 dark:hover:bg-gray-700 p-2 rounded-full w-10 h-10 transition"
+                  disabled={chatId === undefined}
                   onClick={() => {
                     fileRef.current.accept = "video/*";
                     fileRef.current.click();
@@ -387,6 +403,11 @@ const ChatBox = ({ chatId, receiverId }) => {
 ChatBox.propTypes = {
   chatId: PropTypes.string,
   receiverId: PropTypes.string,
+};
+
+const formatDate = (isoString) => {
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  return new Date(isoString).toLocaleDateString(undefined, options);
 };
 
 const extractTime = (isoString) => {

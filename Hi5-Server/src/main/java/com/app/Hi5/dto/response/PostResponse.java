@@ -35,6 +35,12 @@ public class PostResponse {
     @JsonProperty("saveStatus")
     private SaveStatus saveStatus;
 
+    @JsonProperty("isPrivate")
+    private Boolean isPrivate;
+
+    @JsonProperty("isCommentsDisabled")
+    private Boolean isCommentsDisabled;
+
     private String username;
     private String fullname;
     private String profilePictureUrl;

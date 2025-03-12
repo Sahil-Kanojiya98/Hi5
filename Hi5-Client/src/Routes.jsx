@@ -17,13 +17,8 @@ import SearchPage from "./views/SearchPage";
 import ChatPage from "./views/ChatPage";
 import NotificationsPage from "./views/NotificationsPage";
 import ProfilePage from "./views/ProfilePage";
-// import SettingsPage from "./views/SettingsPage";
 import SharedMediaPage from "./views/SharedMediaPage";
-// import SavedPostsPage from "./pages/SavedPostsPage";
-// import SearchPage from "./pages/SearchPage";
-// import AdminPage from "./pages/AdminPage";
-// import ContentManagementPage from "./pages/ContentManagementPage";
-// import UserManagementPage from "./pages/UserManagementPage";
+import SettingsPage from "./views/SettingsPage";
 
 const RoutesConfig = () => {
   const user = useSelector((state) => state.user.profile);
@@ -158,7 +153,6 @@ const RoutesConfig = () => {
       <Route
         path="/notifications"
         element={
-          // <></>
           <AuthGuard>
             <NotificationsPage />
           </AuthGuard>
@@ -168,10 +162,9 @@ const RoutesConfig = () => {
       <Route
         path="/settings"
         element={
-          <></>
-          // <AuthGuard>
-          //   <SettingsPage />
-          // </AuthGuard>
+          <AuthGuard>
+            <SettingsPage />
+          </AuthGuard>
         }
       />
 

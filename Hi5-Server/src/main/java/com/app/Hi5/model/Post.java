@@ -36,6 +36,14 @@ public class Post {
     @Field("video_url")
     private String videoUrl;
 
+    @Field("is_private")
+    @Builder.Default
+    private Boolean isPrivate = false;
+
+    @Field("is_comments_disabled")
+    @Builder.Default
+    private Boolean isCommentsDisabled = false;
+
     @CreatedDate
     @Field("created_at")
     private Date createdAt;

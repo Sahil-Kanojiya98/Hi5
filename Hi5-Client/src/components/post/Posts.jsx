@@ -17,10 +17,10 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
 
   const getPostEndpoint = () => {
     switch (feedType) {
-      case "forYou":
+      case "FOR_YOU":
         return `/post`;
-      // case "following":
-      //   return `/post/following?page=${page}`;
+      case "FOLLOWINGS":
+        return `/post/following?page=${page}`;
       // case "posts":
       //   return `/post/user/${userId}?page=${page}`;
       // case "saved":

@@ -2,11 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* Lobster font */
 @font-face {
-  font-family: 'Lobster';
-  src: url('/fonts/Lobster-Regular.ttf') format('truetype');
+  font-family: "Lobster";
+  src: url("/fonts/Lobster-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -15,44 +14,43 @@
 
 /* Regular (400) */
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Regular.ttf') format('truetype');
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 
 /* Bold (700) */
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Bold.ttf') format('truetype');
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
 
 /* Light (300) */
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Light.ttf') format('truetype');
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
 }
 
 /* Medium (500) */
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Medium.ttf') format('truetype');
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
 }
 
 /* Thin (100) */
 @font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Thin.ttf') format('truetype');
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Thin.ttf") format("truetype");
   font-weight: 100;
   font-style: normal;
 }
-
 
 .hide-scrollbar {
   overflow-x: auto; /* Enable horizontal scrolling */
@@ -63,15 +61,9 @@
   display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
 }
 
-
-
-
-
-
-
-
-
-
+/* .invert {
+  filter: invert(1);
+} */
 
 /* @tailwind base;
 @tailwind components;
@@ -101,18 +93,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 } */
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* @font-face {
   font-family: 'Agdasima';
   src: url('/fonts/Agdasima/Agdasima-Regular.ttf') format('truetype');
@@ -126,7 +106,6 @@ body {
   font-weight: bold;
   font-style: normal;
 } */
-
 
 /* @font-face {
   font-family: "TechnoGrazer";

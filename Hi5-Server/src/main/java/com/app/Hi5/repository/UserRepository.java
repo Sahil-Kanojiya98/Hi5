@@ -4,12 +4,15 @@ import com.app.Hi5.model.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, ObjectId> {
@@ -21,21 +24,6 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     Optional<User> findByUsername(String username);
 
     Optional<User> findByUsernameAndIsActiveTrue(String username);
-
-//    @Query(
-//            "{'$and': [ " +
-//                "{'role': 'USER'}, " +
-//                "{'$or': [ " +
-//                    " {'username': {$regex: '^?0', $options: 'i'}}, " +
-//                    " {'username': {$regex: '?0$', $options: 'i'}}, " +
-//                    " {'username': {$regex: '.*?0.*', $options: 'i'}}, " +
-//                    " {'full_name': {$regex: '^?0', $options: 'i'}}, " +
-//                    " {'full_name': {$regex: '?0$', $options: 'i'}}, " +
-//                    " {'full_name': {$regex: '.*?0.*', $options: 'i'}} " +
-//                "]}" +
-//            "]}"
-//    )
-//    List<User> findUsersByUsernameAndFullname(String keyword);
 
     @Query(
             "{'$and': [ " +
@@ -60,6 +48,32 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
                     "]}"
     )
     Optional<User> findUserById(ObjectId id);
+
+    Page<User> findByIdIn(Set<ObjectId> userIds, Pageable pageable);
+
+//    @Aggregation(pipeline = {
+//            "{ $match: { _id: { $in: ?0 } } }",
+//            "{ $sample: { size: ?1 } }"
+//    })
+//    List<User> findRandomUsers(Set<ObjectId> ids, int numberOfUsers);
+
+    @Aggregation(pipeline = {
+            "{ $match: { '_id': { $in: ?0 }, 'role': 'USER', 'active': true } }",
+            "{ $sample: { size: ?1 } }"
+    })
+    List<User> findRandomUsers(Set<ObjectId> ids, int numberOfUsers);
+
+//    @Aggregation(pipeline = {
+//            "{ $match: { 'role': 'USER', 'active': true } }",
+//            "{ $sample: { size: ?0 } }"
+//    })
+//    List<User> findRandomUsers(int numberOfUsers, Set<String> excludedIds);
+
+    @Aggregation(pipeline = {
+            "{ $match: { 'role': 'USER', 'active': true, '_id': { $nin: ?1 } } }",
+            "{ $sample: { size: ?0 } }"
+    })
+    List<User> findRandomUsersExceptSomeIds(int numberOfUsers, Set<ObjectId> excludedIds);
 
 
 //    Optional<User> findByUsername(String username);

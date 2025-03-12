@@ -1,5 +1,6 @@
 package com.app.Hi5.repository;
 
+import com.app.Hi5.model.Enum.NotificationType;
 import com.app.Hi5.model.Notification;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,10 @@ public interface NotificationRepository extends MongoRepository<Notification, Ob
 
     Boolean existsByNotificationUserIdAndUserIdAndRelevantId(String notificationUserId, String userId, String relevantId);
 
+    Boolean existsByNotificationUserIdAndUserIdAndRelevantIdAndType(String notificationUserId, String userId, String relevantId, NotificationType type);
+
     void deleteByNotificationUserId(String notificationUserId);
+
+    void deleteByNotificationUserIdAndUserIdAndType(String notificationUserId,String userId,NotificationType type);
 
 }

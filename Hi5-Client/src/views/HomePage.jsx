@@ -6,13 +6,14 @@ import Posts from "../components/post/Posts";
 import { useState } from "react";
 
 const HomePage = () => {
-  const [feedType, setFeedType] = useState("forYou");
+  const [feedType, setFeedType] = useState("FOR_YOU");
 
   const forYouTabClickHandle = () => {
-    setFeedType("forYou");
+    setFeedType("FOR_YOU");
   };
+
   const followingTabClickHandle = () => {
-    setFeedType("following");
+    setFeedType("FOLLOWINGS");
   };
 
   return (
@@ -30,7 +31,7 @@ const HomePage = () => {
                 onClick={forYouTabClickHandle}
               >
                 For You
-                {feedType === "forYou" && (
+                {feedType === "FOR_YOU" && (
                   <div className="bottom-0 absolute bg-gray-800 dark:bg-gray-200 rounded-full w-10 h-1"></div>
                 )}
               </div>
@@ -40,7 +41,7 @@ const HomePage = () => {
                 onClick={followingTabClickHandle}
               >
                 Following
-                {feedType === "following" && (
+                {feedType === "FOLLOWINGS" && (
                   <div className="bottom-0 absolute bg-gray-800 dark:bg-gray-200 rounded-full w-10 h-1"></div>
                 )}
               </div>

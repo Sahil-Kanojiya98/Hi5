@@ -65,7 +65,7 @@ const ReportConfirmationModal = ({
     <>
       {isOpen && (
         <div
-          className={`z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 transition-opacity duration-300 ${
+          className={`z-20 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 transition-opacity duration-300 ${
             isReporting ? "opacity-50 pointer-events-none" : ""
           }`}
           onClick={handleOutsideClick}

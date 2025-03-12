@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/save")
-@PreAuthorize("principal.isAccountNonLocked()")
 @RequiredArgsConstructor
 public class SaveController {
 

@@ -35,8 +35,8 @@ public class ReelService {
     private final FileStorage fileStorage;
     private final NotificationService notificationService;
 
-    public String makeReel(User user, String description, MultipartFile thumbnailImageFile, MultipartFile videoFile, Long duration) {
-        Reel reel = Reel.builder().description(description).userId(user.getId().toHexString()).build();
+    public String makeReel(User user, String description, MultipartFile thumbnailImageFile, MultipartFile videoFile, Long duration, Boolean isPrivate, Boolean isCommentsDisabled) {
+        Reel reel = Reel.builder().description(description).userId(user.getId().toHexString()).isPrivate(isPrivate).isCommentsDisabled(isCommentsDisabled).build();
         Validator.validateReelMultipartFilesExsists(thumbnailImageFile, videoFile);
         try {
             String imageUrl = fileStorage.saveFile(thumbnailImageFile, FileType.REEL_THUMBNAIL_IMAGE);
@@ -87,29 +87,28 @@ public class ReelService {
             if (reelUser == null) {
                 return null;
             }
-            return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
+            return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(reel.getIsPrivate()).isCommentsDisabled(reel.getIsCommentsDisabled()).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestReceivedUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public ReelResponse findReel(String reelId) {
         return reelRepository.findById(new ObjectId(reelId)).map(reel -> {
-            User reelUser = userRepository.findById(new ObjectId(reel.getUserId())).orElseThrow(() -> new EntityNotFoundException("user not found!"));
-            return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(LikeStatus.NOT_LIKED).reportStatus(ReportStatus.NOT_REPORTED).saveStatus(SaveStatus.NOT_SAVED).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(FollowStatus.NOT_FOLLOWED).build();
-        }).orElseThrow(() -> new EntityNotFoundException("Reel not found!"));
+            User reelUser = userRepository.findById(new ObjectId(reel.getUserId())).orElseThrow(() -> new EntityNotFoundException("User not found."));
+            if (!reel.getIsPrivate()) {
+                return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(LikeStatus.NOT_LIKED).reportStatus(ReportStatus.NOT_REPORTED).saveStatus(SaveStatus.NOT_SAVED).isPrivate(reel.getIsPrivate()).isCommentsDisabled(reel.getIsCommentsDisabled()).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(FollowStatus.NOT_FOLLOWED).build();
+            }
+            return null;
+        }).orElseThrow(() -> new EntityNotFoundException("Reel not found."));
     }
 
     public ReelResponse findReel(String reelId, User user) {
         return reelRepository.findById(new ObjectId(reelId)).map(reel -> {
-            User reelUser = userRepository.findById(new ObjectId(reel.getUserId())).orElseThrow(() -> new EntityNotFoundException("user not found!"));
-            return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
-        }).orElseThrow(() -> new EntityNotFoundException("Reel not found!"));
+            User reelUser = userRepository.findById(new ObjectId(reel.getUserId())).orElseThrow(() -> new EntityNotFoundException("User not found."));
+            if (!reel.getIsPrivate()) {
+                return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(reel.getIsPrivate()).isCommentsDisabled(reel.getIsCommentsDisabled()).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestReceivedUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
+            }
+            return null;
+        }).orElseThrow(() -> new EntityNotFoundException("Reel not found."));
     }
-
-//    public ReelResponse findReel(String reelId) {
-//        return reelRepository.findById(new ObjectId(reelId)).map(reel -> {
-//            User reelUser = userRepository.findById(new ObjectId(reel.getUserId())).orElseThrow(() -> new EntityNotFoundException("user not found!"));
-//            return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).thumbnailUrl(reel.getThumbnailUrl()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
-//        }).orElseThrow(() -> new EntityNotFoundException("Reel not found!"));
-//    }
 
 }

@@ -48,6 +48,7 @@ export const ToastProvider = ({ children }) => {
                 return CommentNotification(type, msg?.username);
               case "FOLLOW":
               case "FOLLOW_REQUEST":
+              case "FOLLOW_REQUEST_ACCEPT":
                 return FollowNotification(type, msg?.username);
             }
           }
@@ -215,7 +216,7 @@ export const MessageToast = (messageData) => {
 
 export const LikeNotification = (type, username) => {
   t.custom((t) => (
-    <Link to={"/notification"}>
+    <Link to={"/notifications"}>
       <div
         className={`${
           t.visible ? "animate-toast-enter" : "animate-toast-leave"
@@ -247,7 +248,7 @@ const getLikeMessage = (type) => {
 
 export const CommentNotification = (type, username) => {
   t.custom((t) => (
-    <Link to={"/notification"}>
+    <Link to={"/notifications"}>
       <div
         className={`${
           t.visible ? "animate-toast-enter" : "animate-toast-leave"
@@ -275,7 +276,7 @@ const getCommentMessage = (type) => {
 
 export const FollowNotification = (type, username) => {
   t.custom((t) => (
-    <Link to={"/notification"}>
+    <Link to={"/notifications"}>
       <div
         className={`${
           t.visible ? "animate-toast-enter" : "animate-toast-leave"
@@ -296,6 +297,8 @@ const getFollowMessage = (type) => {
       return "started following you.";
     case "FOLLOW_REQUEST":
       return "sent you a follow request.";
+    case "FOLLOW_REQUEST_ACCEPT":
+      return "accepted your follow request."
     default:
       return "";
   }
@@ -303,7 +306,7 @@ const getFollowMessage = (type) => {
 
 export const NewContentNotification = (type, username) => {
   t.custom((t) => (
-    <Link to={"/notification"}>
+    <Link to={"/notifications"}>
       <div
         className={`${
           t.visible ? "animate-toast-enter" : "animate-toast-leave"

@@ -20,15 +20,14 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/post")
-@PreAuthorize("principal.isAccountNonLocked()")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<String> createPost(@RequestParam("content") String content, @RequestParam(value = "image", required = false) MultipartFile imageFile, @RequestParam(value = "video", required = false) MultipartFile videoFile, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String body = postService.makePost(userDetails.getUser(), content, imageFile, videoFile);
+    public ResponseEntity<String> createPost(@RequestParam("content") String content, @RequestParam(value = "image", required = false) MultipartFile imageFile, @RequestParam(value = "video", required = false) MultipartFile videoFile, @RequestParam("isPrivate") Boolean isPrivate, @RequestParam("isCommentsDisabled") Boolean isCommentsDisabled, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String body = postService.makePost(userDetails.getUser(), content, imageFile, videoFile, isPrivate, isCommentsDisabled);
         return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
@@ -43,53 +42,14 @@ public class PostController {
         return postService.findRandomPosts(userDetails.getUser(), size);
     }
 
-    @GetMapping("/shared")
-    public PostResponse getSharedPost(@RequestParam("postId") String postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.findPost(postId,userDetails.getUser());
+    @GetMapping("/following")
+    public List<PostResponse> getAllFollowigsPosts(@RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.findFollowigsPosts(userDetails.getUser(), size, page);
     }
 
-
-
-
-
-//    @GetMapping("/saved")
-//    public List<PostResponse> getAllSavedPosts(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return postService.findSavedPosts(userDetails.getUser(), pageNo, pageSize);
-//    }
-//    @GetMapping("/user/{user_id}")
-//    public ResponseEntity<List<PostResponseDTO>> getUserPosts(
-//            @PathVariable("user_id") String userId,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "5") int pageSize) {
-//        int skip = page * pageSize;
-//        List<PostResponseDTO> posts = postRepository.findPostsByUserIdsWithPaginationAndOrder(
-//                userDetails.getUser().getId(),
-//                Set.of(userId),
-//                skip,
-//                pageSize
-//        );
-//        System.out.println(posts);
-//        return new ResponseEntity<>(posts, HttpStatus.OK);
-//    }
-//    @GetMapping("/following")
-//    public ResponseEntity<List<PostResponseDTO>> getFolloingsPosts(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
-//            @RequestParam(defaultValue = "0") int page,   // Page number (default to 0)
-//            @RequestParam(defaultValue = "5") int pageSize) { // Page size (default to 5)
-//        int skip = page * pageSize;
-//        List<PostResponseDTO> posts = postRepository.findPostsByUserIdsWithPaginationAndOrder(
-//                userDetails.getUser().getId(),
-//                userDetails.getUser().getFollowings(),
-//                skip,
-//                pageSize
-//        );
-//        return new ResponseEntity<>(posts, HttpStatus.OK);
-//    }
-//    @GetMapping("/{post_id}")
-//    public ResponseEntity<Post> getPost(@PathVariable("post_id") String post_id){
-//        Post post=postService.getPost(post_id);
-//        return new ResponseEntity<>(post,HttpStatus.OK);
-//    }
+    @GetMapping("/shared")
+    public PostResponse getSharedPost(@RequestParam("postId") String postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.findPost(postId, userDetails.getUser());
+    }
 
 }

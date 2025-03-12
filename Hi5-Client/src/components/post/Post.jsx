@@ -23,6 +23,7 @@ import {
 } from "../../services/api";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { CommentsDisabled } from "@mui/icons-material";
 
 const Post = ({ post, removePost, isMyProfilePosts }) => {
   const user = useSelector((state) => state.user.profile);
@@ -243,23 +244,37 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
             </span>
           </button>
 
-          <button
-            className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
-            onClick={openCommentModel}
-          >
-            <CommentOutlinedIcon className="group-hover:text-blue-500 w-5 h-5 text-gray-500 transition-colors duration-200" />
-            <span className="group-hover:text-blue-500 font-medium text-sm">
-              {commentCount}
-            </span>
-          </button>
+          {post?.isCommentsDisabled === true ? (
+            <button className="flex items-center space-x-2 cursor-not-allowed">
+              <CommentsDisabled
+                sx={{
+                  fontSize: { xs: 21, sm: 23, md: 25 },
+                }}
+                className="w-5 sm:w-6 h-5 sm:h-6"
+              />
+              <span className="font-medium text-xs sm:text-sm">0</span>
+            </button>
+          ) : (
+            <button
+              className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
+              onClick={openCommentModel}
+            >
+              <CommentOutlinedIcon className="group-hover:text-blue-500 w-5 h-5 text-gray-500 transition-colors duration-200" />
+              <span className="group-hover:text-blue-500 font-medium text-sm">
+                {commentCount}
+              </span>
+            </button>
+          )}
 
-          <button
-            className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
-            onClick={shareClickHandler}
-          >
-            <ShareSharpIcon className="group-hover:text-green-500 w-5 h-5 text-gray-500 transition-colors duration-200" />
-            <span className="group-hover:text-green-500 text-xs">Share</span>
-          </button>
+          {post?.isPrivate === false && (
+            <button
+              className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
+              onClick={shareClickHandler}
+            >
+              <ShareSharpIcon className="group-hover:text-green-500 w-5 h-5 text-gray-500 transition-colors duration-200" />
+              <span className="group-hover:text-green-500 text-xs">Share</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -277,14 +292,17 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
         isReporting={isReporting}
         type="POST"
       />
-      <CommentModel
-        isOpen={isCommentModelOpen}
-        onClose={closeCommentModel}
-        type={"POST"}
-        relevantId={post.id}
-        updateCommentCount={setCommentCount}
-        commentCount={commentCount}
-      />
+
+      {post?.isCommentsDisabled !== true && (
+        <CommentModel
+          isOpen={isCommentModelOpen}
+          onClose={closeCommentModel}
+          type={"POST"}
+          relevantId={post.id}
+          updateCommentCount={setCommentCount}
+          commentCount={commentCount}
+        />
+      )}
     </div>
   );
 };
@@ -292,23 +310,20 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
 Post.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.string.isRequired,
-
     userId: PropTypes.string.isRequired,
     fullname: PropTypes.string.isRequired,
     profilePictureUrl: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
-
     content: PropTypes.string,
     imageUrl: PropTypes.string,
     videoUrl: PropTypes.string,
-
     likeStatus: PropTypes.string.isRequired,
     reportStatus: PropTypes.string.isRequired,
     saveStatus: PropTypes.string.isRequired,
-
     likesCount: PropTypes.number.isRequired,
     commentsCount: PropTypes.number.isRequired,
-
+    isPrivate: PropTypes.bool.isRequired,
+    isCommentsDisabled: PropTypes.bool.isRequired,
     createdAt: PropTypes.string.isRequired,
   }).isRequired,
   removePost: PropTypes.func.isRequired,

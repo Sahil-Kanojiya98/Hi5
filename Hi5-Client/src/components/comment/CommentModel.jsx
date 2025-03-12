@@ -134,7 +134,7 @@ const CommentModel = ({
 
   return (
     <div
-      className="z-10 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
+      className="z-20 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
       onClick={handleOutsideClick}
     >
       <div className="bg-white shadow-lg p-4 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-xl">

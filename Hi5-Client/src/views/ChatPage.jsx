@@ -108,8 +108,8 @@ const ChatPage = () => {
   return (
     <MainLayout>
       <div className="flex justify-center md:ml-[14dvw] lg:ml-[13dvw] xl:ml-[19dvw] 2xl:ml-[10dvw] w-full md:max-w-4xl xl:max-w-5xl h-full">
-        <div className="p-3 lg:w-1/3 h-full">
-          <div className="bg-white dark:bg-black p-4 rounded-lg w-full h-full">
+        <div className="p-3 lg:w-1/3">
+          <div className="bg-white dark:bg-black shadow-md p-4 rounded-lg w-full h-full">
             <div className="flex justify-between items-center gap-6 mb-7">
               <h2 className="font-bold text-xl">Users</h2>
               <div className="flex items-center gap-1">
@@ -138,8 +138,8 @@ const ChatPage = () => {
                           key={chat?.chatId}
                           className={`flex justify-between items-center p-3 mb-2 rounded-lg cursor-pointer transition-all ${
                             selectedChat?.receiverId === chat?.receiverId
-                              ? "bg-blue-400 dark:bg-blue-600"
-                              : "hover:bg-gray-200 dark:hover:bg-gray-700"
+                              ? "!bg-blue-400 dark:bg-blue-600"
+                              : "bg-gray-300 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-900"
                           }`}
                           onClick={() => {
                             navigate(`/chat/${chat.receiverId}`);
@@ -183,7 +183,7 @@ const ChatPage = () => {
         </div>
 
         <div className="flex flex-col py-3 w-full md:w-[430px] lg:w-[450px] xl:w-[700px] h-full">
-          <div className="flex flex-col flex-1 bg-white dark:bg-black p-4 rounded-lg w-full h-full">
+          <div className="flex flex-col flex-1 bg-white dark:bg-black shadow-md p-4 rounded-lg w-full h-full">
             <div className="flex justify-between items-center mb-4 pb-2 border-gray-300 dark:border-gray-700 border-b">
               <div className="flex justify-between items-center px-3 w-full h-10 font-semibold">
                 {selectedChat ? (

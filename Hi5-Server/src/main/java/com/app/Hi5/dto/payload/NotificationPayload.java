@@ -17,7 +17,7 @@ import java.util.Date;
 @Builder
 public class NotificationPayload {
 
-    private ObjectId id;
+    private String id;
 
     private String notificationUserId;
 
@@ -36,6 +36,7 @@ public class NotificationPayload {
     private String profilePictureUrl;
 
     public static NotificationPayload convertToPayload(Notification notification, User u) {
-        return NotificationPayload.builder().id(notification.getId()).notificationUserId(notification.getNotificationUserId()).userId(notification.getUserId()).type(notification.getType()).relevantId(notification.getRelevantId()).createdAt(notification.getCreatedAt()).username(u.getUsername()).fullname(u.getFullname()).profilePictureUrl(u.getProfileImageUrl()).build();
+        return NotificationPayload.builder().id(notification.getId().toHexString()).notificationUserId(notification.getNotificationUserId()).userId(notification.getUserId()).type(notification.getType()).relevantId(notification.getRelevantId()).createdAt(notification.getCreatedAt()).username(u.getUsername()).fullname(u.getFullname()).profilePictureUrl(u.getProfileImageUrl()).build();
     }
+
 }

@@ -19,7 +19,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/comment")
-@PreAuthorize("principal.isAccountNonLocked()")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -42,34 +41,5 @@ public class CommentController {
         commentService.deleteComment(userDetails.getUser(), post_id);
         return new ResponseEntity<>("post deleted successfully!", HttpStatus.OK);
     }
-
-//    @GetMapping("/{post_id}")
-//    public List<CommentResponseDTO> getComments(
-//            @PathVariable("post_id") String post_id,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "5") int pageSize,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        List<CommentResponseDTO> comments = commentService.getComment(post_id, page, pageSize, userDetails.getUser());
-//        System.out.println(comments);
-//        return comments;
-//    }
-//    @PostMapping("/like/{comment_id}")
-//    public ResponseEntity<String> likePost(
-//            @PathVariable("comment_id") String comment_id,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails
-//    ){
-//        System.out.println("like request occure    ---------------------------------------------------------------------------:"+comment_id);
-//        commentService.likeComment(userDetails.getUser(),comment_id);
-//        return new ResponseEntity<>("post liked",HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/unlike/{comment_id}")
-//    public ResponseEntity<String> unlikePost(
-//            @PathVariable("comment_id") String comment_id,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails
-//    ){
-//        commentService.unlikeComment(userDetails.getUser(),comment_id);
-//        return new ResponseEntity<>("post unliked",HttpStatus.OK);
-//    }
 
 }

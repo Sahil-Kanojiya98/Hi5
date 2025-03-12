@@ -1,6 +1,7 @@
 package com.app.Hi5.controller;
 
 import com.app.Hi5.dto.request.FollowRequestActionRequest;
+import com.app.Hi5.dto.request.SettingsRequest;
 import com.app.Hi5.dto.request.UpdateUserRequest;
 import com.app.Hi5.dto.response.*;
 import com.app.Hi5.model.User;
@@ -73,41 +74,91 @@ public class UserController {
         return response.toResponseEntity();
     }
 
-
     @PostMapping("/follow/allow")
-    public ResponseEntity<String> allowFollowRequest(@RequestBody FollowRequestActionRequest request) {
-        userService.allowFollowRequest(request.getNotificationId());
+    public ResponseEntity<String> allowFollowRequest(@RequestBody FollowRequestActionRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (request.getNotificationId() != null) {
+            userService.allowFollowRequestByNotificationId(request.getNotificationId(), userDetails.getUser());
+        } else if (request.getUserId() != null) {
+            userService.allowFollowRequestByUserId(request.getUserId(), userDetails.getUser());
+        } else {
+            return ResponseEntity.badRequest().body("Either notificationId or userId must be provided");
+        }
         return ResponseEntity.ok("Follow request allowed");
     }
 
     @PostMapping("/follow/deny")
-    public ResponseEntity<String> denyFollowRequest(@RequestBody FollowRequestActionRequest request) {
-        userService.denyFollowRequest(request.getNotificationId());
+    public ResponseEntity<String> denyFollowRequest(@RequestBody FollowRequestActionRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (request.getNotificationId() != null) {
+            userService.denyFollowRequestByNotificationId(request.getNotificationId(), userDetails.getUser());
+        } else if (request.getUserId() != null) {
+            userService.denyFollowRequestByUserId(request.getUserId(), userDetails.getUser());
+        } else {
+            return ResponseEntity.badRequest().body("Either notificationId or userId must be provided");
+        }
         return ResponseEntity.ok("Follow request denied");
     }
 
-//    on user accoun delete remove all the posts and its all history
+    @DeleteMapping("/follow/cancel/{userId}")
+    public ResponseEntity<String> cancelFollowRequest(@PathVariable String userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.cancelFollowRequest(userId, userDetails.getUser());
+        return ResponseEntity.ok("Follow request canceled");
+    }
+
+    @GetMapping("/follow/sent/requests")
+    public ResponseEntity<List<ConnectionRequestResponse>> getSentFollowRequests(@RequestParam("page") Integer page, @RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<ConnectionRequestResponse> responseList = userService.getSentFollowRequestsList(userDetails.getUser(), page, size);
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/follow/received/requests")
+    public ResponseEntity<List<ConnectionRequestResponse>> getReceivedFollowRequests(@RequestParam("page") Integer page, @RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<ConnectionRequestResponse> responseList = userService.getReceivedFollowRequestsList(userDetails.getUser(), page, size);
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/followers")
+    public ResponseEntity<List<UserCardResponse>> getFollowers(@RequestParam("page") Integer page, @RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<UserCardResponse> responseList = userService.getFollowersList(userDetails.getUser(), page, size);
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/followings")
+    public ResponseEntity<List<UserCardResponse>> getFollowings(@RequestParam("page") Integer page, @RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<UserCardResponse> responseList = userService.getFollowingsList(userDetails.getUser(), page, size);
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/suggest")
+    public ResponseEntity<List<UserCardResponse>> suggestUsers(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<UserCardResponse> responseList = userService.getSuggestedUsers(userDetails.getUser());
+        System.out.println("responseList = " + responseList);
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
+
+    @GetMapping("/settings")
+    public ResponseEntity<SettingsResponse> getSettings(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        SettingsResponse response = userService.getUserSettings(userDetails.getUser());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/settings")
+    public ResponseEntity<String> changeSettings(@RequestBody SettingsRequest settingsRequest, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.saveUserSettings(settingsRequest,userDetails.getUser());
+        return new ResponseEntity<>("Settings Changed.", HttpStatus.OK);
+    }
+
+//    @GetMapping("/follow/requests")
+//    public ResponseEntity<String> denyFollowRequest(@RequestBody FollowRequestActionRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        userService.denyFollowRequest(request.getNotificationId(),userDetails.getUser());
+//        return ResponseEntity.ok("Follow request denied");
+//    }
+
+
+//    on user account delete remove all the posts and its all history
 //    @GetMapping("/{userId}")
 //    public ResponseEntity<UserProfileResponse> getUser(@PathVariable("userId") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
 //        UserProfileResponse response=userService.getProfile(userId,userDetails.getUser().getId());
 //        return new ResponseEntity<>(response,HttpStatus.OK);
-//    }
-
-//    @GetMapping("/saved-posts")
-//    public ResponseEntity<List<PostResponseDTO>> getSavedPosts(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int pageSize) {
-//        System.out.println("this is me");
-//        List<PostResponseDTO> savedPosts = userService.getAllSavedPosts(userDetails.getUser(), page, pageSize);
-//        return new ResponseEntity<>(savedPosts, HttpStatus.OK);
-//    }
-
-//    @GetMapping("/search")
-//    public Page<User> search(@RequestParam String pattern,
-//                             @RequestParam(defaultValue = "0") int page,
-//                             @RequestParam(defaultValue = "10") int size) {
-//        return userService.searchUsers(pattern, page, size);
 //    }
 
 //    @GetMapping("/suggest")

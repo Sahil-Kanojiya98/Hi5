@@ -9,14 +9,18 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface PostRepository extends MongoRepository<Post, ObjectId> {
 
     @Aggregation(pipeline = {
+            "{ $match: { is_private : false } }",
             "{ $sample: { size: ?0 } }"
     })
     List<Post> findRandomPosts(int numberOfPosts);
+
+    Page<Post> findByUserIdInOrderByCreatedAtDesc(Set<String> userIds, Pageable pageable);
 
 //    Page<Post> findAllByIdIn(List<ObjectId> ids, Pageable pageable);
 

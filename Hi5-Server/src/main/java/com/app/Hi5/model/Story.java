@@ -41,4 +41,8 @@ public class Story {
     @Builder.Default
     private Set<String> likedUserIds = new LinkedHashSet<>();
 
+    @Field("watched_users")
+    @Builder.Default
+    private Set<String> watchedUserIds = new LinkedHashSet<>();
+
 }
