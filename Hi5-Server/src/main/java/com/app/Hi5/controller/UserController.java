@@ -1,11 +1,10 @@
 package com.app.Hi5.controller;
 
-import com.app.Hi5.dto.request.FollowRequestActionRequest;
-import com.app.Hi5.dto.request.SettingsRequest;
-import com.app.Hi5.dto.request.UpdateUserRequest;
+import com.app.Hi5.dto.request.*;
 import com.app.Hi5.dto.response.*;
 import com.app.Hi5.model.User;
 import com.app.Hi5.security.UserDetailsImpl;
+import com.app.Hi5.service.AuthService;
 import com.app.Hi5.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -143,28 +142,21 @@ public class UserController {
 
     @PutMapping("/settings")
     public ResponseEntity<String> changeSettings(@RequestBody SettingsRequest settingsRequest, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.saveUserSettings(settingsRequest,userDetails.getUser());
+        userService.saveUserSettings(settingsRequest, userDetails.getUser());
         return new ResponseEntity<>("Settings Changed.", HttpStatus.OK);
     }
 
-//    @GetMapping("/follow/requests")
-//    public ResponseEntity<String> denyFollowRequest(@RequestBody FollowRequestActionRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        userService.denyFollowRequest(request.getNotificationId(),userDetails.getUser());
-//        return ResponseEntity.ok("Follow request denied");
-//    }
+    @PostMapping("/change-username")
+    public ResponseEntity<String> checkUsername(@RequestBody @Valid ChangeUsernameRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.changeUsername(request.getUsername(), userDetails.getUser());
+        return new ResponseEntity<>("Username changed successfully.", HttpStatus.OK);
+    }
 
+    @DeleteMapping("/myaccount")
+    public ResponseEntity<String> deleteAccount(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        userService.deleteAccount(userDetails.getUser());
+        return new ResponseEntity<>("Account Deleted",HttpStatus.OK);
+    }
 
 //    on user account delete remove all the posts and its all history
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<UserProfileResponse> getUser(@PathVariable("userId") String userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-//        UserProfileResponse response=userService.getProfile(userId,userDetails.getUser().getId());
-//        return new ResponseEntity<>(response,HttpStatus.OK);
-//    }
-
-//    @GetMapping("/suggest")
-//    public ResponseEntity<List<UserDescResponse>> suggestUsers(){
-//        List<UserDescResponse> users=userService.suggest();
-//        return new ResponseEntity<>(users,HttpStatus.OK);
-//    }
-
 }

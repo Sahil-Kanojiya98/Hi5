@@ -30,7 +30,7 @@ import toast from "react-hot-toast";
 import { setUser } from "../redux/slices/userSlice";
 import RequestsModel from "../components/temp/RequestsModel";
 import ConnectionsModel from "../components/temp/ConnectionsModel";
-// import Posts from "../components/post/Posts";
+import ProfileTabs from "../components/profile/ProfileTabs";
 
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState("");
@@ -303,7 +303,7 @@ const ProfilePage = () => {
 
   return (
     <MainLayout>
-      <div className="flex justify-center bg-gray-100 dark:bg-gray-900 mx-auto p-2 md:p-6 pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full">
+      <div className="flex justify-center bg-gray-100 dark:bg-gray-900 mx-auto pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full">
         <div className="flex flex-col justify-center w-full max-w-3xl">
           {error && (
             <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800 shadow-lg mt-[15dvh] p-6 rounded-lg w-full min-h-[200px]">
@@ -332,7 +332,7 @@ const ProfilePage = () => {
             </div>
           )}
           {!error && !loading && profileData && (
-            <div className="flex flex-col bg-white dark:bg-black shadow-md mt-5 rounded-lg min-h-screen">
+            <div className="flex flex-col bg-white dark:bg-black shadow-md my-0 md:my-4 px-4 rounded-lg min-h-screen">
               <div className="flex justify-between items-center gap-4 p-4">
                 <div className="flex items-center gap-4">
                   <div
@@ -729,25 +729,11 @@ const ProfilePage = () => {
                 </div>
               </div>
 
-              {/* <div className="flex flex-col items-center">
-                {!isMyProfile && profileType === "PRIVATE" && (
-                  <>
-                    <div className="flex gap-3 mt-6">
-                      <div className="relative flex-1 py-3 font-semibold text-blue-500 text-center cursor-pointer">
-                        Posts
-                        <div className="bottom-0 left-0 absolute bg-blue-500 w-full h-1"></div>
-                      </div>
-                      <div className="relative flex-1 py-3 font-semibold text-blue-500 text-center cursor-pointer">
-                        Reels
-                        <div className="bottom-0 left-0 absolute bg-blue-500 w-full h-1"></div>
-                      </div>
-                    </div>
-                    <div className="mt-8 px-4 pb-8 w-full max-w-xl">
-                      <Posts feedType="saved" />
-                    </div>
-                  </>
-                )}
-              </div> */}
+              <ProfileTabs
+                userId={userId}
+                isMyProfile={isMyProfile}
+                profileType={profileType}
+              />
             </div>
           )}
         </div>

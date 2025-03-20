@@ -15,29 +15,26 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
   const [page, setPage] = useState(0);
   const [error, setError] = useState(null);
 
+  const size = 10;
   const getPostEndpoint = () => {
     switch (feedType) {
       case "FOR_YOU":
-        return `/post`;
+        return `/post?size=${size}`;
       case "FOLLOWINGS":
-        return `/post/following?page=${page}`;
-      // case "posts":
-      //   return `/post/user/${userId}?page=${page}`;
-      // case "saved":
-      //   return `/post/saved?pageNo=${page}&pageSize=10`;
+        return `/post/following?page=${page}&size=${size}`;
+      case "POSTS":
+        return `/post/user/${userId}?page=${page}&size=${size}`;
+      case "SAVED":
+        return `/post/saved?page=${page}&size=${size}`;
       default:
-        return `/post`;
+        return `/post?size=${size}`;
     }
   };
 
   const fetchPosts = async () => {
     try {
       const endpoint = getPostEndpoint();
-      const response = await axiosInstance.get(endpoint, {
-        params: {
-          size: 5,
-        },
-      });
+      const response = await axiosInstance.get(endpoint);
       console.log(response.data);
       if (response.data.length === 0) {
         setHasMore(false);
@@ -93,7 +90,11 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
         {error && <p className="my-4 text-red-500 text-center">{error}</p>}
 
         {!isLoading && posts.length === 0 && (
-          <p className="text-center">No posts in this tab. Switch 👻</p>
+          <div className="flex justify-center items-center px-20 sm:px-40 !w-full !h-full">
+            <div className="bg-white shadow-md px-4 py-2 rounded-lg text-center">
+              <p className="font-semibold text-gray-500 text-lg">No Posts</p>
+            </div>
+          </div>
         )}
 
         {!isLoading && posts.length > 0 && (

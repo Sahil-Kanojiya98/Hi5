@@ -19,6 +19,21 @@ import NotificationsPage from "./views/NotificationsPage";
 import ProfilePage from "./views/ProfilePage";
 import SharedMediaPage from "./views/SharedMediaPage";
 import SettingsPage from "./views/SettingsPage";
+import AdminDashboardPage from "./views/AdminDashboardPage";
+import ContentControlPage from "./views/ContentControlPage";
+import UserControlPage from "./views/UserControlPage";
+import ModeratorControlPage from "./views/ModeratorControlPage";
+
+const roleRedirect = (user) => {
+  switch (user?.role) {
+    case "ADMIN":
+      return <Navigate to="/admin" />;
+    case "MODERATOR":
+      return <Navigate to="/moderator" />;
+    default:
+      return <Navigate to="/home" />;
+  }
+};
 
 const RoutesConfig = () => {
   const user = useSelector((state) => state.user.profile);
@@ -27,18 +42,7 @@ const RoutesConfig = () => {
     <Routes>
       <Route path="/token-manage" element={<TokenManager />} />
 
-      <Route
-        path="/"
-        element={
-          <AuthGuard>
-            {user?.role === "ADMIN" ? (
-              <Navigate to="/admin" />
-            ) : (
-              <Navigate to="/home" />
-            )}
-          </AuthGuard>
-        }
-      />
+      <Route path="/" element={<AuthGuard>{roleRedirect(user)}</AuthGuard>} />
 
       <Route
         path="/login"
@@ -109,7 +113,9 @@ const RoutesConfig = () => {
         path="/search"
         element={
           <AuthGuard>
-            <SearchPage />
+            <RoleGuard requiredRole={"USER"}>
+              <SearchPage />
+            </RoleGuard>
           </AuthGuard>
         }
       />
@@ -118,7 +124,9 @@ const RoutesConfig = () => {
         path="/chat"
         element={
           <AuthGuard>
-            <ChatPage />
+            <RoleGuard requiredRole={"USER"}>
+              <ChatPage />
+            </RoleGuard>
           </AuthGuard>
         }
       />
@@ -127,7 +135,9 @@ const RoutesConfig = () => {
         path="/chat/:userId"
         element={
           <AuthGuard>
-            <ChatPage />
+            <RoleGuard requiredRole={"USER"}>
+              <ChatPage />
+            </RoleGuard>
           </AuthGuard>
         }
       />
@@ -136,7 +146,9 @@ const RoutesConfig = () => {
         path="/reels"
         element={
           <AuthGuard>
-            <ReelsPage />
+            <RoleGuard requiredRole={"USER"}>
+              <ReelsPage />
+            </RoleGuard>
           </AuthGuard>
         }
       />
@@ -145,7 +157,9 @@ const RoutesConfig = () => {
         path="/profile/:userId"
         element={
           <AuthGuard>
-            <ProfilePage />
+            <RoleGuard requiredRole={"USER"}>
+              <ProfilePage />
+            </RoleGuard>
           </AuthGuard>
         }
       />
@@ -154,7 +168,9 @@ const RoutesConfig = () => {
         path="/notifications"
         element={
           <AuthGuard>
-            <NotificationsPage />
+            <RoleGuard requiredRole={"USER"}>
+              <NotificationsPage />
+            </RoleGuard>
           </AuthGuard>
         }
       />
@@ -163,7 +179,9 @@ const RoutesConfig = () => {
         path="/settings"
         element={
           <AuthGuard>
-            <SettingsPage />
+            <RoleGuard requiredRole={"USER"}>
+              <SettingsPage />
+            </RoleGuard>
           </AuthGuard>
         }
       />
@@ -171,66 +189,94 @@ const RoutesConfig = () => {
       <Route path="/share/:entity/:entityId" element={<SharedMediaPage />} />
 
       <Route
-        path="/admin"
+        path="/moderator"
         element={
           <AuthGuard>
-            <RoleGuard requiredRole={"ADMIN"}>home</RoleGuard>
+            <RoleGuard requiredRole={"MODERATOR"}>
+              <Navigate to="/moderator/moderate/content" />
+            </RoleGuard>
           </AuthGuard>
         }
       />
 
-      <Route path="*" element={<NotFound />} />
+      <Route
+        path="/moderator/moderate/content"
+        element={
+          <AuthGuard>
+            <RoleGuard requiredRole={"MODERATOR"}>
+              <ContentControlPage />
+            </RoleGuard>
+          </AuthGuard>
+        }
+      />
 
-      {/* <Route element={<AuthGuard />}>
-        <Route element={<RoleGuard requiredRoles={["ROLE_USER"]} />}>
-          <Route path="/profile/:id" element={<ProfilePage />} />
-          <Route path="/saved" element={<SavedPostsPage />} />
-        </Route>
-      </Route> */}
+      <Route
+        path="/moderator/moderate/user"
+        element={
+          <AuthGuard>
+            <RoleGuard requiredRole={"MODERATOR"}>
+              <UserControlPage />
+            </RoleGuard>
+          </AuthGuard>
+        }
+      />
 
-      {/* <Route
+      <Route
         path="/admin"
         element={
           <AuthGuard>
-            <RoleGuard requiredRoles={["ROLE_ADMIN"]}>
+            <RoleGuard requiredRole={"ADMIN"}>
               <Navigate to="/admin/dashboard" />
             </RoleGuard>
           </AuthGuard>
         }
       />
-      
+
       <Route
         path="/admin/dashboard"
         element={
           <AuthGuard>
-            <RoleGuard requiredRoles={["ROLE_ADMIN"]}>
-              <AdminPage />
-            </RoleGuard>
-          </AuthGuard>
-        }
-      />
-      
-      <Route
-        path="/admin/content-management"
-        element={
-          <AuthGuard>
-            <RoleGuard requiredRoles={["ROLE_ADMIN"]}>
-              <ContentManagementPage />
+            <RoleGuard requiredRole={"ADMIN"}>
+              <AdminDashboardPage />
             </RoleGuard>
           </AuthGuard>
         }
       />
 
       <Route
-        path="/admin/user-management"
+        path="/admin/moderate/content"
         element={
           <AuthGuard>
-            <RoleGuard requiredRoles={["ROLE_ADMIN"]}>
-              <UserManagementPage />
+            <RoleGuard requiredRole={"ADMIN"}>
+              <ContentControlPage />
             </RoleGuard>
           </AuthGuard>
         }
-      /> */}
+      />
+
+      <Route
+        path="/admin/moderate/user"
+        element={
+          <AuthGuard>
+            <RoleGuard requiredRole={"ADMIN"}>
+              <UserControlPage />
+            </RoleGuard>
+          </AuthGuard>
+        }
+      />
+
+      <Route
+        path="/admin/moderators"
+        element={
+          <AuthGuard>
+            <RoleGuard requiredRole={"ADMIN"}>
+              <ModeratorControlPage />
+            </RoleGuard>
+          </AuthGuard>
+        }
+      />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

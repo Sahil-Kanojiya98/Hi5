@@ -3,6 +3,7 @@ package com.app.Hi5.service;
 import com.app.Hi5.dto.enums.LikeStatus;
 import com.app.Hi5.dto.enums.ReportStatus;
 import com.app.Hi5.dto.response.CommentResponse;
+import com.app.Hi5.dto.response.ReportedCommentResponse;
 import com.app.Hi5.exceptions.ActionNotAllowedException;
 import com.app.Hi5.exceptions.EntityNotFoundException;
 import com.app.Hi5.exceptions.UnauthorizedAccessException;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -102,6 +104,10 @@ public class CommentService {
             throw new ValidationException("Invalid Type");
         }
         commentRepository.delete(comment);
+    }
+
+    public List<ReportedCommentResponse> getCommentListForModeration(Integer page, Integer size) {
+        return new ArrayList<>();
     }
 
 //    List<CommentResponseDTO> getComment(String postId, int page, int pageSize, User user);

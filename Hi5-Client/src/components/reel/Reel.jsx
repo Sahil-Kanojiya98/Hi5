@@ -16,6 +16,7 @@ import {
   FavoriteSharp,
   VolumeOffOutlined,
   VolumeUpOutlined,
+  PersonOutline,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -35,6 +36,7 @@ import {
 } from "../../services/api";
 import CommentModel from "../comment/CommentModel";
 import { useSelector } from "react-redux";
+import ViewLikedUsersModel from "../temp/ViewLikedUsersModel";
 
 const Reel = ({
   reel,
@@ -44,6 +46,8 @@ const Reel = ({
   toggleMute,
   removeReel,
   isMyProfileReels,
+  showBackButton,
+  showCreateReelButton,
 }) => {
   const user = useSelector((state) => state.user.profile);
   const isMyReel = reel.userId === user.id;
@@ -231,20 +235,32 @@ const Reel = ({
 
   const [expanded, setExpanded] = useState(false);
 
+  const [isViewLikedUsersModelOpen, setIsViewLikedUsersModelOpen] =
+    useState(false);
+  const viewLikedUsersButtonClickHandler = () => {
+    setIsViewLikedUsersModelOpen(true);
+  };
+  const closeViewLikedUsersModal = () => {
+    setIsViewLikedUsersModelOpen(false);
+  };
+
   return (
     <div className="relative flex w-full h-full snap-start">
-      <div className="top-0 left-1/2 z-10 absolute flex justify-between items-center bg-white/15 dark:bg-black/20 mt-6 sm:mt-4 md:mt-2 lg:mt-4 mb-3 p-2 px-4 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-black dark:text-white text-xs -translate-x-1/2 transform">
-        <span onClick={handleBackClick} className="mx-2 p-2 cursor-pointer">
-          <ArrowBackSharp
-            sx={{
-              fontSize: { xs: 23, sm: 25, md: 27 },
-            }}
-          />
-        </span>
+      {/* <div className="top-0 left-1/2 z-10 absolute flex justify-between items-center bg-white/15 dark:bg-black/20 mt-6 sm:mt-4 md:mt-2 lg:mt-4 mb-3 p-2 px-4 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-black dark:text-white text-xs -translate-x-1/2 transform">
+      
+        {showBackButton && (
+          <span onClick={handleBackClick} className="mx-2 p-2 cursor-pointer">
+            <ArrowBackSharp
+              sx={{
+                fontSize: { xs: 23, sm: 25, md: 27 },
+              }}
+            />
+          </span>
+        )}
 
         <h3 className="font-bold text-lg select-none">Reels</h3>
 
-        {!isMyProfileReels && (
+        {showCreateReelButton && (
           <span
             className="mx-2 p-2 text-black dark:text-white cursor-pointer"
             onClick={createReelModelOpenHandler}
@@ -264,11 +280,45 @@ const Reel = ({
             <DeleteOutlineOutlined />
           </button>
         )}
+      </div> */}
+
+      <div className="top-0 left-1/2 z-10 absolute flex justify-between items-center bg-white/15 dark:bg-black/20 mt-6 sm:mt-4 md:mt-2 lg:mt-4 mb-3 p-2 px-4 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-black dark:text-white text-xs -translate-x-1/2 transform">
+        <div className="flex items-center w-1/3">
+          {showBackButton && (
+            <span onClick={handleBackClick} className="mx-2 p-2 cursor-pointer">
+              <ArrowBackSharp sx={{ fontSize: { xs: 23, sm: 25, md: 27 } }} />
+            </span>
+          )}
+        </div>
+
+        <div className="flex justify-center w-1/3">
+          <h3 className="font-bold text-lg select-none">Reels</h3>
+        </div>
+
+        <div className="flex justify-end space-x-2 w-1/3">
+          {showCreateReelButton && (
+            <span
+              className="mx-2 p-2 text-black dark:text-white cursor-pointer"
+              onClick={createReelModelOpenHandler}
+            >
+              <AddCircleOutlineOutlined
+                sx={{ fontSize: { xs: 23, sm: 25, md: 27 } }}
+              />
+            </span>
+          )}
+          {isMyProfileReels && (
+            <button
+              className="flex items-center space-x-1 text-black hover:text-red-500 dark:text-white hover:scale-110 transition duration-200 cursor-pointer transform"
+              onClick={openDeleteModal}
+            >
+              <DeleteOutlineOutlined />
+            </button>
+          )}
+        </div>
       </div>
 
       <video
         className="flex-1 w-full object-cover"
-        poster={reel.thumbnailUrl}
         src={reel.videoUrl}
         // muted={isMuted}
         autoPlay
@@ -276,9 +326,8 @@ const Reel = ({
         loop
         onClick={handleClick}
       />
-
       <div
-        className="right-14 bottom-40 absolute flex flex-col justify-center items-center bg-black dark:bg-white textfrom-white bg-opacity-15 p-2 rounded-full text-white cursor-pointer"
+        className="right-14 bottom-40 absolute flex flex-col justify-center items-center bg-black dark:bg-white bg-opacity-15 p-2 rounded-full text-white cursor-pointer textfrom-white"
         onClick={toggleMute}
       >
         {isMuted ? (
@@ -295,7 +344,6 @@ const Reel = ({
           />
         )}
       </div>
-
       <div className="top-1/2 right-4 sm:right-5 absolute flex flex-col items-center sm:gap-2 md:gap-3 lg:gap-4 space-y-6 text-white -translate-y-1/2 transform">
         <button
           className="group flex flex-col items-center space-y-2 hover:scale-110 transition duration-200 transform"
@@ -318,6 +366,18 @@ const Reel = ({
           )}
           <span className="font-medium text-xs sm:text-sm">{likesCount}</span>
         </button>
+
+        {isMyProfileReels && (
+          <button
+            className="group relative flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
+            onClick={viewLikedUsersButtonClickHandler}
+          >
+            <PersonOutline className="w-5 h-5 group-hover:text-blue-600 scale-110 transition-colors duration-200" />
+            <span className="-top-8 -left-9 absolute bg-gray-800 opacity-0 group-hover:opacity-100 px-2 py-1 rounded-md text-white text-xs whitespace-nowrap transition -translate-x-1/2 duration-200">
+              View Liked Users
+            </span>
+          </button>
+        )}
 
         {reel?.isCommentsDisabled === true ? (
           <button className="flex flex-col items-center space-y-1 cursor-not-allowed">
@@ -398,7 +458,6 @@ const Reel = ({
             />
           ))}
       </div>
-
       <div className="bottom-8 left-1/2 z-10 absolute flex flex-col justify-between items-center bg-white/15 dark:bg-black/20 p-2 px-3 sm:px-5 md:px-6 lg:px-7 rounded-lg w-full text-white dark:text-black text-xs -translate-x-1/2 transform">
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center gap-x-1 sm:gap-x-2 md:gap-x-3">
@@ -484,7 +543,6 @@ const Reel = ({
           </button>
         </div>
       </div>
-
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         closeModal={closeDeleteModal}
@@ -492,7 +550,6 @@ const Reel = ({
         isDeleting={isDeleting}
         type="REEL"
       />
-
       <ReportConfirmationModal
         isOpen={isReportModalOpen}
         closeModal={closeReportModal}
@@ -500,6 +557,15 @@ const Reel = ({
         isReporting={isReporting}
         type="REEL"
       />
+
+      {isMyProfileReels && (
+        <ViewLikedUsersModel
+          isOpen={isViewLikedUsersModelOpen}
+          closeModal={closeViewLikedUsersModal}
+          relevantId={reel?.id}
+          type="REEL"
+        />
+      )}
 
       {reel?.isCommentsDisabled !== true && (
         <CommentModel
@@ -523,7 +589,6 @@ Reel.propTypes = {
     profilePictureUrl: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
     videoUrl: PropTypes.string.isRequired,
-    thumbnailUrl: PropTypes.string.isRequired,
     likeStatus: PropTypes.string.isRequired,
     reportStatus: PropTypes.string.isRequired,
     saveStatus: PropTypes.string.isRequired,
@@ -542,6 +607,8 @@ Reel.propTypes = {
   authUserId: PropTypes.string.isRequired,
   removeReel: PropTypes.func.isRequired,
   isMyProfileReels: PropTypes.bool.isRequired,
+  showBackButton: PropTypes.bool.isRequired,
+  showCreateReelButton: PropTypes.bool.isRequired,
 };
 
 export default Reel;

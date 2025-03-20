@@ -22,7 +22,6 @@ public class ReelResponse {
     private String id;
 
     private String description;
-    private String thumbnailUrl;
     private String videoUrl;
     private Date createdAt;
 

@@ -46,17 +46,11 @@ public class Validator {
         log.info("Validation passed successfully for email = {}, username = {}", email, username);
     }
 
-    public static void validateReelMultipartFilesExsists(MultipartFile thumbnailImageFile, MultipartFile videoFile) throws ValidationException {
+    public static void validateReelMultipartFilesExsists(MultipartFile file) throws ValidationException {
         log.info("Starting validation for multiparts for reel");
 
-        // Check if thumbnail image file exists and is not empty
-        if (thumbnailImageFile == null || thumbnailImageFile.isEmpty()) {
-            log.warn("Thumbnail image file is missing or empty.");
-            throw new ValidationException("Thumbnail image file must be provided.");
-        }
-
         // Check if video file exists and is not empty
-        if (videoFile == null || videoFile.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             log.warn("Video file is missing or empty.");
             throw new ValidationException("Video file must be provided.");
         }

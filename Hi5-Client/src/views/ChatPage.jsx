@@ -105,154 +105,176 @@ const ChatPage = () => {
     }
   };
 
+  const loadNewChats = () => {
+    loadData();
+  };
+
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const setSelectedChatNull = () => {
+  //   setSelectedChat(null);
+  // };
+
   return (
     <MainLayout>
-      <div className="flex justify-center md:ml-[14dvw] lg:ml-[13dvw] xl:ml-[19dvw] 2xl:ml-[10dvw] w-full md:max-w-4xl xl:max-w-5xl h-full">
-        <div className="p-3 lg:w-1/3">
-          <div className="bg-white dark:bg-black shadow-md p-4 rounded-lg w-full h-full">
-            <div className="flex justify-between items-center gap-6 mb-7">
-              <h2 className="font-bold text-xl">Users</h2>
-              <div className="flex items-center gap-1">
-                <Link to="/search">
-                  <button className="bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded-lg text-white whitespace-nowrap transition-all">
-                    Search Users
-                  </button>
-                </Link>
-                <Link to="/chat">
-                  <button className="bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded-lg text-white whitespace-nowrap transition-all">
+      <div className="flex justify-center md:ml-[6dvw] lg:ml-[20dvw] xl:ml-[19dvw] 2xl:ml-[10dvw] w-full md:max-w-3xl lg:max-w-3xl xl:max-w-5xl h-full">
+        <div className="flex justify-center space-x-1 lg:space-x-3 my-0 md:my-4 px-4 w-full">
+          <div className="flex flex-1 mt-16 md:mt-0 mb-12 md:mb-0 w-full md:max-w-[250px] lg:max-w-xs">
+            <div className="flex flex-col bg-white dark:bg-black shadow-md p-4 rounded-lg w-full">
+              <div className="flex flex-wrap justify-between items-center gap-4 mb-7 w-full">
+                <h2 className="font-bold text-xl">Users</h2>
+                <div className="flex items-center gap-2">
+                  <Link to="/search">
+                    <button className="bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded-lg text-white text-sm sm:text-base whitespace-nowrap transition-all">
+                      Search Users
+                    </button>
+                  </Link>
+
+                  <button
+                    className="bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded-lg text-white text-sm sm:text-base whitespace-nowrap transition-all"
+                    onClick={loadNewChats}
+                  >
                     New Chats
                   </button>
-                </Link>
+                </div>
               </div>
-            </div>
 
-            <ul className="rounded-md h-[calc(100dvh-100px)] overflow-y-auto hide-scrollbar">
-              {chatLoading ? (
-                <p className="pt-4 text-slate-500 text-center">Loading...</p>
-              ) : (
-                <>
-                  {chats.length > 0 ? (
+              <ul className="flex flex-col flex-1 rounded-md overflow-y-auto hide-scrollbar">
+                {chatLoading ? (
+                  <p className="pt-4 text-slate-500 text-sm md:text-base text-center">
+                    Loading...
+                  </p>
+                ) : (
+                  <>
+                    {chats.length > 0 ? (
+                      <>
+                        {chats.map((chat) => (
+                          <li
+                            key={chat?.chatId}
+                            className={`flex justify-between items-center p-3 mb-2 rounded-lg cursor-pointer transition-all ${
+                              selectedChat?.receiverId === chat?.receiverId
+                                ? "!bg-blue-400 dark:bg-blue-600"
+                                : "bg-gray-300 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-900"
+                            }`}
+                            onClick={() => {
+                              navigate(`/chat/${chat.receiverId}`);
+                            }}
+                          >
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={chat.receiverProfileImageUrl}
+                                alt={chat.receiverFullname}
+                                className="rounded-full w-8 sm:w-10 h-8 sm:h-10"
+                              />
+                              <div className="flex flex-col">
+                                <span className="font-semibold text-sm sm:text-base">
+                                  {chat.receiverFullname}
+                                </span>
+                                <span className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
+                                  {chat.receiverUsername}
+                                </span>
+                              </div>
+                            </div>
+                            <span
+                              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${
+                                chat.receiverStatus === "ONLINE"
+                                  ? "bg-green-500"
+                                  : "bg-gray-500"
+                              }`}
+                            ></span>
+                          </li>
+                        ))}
+                      </>
+                    ) : (
+                      <p className="pt-4 text-slate-500 text-sm md:text-base text-center">
+                        No conversations yet. <br />
+                        Start a chat to connect with others!
+                      </p>
+                    )}
+                  </>
+                )}
+              </ul>
+            </div>
+          </div>
+
+          <div className="hidden md:flex flex-col flex-1">
+            <div className="flex flex-col flex-1 bg-white dark:bg-black shadow-md p-4 rounded-lg min-h-0">
+              <div className="flex justify-between items-center mb-4 pb-2 border-gray-300 dark:border-gray-700 border-b">
+                <div className="flex justify-between items-center px-3 w-full font-semibold">
+                  {selectedChat ? (
                     <>
-                      {chats.map((chat) => (
-                        <li
-                          key={chat?.chatId}
-                          className={`flex justify-between items-center p-3 mb-2 rounded-lg cursor-pointer transition-all ${
-                            selectedChat?.receiverId === chat?.receiverId
-                              ? "!bg-blue-400 dark:bg-blue-600"
-                              : "bg-gray-300 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-900"
+                      <div className="flex items-center gap-3">
+                        <Link to={`/profile/${selectedChat?.receiverId}`}>
+                          <img
+                            src={selectedChat?.receiverProfileImageUrl}
+                            alt={selectedChat?.receiverFullname}
+                            className="rounded-full w-10 h-10"
+                          />
+                        </Link>
+                        <div className="flex flex-col">
+                          <span className="font-semibold">
+                            {selectedChat?.receiverFullname}
+                          </span>
+                          <span className="text-gray-400 text-sm">
+                            {selectedChat?.receiverUsername}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="relative flex items-center gap-3">
+                        <span
+                          className={`w-3 h-3 rounded-full ${
+                            selectedChat.receiverStatus === "ONLINE"
+                              ? "bg-green-500"
+                              : "bg-gray-500"
                           }`}
-                          onClick={() => {
-                            navigate(`/chat/${chat.receiverId}`);
-                          }}
-                        >
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={chat.receiverProfileImageUrl}
-                              alt={chat.receiverFullname}
-                              className="rounded-full w-10 h-10"
-                            />
-                            <div className="flex flex-col">
-                              <span className="font-semibold">
-                                {chat.receiverFullname}
-                              </span>
-                              <span className="text-gray-600 dark:text-gray-400 text-sm">
-                                {chat.receiverUsername}
-                              </span>
+                        />
+                        <span className="cursor-pointer" onClick={toggleModal}>
+                          <MoreVertRounded
+                            sx={{
+                              fontSize: { xs: 22, sm: 25, md: 28 },
+                            }}
+                          />
+                        </span>
+
+                        {isModalOpen && (
+                          <div className="top-7 left-11 z-50 absolute flex flex-col bg-white dark:bg-black shadow-lg p-2 rounded-md w-48">
+                            <div
+                              className="hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded-md text-center whitespace-nowrap cursor-pointer"
+                              onClick={openDeleteModal}
+                            >
+                              Delete All Messages
                             </div>
                           </div>
-                          <span
-                            className={`w-3 h-3 rounded-full ${
-                              chat.receiverStatus === "ONLINE"
-                                ? "bg-green-500"
-                                : "bg-gray-500"
-                            }`}
-                          ></span>
-                        </li>
-                      ))}
+                        )}
+
+                        <DeleteConfirmationModal
+                          isOpen={isDeleteModalOpen}
+                          closeModal={closeDeleteModal}
+                          confirmDelete={confirmDelete}
+                          isDeleting={isDeleting}
+                          type="MESSAGES"
+                        />
+                      </div>
                     </>
                   ) : (
-                    <p className="pt-4 text-slate-500 text-center">
-                      No conversations yet. <br />
-                      Start a chat to connect with others!
-                    </p>
+                    <p className="text-2xl">Select a user to chat</p>
                   )}
-                </>
-              )}
-            </ul>
-          </div>
-        </div>
-
-        <div className="flex flex-col py-3 w-full md:w-[430px] lg:w-[450px] xl:w-[700px] h-full">
-          <div className="flex flex-col flex-1 bg-white dark:bg-black shadow-md p-4 rounded-lg w-full h-full">
-            <div className="flex justify-between items-center mb-4 pb-2 border-gray-300 dark:border-gray-700 border-b">
-              <div className="flex justify-between items-center px-3 w-full h-10 font-semibold">
-                {selectedChat ? (
-                  <>
-                    <div className="flex items-center gap-3">
-                      <Link to={`/profile/${selectedChat?.receiverId}`}>
-                        <img
-                          src={selectedChat?.receiverProfileImageUrl}
-                          alt={selectedChat?.receiverFullname}
-                          className="rounded-full w-10 h-10"
-                        />
-                      </Link>
-                      <div className="flex flex-col">
-                        <span className="font-semibold">
-                          {selectedChat?.receiverFullname}
-                        </span>
-                        <span className="text-gray-400 text-sm">
-                          {selectedChat?.receiverUsername}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="relative flex items-center gap-3">
-                      <span
-                        className={`w-3 h-3 rounded-full ${
-                          selectedChat.receiverStatus === "ONLINE"
-                            ? "bg-green-500"
-                            : "bg-gray-500"
-                        }`}
-                      />
-                      <span className="cursor-pointer" onClick={toggleModal}>
-                        <MoreVertRounded
-                          sx={{
-                            fontSize: { xs: 22, sm: 25, md: 28 },
-                          }}
-                        />
-                      </span>
-
-                      {isModalOpen && (
-                        <div className="top-7 left-11 z-50 absolute flex flex-col bg-white dark:bg-black shadow-lg p-2 rounded-md w-48">
-                          <div
-                            className="hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded-md text-center whitespace-nowrap cursor-pointer"
-                            onClick={openDeleteModal}
-                          >
-                            Delete All Messages
-                          </div>
-                        </div>
-                      )}
-
-                      <DeleteConfirmationModal
-                        isOpen={isDeleteModalOpen}
-                        closeModal={closeDeleteModal}
-                        confirmDelete={confirmDelete}
-                        isDeleting={isDeleting}
-                        type="MESSAGES"
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-2xl">Select a user to chat</p>
-                )}
+                </div>
               </div>
-            </div>
 
-            <ChatBox
-              chatId={selectedChat?.chatId}
-              receiverId={selectedChat?.receiverId}
-            />
+              <ChatBox
+                chatId={selectedChat?.chatId}
+                receiverId={selectedChat?.receiverId}
+              />
+            </div>
           </div>
+
+          {/* <div className="md:hidden block relative">
+            {selectedChat && <>
+            <div className="z-20 fixed inset-0">
+            </div>
+            </>}
+          </div> */}
         </div>
       </div>
     </MainLayout>

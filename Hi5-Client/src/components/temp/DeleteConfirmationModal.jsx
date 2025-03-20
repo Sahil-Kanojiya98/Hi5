@@ -89,6 +89,11 @@ const DeleteConfirmationModal = ({
                 Are you sure you want to delete all notifications?
               </p>
             )}
+            {type === "USER_ACCOUNT" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Are you sure you want to delete this account?
+              </p>
+            )}
             <div className="flex justify-end gap-4">
               <button
                 onClick={closeModal}

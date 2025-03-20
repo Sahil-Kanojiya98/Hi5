@@ -117,6 +117,19 @@ const searchUsersByKeyword = async (keyword, body) => {
   });
 };
 
+const searchUsersByKeywordForModeration = async (keyword, body) => {
+  return axiosInstance.get(
+    `/moderate/user/search/${encodeURIComponent(keyword)}`,
+    {
+      params: body,
+    }
+  );
+};
+
+const getModerators = async () => {
+  return axiosInstance.get("/moderate/moderator");
+};
+
 const createChat = async (userId) => {
   return axiosInstance.post(`/chat/${userId}`);
 };
@@ -172,6 +185,24 @@ const unfollow = async (userId) => {
 //   return axiosInstance.delete(`/story/${encodeURIComponent(storyId)}`);
 // };
 
+const banUserAccount = async (userId, date) => {
+  return axiosInstance.patch(`/moderate/user/${userId}/ban`, {
+    banToDate: date,
+  });
+};
+
+const unbanUserAccount = async (userId) => {
+  return axiosInstance.patch(`/moderate/user/${userId}/unban`);
+};
+
+const deleteUserAccount = async (userId) => {
+  return axiosInstance.delete(`/moderate/user/${userId}/delete`);
+};
+
+const deleteModeratorAccount = async (userId) => {
+  return axiosInstance.delete(`/moderate/moderator/${userId}/delete`);
+};
+
 export {
   checkEmail,
   checkUsername,
@@ -207,6 +238,12 @@ export {
   updateProfileInfo,
   follow,
   unfollow,
+  searchUsersByKeywordForModeration,
+  banUserAccount,
+  unbanUserAccount,
+  deleteUserAccount,
+  getModerators,
+  deleteModeratorAccount,
   // getMyStorys,
   // getFollowingUsersStorys,
   // deleteStory,

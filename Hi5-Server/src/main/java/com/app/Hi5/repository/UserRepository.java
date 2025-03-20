@@ -1,5 +1,6 @@
 package com.app.Hi5.repository;
 
+import com.app.Hi5.model.Enum.Role;
 import com.app.Hi5.model.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -51,12 +56,6 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 
     Page<User> findByIdIn(Set<ObjectId> userIds, Pageable pageable);
 
-//    @Aggregation(pipeline = {
-//            "{ $match: { _id: { $in: ?0 } } }",
-//            "{ $sample: { size: ?1 } }"
-//    })
-//    List<User> findRandomUsers(Set<ObjectId> ids, int numberOfUsers);
-
     @Aggregation(pipeline = {
             "{ $match: { '_id': { $in: ?0 }, 'role': 'USER', 'active': true } }",
             "{ $sample: { size: ?1 } }"
@@ -75,6 +74,10 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     })
     List<User> findRandomUsersExceptSomeIds(int numberOfUsers, Set<ObjectId> excludedIds);
 
+
+    long countByRole(Role role);
+
+    long countByBanUntilAfter(Date date);
 
 //    Optional<User> findByUsername(String username);
 //
@@ -114,5 +117,11 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 //    @Query(value = "{ '$or': [ { 'fullname': { '$regex': ?0, '$options': 'i' } }, { 'username': { '$regex': ?0, '$options': 'i' } } ], 'roles': { '$in': ['ROLE_USER'] } }",
 //            fields = "{ 'id': '$_id', 'username': 1, 'fullname': 1, 'profile_picture_url': 1 }")
 //    Page<User> searchByPattern(String pattern, Pageable pageable);
+
+//    long countByCreatedAtBetween(Date startDate, Date endDate);
+
+    long countByCreatedAtBetweenAndIsActiveTrue(Date startDate, Date endDate);
+
+    List<User> findByRole(Role role);
 
 }

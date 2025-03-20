@@ -1,8 +1,10 @@
 package com.app.Hi5.controller;
 
 
+import com.app.Hi5.dto.response.LikedUserCardResponse;
 import com.app.Hi5.dto.response.PostResponse;
 import com.app.Hi5.dto.response.ReelResponse;
+import com.app.Hi5.dto.response.UserCardResponse;
 import com.app.Hi5.security.UserDetailsImpl;
 import com.app.Hi5.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,6 +53,21 @@ public class PostController {
     @GetMapping("/shared")
     public PostResponse getSharedPost(@RequestParam("postId") String postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.findPost(postId, userDetails.getUser());
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<PostResponse> getUserPosts(@PathVariable("userId") String userId, @RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.findUserPosts(userId, size, page, userDetails.getUser());
+    }
+
+    @GetMapping("/saved")
+    public List<PostResponse> getUserPosts(@RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.findUserSavedPosts(size, page, userDetails.getUser());
+    }
+
+    @GetMapping("/user/like/{postId}")
+    public List<LikedUserCardResponse> getLikedUsers(@PathVariable("postId") String postId, @RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.findLikedUsers(postId, size, page, userDetails.getUser());
     }
 
 }

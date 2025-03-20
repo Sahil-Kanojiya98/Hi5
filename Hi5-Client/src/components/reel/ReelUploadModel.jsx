@@ -9,7 +9,6 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
   const [video, setVideo] = useState(null);
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(null);
-  const [thumbnail, setThumbnail] = useState(null);
   const [preview, setPreview] = useState(null);
   const [validationError, setValidationError] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -30,16 +29,12 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
     };
   }, [isOpen]);
 
-  const handleFileChange = (event, isVideo = false) => {
+  const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
     setValidationError("");
     setUploadError("");
-
-    const isValidVideo = isVideo && file.type.startsWith("video/");
-    const isValidImage = !isVideo && file.type.startsWith("image/");
-
+    const isValidVideo = file.type.startsWith("video/");
     if (isValidVideo && file.size > 1024 * 1024 * 1024) {
       setValidationError(
         "The selected video exceeds the maximum file size of 1GB."
@@ -47,69 +42,15 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
       return;
     }
 
-    if (isValidImage && file.size > 20 * 1024 * 1024) {
-      setValidationError(
-        "The selected image exceeds the maximum file size of 20MB."
-      );
-      return;
-    }
-
-    if (isVideo) {
-      setVideo(file);
-      const videoURL = URL.createObjectURL(file);
-      setPreview(videoURL);
-      setDuration(null);
-      generateThumbnail(file);
-    } else {
-      setThumbnail(file);
-    }
-  };
-
-  const generateThumbnail = (file) => {
-    const videoElement = document.createElement("video");
+    setVideo(file);
     const videoURL = URL.createObjectURL(file);
+    setPreview(videoURL);
+
+    const videoElement = document.createElement("video");
     videoElement.src = videoURL;
     videoElement.preload = "metadata";
-
     videoElement.onloadedmetadata = () => {
-      const videoDuration = Math.round(videoElement.duration);
-      if (videoDuration > 5 * 60) {
-        setValidationError(
-          "The selected video exceeds the maximum length of 5 minutes."
-        );
-        setVideo(null);
-        setPreview(null);
-        setDuration(null);
-        URL.revokeObjectURL(videoURL);
-        return;
-      }
-      setDuration(videoDuration);
-      videoElement.currentTime = 1;
-    };
-
-    videoElement.oncanplay = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = 300;
-      canvas.height = 200;
-      const context = canvas.getContext("2d");
-      context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            const thumbFile = new File([blob], "thumbnail.jpg", {
-              type: "image/jpeg",
-            });
-            setThumbnail(thumbFile);
-          }
-          URL.revokeObjectURL(videoURL);
-        },
-        "image/jpeg",
-        0.95
-      );
-    };
-
-    videoElement.onerror = () => {
-      setValidationError("Failed to load video for processing.");
+      setDuration(Math.floor(videoElement.duration));
     };
   };
 
@@ -127,10 +68,11 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
     formData.append("description", description);
     formData.append("duration", duration);
     formData.append("video", video);
-    if (thumbnail) formData.append("thumbnail", thumbnail);
     formData.append("isPrivate", isPrivate);
     formData.append("isCommentsDisabled", disableComments);
     try {
+      console.log("-------------------")
+      console.log(description, duration, isPrivate, disableComments);
       setLoading(true);
       const response = await axiosInstance.post("/reel", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -158,7 +100,6 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
   const clearAll = () => {
     setVideo(null);
     setPreview(null);
-    setThumbnail(null);
     setDuration(null);
     setValidationError("");
     setUploadProgress(0);
@@ -217,7 +158,7 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
                     sx={{
                       fontSize: { xs: 25, sm: 28, md: 30 },
                     }}
-                    className="top-1 right-1 absolute bg-gray-300 hover:bg-gray-400 dark:hover:bg-gray-600 dark:bg-gray-700 p-1 rounded-full cursor-pointer"
+                    className="top-1 right-1 absolute bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 p-1 rounded-full cursor-pointer"
                   />
                 </button>
                 <video
@@ -229,21 +170,6 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
               </div>
             ) : (
               <span className="pl-2 text-gray-600">No video selected</span>
-            )}
-          </div>
-
-          <div>
-            <span>Thumbnail:</span>
-            {thumbnail ? (
-              <div className="flex justify-center p-2 w-full">
-                <img
-                  src={URL.createObjectURL(thumbnail)}
-                  alt="Thumbnail Preview"
-                  className="rounded-lg w-full max-h-[50dvh] object-contain"
-                />
-              </div>
-            ) : (
-              <span className="pl-2 text-gray-600">No thumbnail selected</span>
             )}
           </div>
 
@@ -259,25 +185,9 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
                   type="file"
                   accept="video/*"
                   ref={videoInputRef}
-                  onChange={(e) => handleFileChange(e, true)}
+                  onChange={handleFileChange}
                   className="hidden"
                   aria-label="Select a video file"
-                />
-              </div>
-
-              <div
-                className="flex flex-grow justify-center items-center hover:bg-gray-100 dark:hover:bg-gray-800 shadow-sm p-3 border dark:border-gray-800 rounded-md transition duration-200 cursor-pointer"
-                onClick={() => thumbnailInputRef.current.click()}
-              >
-                <span className="font-semibold">Select Thumbnail</span>
-                <input
-                  disabled={isLoading}
-                  type="file"
-                  accept="image/*"
-                  ref={thumbnailInputRef}
-                  onChange={(e) => handleFileChange(e)}
-                  className="hidden"
-                  aria-label="Select an image file for the thumbnail"
                 />
               </div>
             </div>
@@ -290,20 +200,18 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
                 {isPrivate ? (
                   <CheckBox
                     fontSize="medium"
-                    className={`${
-                      isPrivate
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-gray-500 dark:text-gray-400"
-                    }`}
+                    className={`${isPrivate
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   />
                 ) : (
                   <CheckBoxOutlineBlank
                     fontSize="medium"
-                    className={`${
-                      isPrivate
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-gray-500 dark:text-gray-400"
-                    }`}
+                    className={`${isPrivate
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   />
                 )}
                 <span className="select-none">Private Reel</span>
@@ -316,20 +224,18 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
                 {disableComments ? (
                   <CheckBox
                     fontSize="medium"
-                    className={`${
-                      disableComments
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-gray-500 dark:text-gray-400"
-                    }`}
+                    className={`${disableComments
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   />
                 ) : (
                   <CheckBoxOutlineBlank
                     fontSize="medium"
-                    className={`${
-                      disableComments
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-gray-500 dark:text-gray-400"
-                    }`}
+                    className={`${disableComments
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   />
                 )}
                 <span className="select-none">Disable Comments</span>
@@ -356,9 +262,8 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
             <button
               onClick={handleUpload}
               disabled={isLoading}
-              className={`py-2 rounded-lg w-full text-white ${
-                isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-              } transition duration-200`}
+              className={`py-2 rounded-lg w-full text-white ${isLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+                } transition duration-200`}
             >
               {isLoading ? "Uploading..." : "Upload"}
             </button>

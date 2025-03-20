@@ -10,7 +10,6 @@ public enum FileType {
     POST_VIDEO("post/video"),
     STORY_IMAGE("story/image"),
     STORY_VIDEO("story/video"),
-    REEL_THUMBNAIL_IMAGE("reel/thumbnailImage"),
     REEL_VIDEO("reel/video"),
     CHAT_IMAGE("chat/image"),
     CHAT_VIDEO("chat/video");

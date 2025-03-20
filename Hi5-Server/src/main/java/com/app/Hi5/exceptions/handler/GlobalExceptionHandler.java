@@ -48,6 +48,11 @@ public class GlobalExceptionHandler {
         return ErrorResponse.builder().status(HttpStatus.BAD_REQUEST).statusCode(HttpStatus.BAD_REQUEST.value()).message(e.getMessage()).build().toResponseEntity();
     }
 
+    @ExceptionHandler({ActionNotAllowedException.class})
+    public ResponseEntity<ErrorResponse> handleActionNotAllowedException(RuntimeException e) {
+        log.warn("ActionNotAllowedException occurred: {}", e.getMessage(), e);
+        return ErrorResponse.builder().status(HttpStatus.BAD_REQUEST).statusCode(HttpStatus.BAD_REQUEST.value()).message(e.getMessage()).build().toResponseEntity();
+    }
     @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleBadRequestException(RuntimeException e) {
         log.error("Bad Request: {}", e.getMessage(), e);
@@ -129,98 +134,5 @@ public class GlobalExceptionHandler {
     public void OAuth2AuthenticationProcessingException(RuntimeException e) {
         log.warn(e.getMessage());
     }
-
-//    @ExceptionHandler({
-//            AccessDeniedException.class,
-//            InvalidOrExpiredTokenException.class
-//    })
-//    public ResponseEntity<String> handleForbiddenException(RuntimeException ex) {
-//        logger.error("Forbidden: {}", ex.getMessage(), ex);
-//        return new ResponseEntity<>("Access Denied: " + ex.getMessage(), HttpStatus.FORBIDDEN);
-//    }
-//
-//    @ExceptionHandler({
-//            EntityAlreadyExistsException.class,
-//            IllegalStateException.class
-//    })
-//    public ResponseEntity<String> handleConflictException(RuntimeException ex) {
-//        logger.error("Conflict: {}", ex.getMessage(), ex);
-//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
-//    }
-//
-//    @ExceptionHandler({
-//            ExpiredJwtException.class,
-//            ClaimJwtException.class,
-//            JwtException.class
-//    })
-//    public ResponseEntity<String> handleUnauthorizedAccessException(RuntimeException ex) {
-//        logger.error("Unauthorized Access: {}", ex.getMessage(), ex);
-//        return new ResponseEntity<>("Unauthorized Access", HttpStatus.UNAUTHORIZED);
-//    }
-//
-//    @ExceptionHandler(
-//            Exception.class
-//    )
-//    public ResponseEntity<String> handleGlobalException(Exception ex) {
-//        logger.error("Internal Server Error: {}", ex.getMessage(), ex);
-//        return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-//
-//    @ExceptionHandler(
-//            Throwable.class
-//    )
-//    public ResponseEntity<String> handleThrowable(Throwable th) {
-//        logger.error("Critical Error: {}", th.getMessage(), th);
-//        return new ResponseEntity<>("A critical error occurred: ",HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-
-
-    // Handle generic exceptions
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ProblemDetail> handleGenericException(Exception ex, WebRequest request) {
-//        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-//                HttpStatus.INTERNAL_SERVER_ERROR,
-//                ex.getMessage()
-//        );
-//        problemDetail.setTitle("Internal Server Error");
-//        problemDetail.setType(URI.create("https://example.com/internal-server-error"));
-//        problemDetail.setInstance(URI.create(request.getDescription(false)));
-//
-//        return ResponseEntity
-//                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                .body(problemDetail);
-//    }
-//
-    // Handle specific custom exceptions
-//    @ExceptionHandler(ResourceNotFoundException.class)
-//    public ResponseEntity<ProblemDetail> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-//        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-//                HttpStatus.NOT_FOUND,
-//                ex.getMessage()
-//        );
-//        problemDetail.setTitle("Resource Not Found");
-//        problemDetail.setType(URI.create("https://example.com/resource-not-found"));
-//        problemDetail.setInstance(URI.create(request.getDescription(false)));
-//
-//        return ResponseEntity
-//                .status(HttpStatus.NOT_FOUND)
-//                .body(problemDetail);
-//    }
-//
-//    // Handle validation-related exceptions
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public ResponseEntity<ProblemDetail> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
-//        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-//                HttpStatus.BAD_REQUEST,
-//                ex.getMessage()
-//        );
-//        problemDetail.setTitle("Invalid Request");
-//        problemDetail.setType(URI.create("https://example.com/bad-request"));
-//        problemDetail.setInstance(URI.create(request.getDescription(false)));
-//
-//        return ResponseEntity
-//                .status(HttpStatus.BAD_REQUEST)
-//                .body(problemDetail);
-//    }
 
 }

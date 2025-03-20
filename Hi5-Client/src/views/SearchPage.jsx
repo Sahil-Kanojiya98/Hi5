@@ -104,7 +104,6 @@ const SearchPage = () => {
                     type="text"
                     placeholder="Search users..."
                     className="bg-white dark:bg-black px-3 sm:px-4 py-2 focus:outline-none w-full sm:w-64"
-                    aria-label="Search users"
                     value={searchTerm}
                     onChange={handleSearchChange}
                   />

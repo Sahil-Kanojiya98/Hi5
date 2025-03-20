@@ -30,9 +30,6 @@ public class Reel {
     @Field("video_url")
     private String videoUrl;
 
-    @Field("thumbnail_url")
-    private String thumbnailUrl;
-
     @Field("duration")
     private Long duration;
 

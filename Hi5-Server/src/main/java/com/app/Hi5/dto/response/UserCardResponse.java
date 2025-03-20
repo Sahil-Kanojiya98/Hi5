@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,5 +17,6 @@ public class UserCardResponse {
     private String username;
     private String fullname;
     private String profilePictureUrl;
+    private Date banUntil;
 
 }

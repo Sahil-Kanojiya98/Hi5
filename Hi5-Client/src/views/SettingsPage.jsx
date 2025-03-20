@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import MainLayout from "../components/layout/MainLayout";
+import * as Yup from "yup";
 import {
   ArrowBackSharp,
   LightMode,
@@ -12,6 +13,8 @@ import useLogout from "../hooks/useLogout";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/slices/themeSlice";
 import axiosInstance from "../services/axios.config";
+import toast from "react-hot-toast";
+import { setUser } from "../redux/slices/userSlice";
 
 const SettingsPage = () => {
   const user = useSelector((state) => state.user.profile);
@@ -34,10 +37,47 @@ const SettingsPage = () => {
   const [username, setUsername] = useState("");
   const [isUsernameUpdateModalOpen, setIsUsernameUpdateModalOpen] =
     useState(false);
-  const handleUsernameUpdate = () => {
-    console.log(username);
-    setIsUsernameUpdateModalOpen(false);
-    alert("username change");
+
+  const handleUsernameUpdate = async () => {
+    const usernameSchema = Yup.string()
+      .min(3, "Username must be at least 3 characters")
+      .max(15, "Username must not exceed 15 characters")
+      .matches(
+        /^[a-z0-9_]+$/,
+        "Username can only contain lowercase letters, numbers, and underscores"
+      )
+      .required("Username is required");
+
+    try {
+      await usernameSchema.validate(username);
+
+      const response = await axiosInstance.post("/user/change-username", {
+        username,
+      });
+      console.log(response);
+      toast.success("Username updated successfully!");
+      setIsUsernameUpdateModalOpen(false);
+      dispatch(
+        setUser({
+          id: user?.id,
+          email: user?.email,
+          username: username,
+          role: user?.role,
+          fullname: user?.fullname,
+          profilePictureUrl: user?.profilePictureUrl,
+        })
+      );
+    } catch (e) {
+      if (e instanceof Yup.ValidationError) {
+        toast.error(e.message);
+      } else {
+        toast.error(
+          e?.response?.data?.message ||
+            "Failed to update username. Please try again."
+        );
+        console.error(e);
+      }
+    }
   };
 
   const logout = useLogout();
@@ -78,8 +118,14 @@ const SettingsPage = () => {
 
   const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] =
     useState(false);
-  const handleDeleteAccount = () => {
-    alert("Account deleted");
+  const handleDeleteAccount = async () => {
+    try {
+      // await axiosInstance.delete("/user/myaccount");
+      setIsDeleteAccountModalOpen(false);
+      logout();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -346,6 +392,7 @@ const SettingsPage = () => {
           </div>
         }
         onSave={handleUsernameUpdate}
+        type="UPDATE"
       />
 
       <Modal
@@ -361,6 +408,7 @@ const SettingsPage = () => {
           />
         }
         onSave={updateSettings}
+        type="SETTING"
       />
 
       <Modal
@@ -376,6 +424,7 @@ const SettingsPage = () => {
           />
         }
         onSave={updateSettings}
+        type="SETTING"
       />
 
       <Modal
@@ -442,6 +491,7 @@ const SettingsPage = () => {
           </div>
         }
         onSave={updateSettings}
+        type="SETTING"
       />
       <Modal
         isOpen={isTwoFactorAuthModalOpen}
@@ -455,6 +505,7 @@ const SettingsPage = () => {
           />
         }
         onSave={updateSettings}
+        type="SECURITY"
       />
       <Modal
         isOpen={isDeleteAccountModalOpen}
@@ -469,6 +520,7 @@ const SettingsPage = () => {
           </div>
         }
         onSave={handleDeleteAccount}
+        type="DANGER"
       />
     </MainLayout>
   );
@@ -507,7 +559,6 @@ const SelectField = ({ label, value, onChange, options }) => (
     >
       {label}
     </label>
-    {value}
     <select
       id={label}
       value={value}
@@ -551,28 +602,58 @@ CheckboxField.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-const Modal = ({ isOpen, onClose, title, content, onSave }) => {
+const Modal = ({ isOpen, onClose, title, content, onSave, type }) => {
+  const getButtonStyle = (type) => {
+    switch (type) {
+      case "UPDATE":
+        return "bg-blue-500 hover:bg-blue-600 text-white";
+      case "SETTING":
+        return "bg-gray-500 hover:bg-gray-600 text-white";
+      case "SECURITY":
+        return "bg-gray-500 hover:bg-gray-600 text-white";
+      case "DANGER":
+        return "bg-red-500 hover:bg-red-600 text-white";
+      default:
+        return "bg-gray-300 hover:bg-gray-400 text-black";
+    }
+  };
+
+  const getButtonText = (type) => {
+    switch (type) {
+      case "UPDATE":
+        return "Save Changes";
+      case "SETTING":
+        return "Update Settings";
+      case "SECURITY":
+        return "Enable Security";
+      case "DANGER":
+        return "Delete Account";
+      default:
+        return "Save";
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="z-10 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+    <div className="z-20 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
       <div className="bg-white dark:bg-gray-900 p-6 rounded-lg w-full max-w-sm">
         <h3 className="mb-4 font-semibold text-black dark:text-white text-lg">
           {title}
         </h3>
         {content}
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end gap-2 mt-4">
           <button
             onClick={onClose}
-            className="mr-2 text-gray-600 dark:text-gray-100"
+            className="bg-gray-200 dark:bg-gray-600 mr-2 px-4 py-2 rounded-md text-gray-600 dark:text-gray-200"
           >
             Cancel
           </button>
           <button
             onClick={onSave}
-            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white"
+            className={`px-4 py-2 rounded-md ${getButtonStyle(type)}`}
           >
-            Save
+            {getButtonText(type)}
           </button>
         </div>
       </div>
@@ -586,6 +667,7 @@ Modal.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.node.isRequired,
   onSave: PropTypes.func.isRequired,
+  type: PropTypes.oneOf(["CONFIRM", "ALERT"]).isRequired,
 };
 
 export default SettingsPage;

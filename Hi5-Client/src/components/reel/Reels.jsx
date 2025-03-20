@@ -6,7 +6,13 @@ import Reel from "./Reel";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
+const Reels = ({
+  feedType,
+  userId = "",
+  isMyProfileReels = false,
+  showBackButton = true,
+  showCreateReelButton = true,
+}) => {
   const user = useSelector((state) => state.user.profile);
 
   const [reels, setReels] = useState([]);
@@ -15,27 +21,24 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
   const [page, setPage] = useState(0);
   const [error, setError] = useState(null);
 
+  const size = 5;
   const getReelEndpoint = useCallback(() => {
     switch (feedType) {
       case "RANDOM":
-        return `/reel`;
-      // case "posts":
-      //   return `/post/user/${userId}?page=${page}`;
-      // case "saved":
-      //   return `/post/saved?pageNo=${page}&pageSize=10`;
+        return `/reel?size=${size}`;
+      case "REELS":
+        return `/reel/user/${userId}?page=${page}&size=${size}`;
+      case "SAVED":
+        return `/reel/saved?page=${page}&size=${size}`;
       default:
-        return `/reel`;
+        return `/reel?size=${size}`;
     }
-  }, [feedType]);
+  }, [feedType, userId, page, size]);
 
   const fetchReels = useCallback(async () => {
     try {
       const endpoint = getReelEndpoint();
-      const response = await axiosInstance.get(endpoint, {
-        params: {
-          size: 10,
-        },
-      });
+      const response = await axiosInstance.get(endpoint);
       console.log(response.data);
       if (response.data.length === 0) {
         setHasMore(false);
@@ -126,7 +129,7 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
           <div className="flex justify-center items-center px-20 sm:px-40 !w-full !h-full p">
             <div className="bg-white shadow-md px-4 py-2 rounded-lg text-center">
               <p className="font-semibold text-gray-500 text-lg">
-                No reels exist
+                No Reels
               </p>
             </div>
           </div>
@@ -145,6 +148,8 @@ const Reels = ({ feedType, userId = "", isMyProfileReels = false }) => {
                 authUserId={user.id}
                 removeReel={removeReel}
                 isMyProfileReels={isMyProfileReels}
+                showBackButton={showBackButton}
+                showCreateReelButton={showCreateReelButton}
               />
             ))}
             {!isLoading && error === null && (
@@ -180,6 +185,8 @@ Reels.propTypes = {
   feedType: PropTypes.string.isRequired,
   userId: PropTypes.string,
   isMyProfileReels: PropTypes.bool,
+  showBackButton: PropTypes.bool,
+  showCreateReelButton: PropTypes.bool,
 };
 
 export default Reels;

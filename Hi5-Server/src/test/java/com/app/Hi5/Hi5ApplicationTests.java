@@ -6,10 +6,12 @@ import com.app.Hi5.repository.ChatRepository;
 import com.app.Hi5.repository.PostRepository;
 import com.app.Hi5.repository.ReelRepository;
 import com.app.Hi5.repository.UserRepository;
+import com.app.Hi5.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +33,9 @@ class Hi5ApplicationTests {
     @Autowired
     private ReelRepository reelRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Test
     void testFindByChatUserIdsAtSpecificPositions() {
 //        Optional<Chat> chat1 = chatRepository.findByChatUserIdsContaining("67bc6b93dd2cc8596bb21e97", "67bc6b93dd2cc8596bb21e97");
@@ -41,6 +46,9 @@ class Hi5ApplicationTests {
 //        postRepository.saveAll(postRepository.findAll());
 //        reelRepository.saveAll(reelRepository.findAll());
 
+//        System.out.println(userService.getUserCountForLast7Days());
+//        System.out.println(userService.getUserCountForLast12Months());
+//        System.out.println(userService.getUserCountForLast6Years());
 
     }
 

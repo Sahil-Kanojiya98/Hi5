@@ -43,7 +43,7 @@ const ReportConfirmationModal = ({
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "auto";
     };
-  }, [isOpen]);
+  }, [isOpen, closeModal]);
 
   const handleOutsideClick = (event) => {
     if (event.target === event.currentTarget) {
@@ -65,15 +65,13 @@ const ReportConfirmationModal = ({
     <>
       {isOpen && (
         <div
-          className={`z-20 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 transition-opacity duration-300 ${
-            isReporting ? "opacity-50 pointer-events-none" : ""
-          }`}
+          className={`z-20 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 transition-opacity duration-300 ${isReporting ? "opacity-50 pointer-events-none" : ""
+            }`}
           onClick={handleOutsideClick}
         >
           <div
-            className={`bg-white dark:bg-gray-900 shadow-lg p-4 sm:p-6 md:p-8 rounded-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-md transition-transform duration-300 transform ${
-              isOpen ? "scale-100" : "scale-95"
-            } ${isReporting ? "opacity-50" : ""}`}
+            className={`bg-white dark:bg-gray-900 shadow-lg p-4 sm:p-6 md:p-8 rounded-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-md transition-transform duration-300 transform ${isOpen ? "scale-100" : "scale-95"
+              } ${isReporting ? "opacity-50" : ""}`}
           >
             <div className="flex justify-between items-center mb-4 text-xl">
               <h3 className="font-semibold text-red-600 dark:text-red-400">

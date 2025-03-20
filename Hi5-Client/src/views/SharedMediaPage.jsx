@@ -305,7 +305,7 @@ const SharedMediaPage = () => {
 
   return (
     <>
-      <header className="bg-white dark:bg-black shadow-md p-4">
+      <header className="bg-white dark:bg-black shadow-md p-3">
         <div className="flex justify-between items-center mx-auto container">
           <Link to="/" className="flex justify-center items-center gap-3">
             <img src={logo} alt="Hi5 Logo" className="w-10" />
@@ -318,13 +318,13 @@ const SharedMediaPage = () => {
               {!isAuthenticated && (
                 <>
                   <Link to="/login">
-                    <button className="bg-gray-200 hover:bg-blue-100 dark:hover:bg-blue-900 dark:bg-gray-800 shadow-md px-2 sm:px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 transition">
+                    <button className="bg-gray-200 hover:bg-blue-100 dark:bg-gray-800 dark:hover:bg-blue-900 shadow-md px-2 sm:px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 transition">
                       Login
                     </button>
                   </Link>
 
                   <Link to="/signup">
-                    <button className="bg-gray-200 hover:bg-blue-100 dark:hover:bg-blue-900 dark:bg-gray-800 shadow-md px-2 sm:px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 transition">
+                    <button className="bg-gray-200 hover:bg-blue-100 dark:bg-gray-800 dark:hover:bg-blue-900 shadow-md px-2 sm:px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 transition">
                       SignUp
                     </button>
                   </Link>
@@ -333,17 +333,18 @@ const SharedMediaPage = () => {
             </div>
 
             <button
+              className="flex justify-center items-center bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 p-2 rounded-md transition-all duration-300 cursor-pointer"
               onClick={changeThemeClickHandler}
-              className="flex justify-center items-center bg-gray-200 hover:bg-yellow-100 dark:hover:bg-yellow-800 dark:bg-gray-800 shadow-md rounded-full w-10 h-10 text-gray-600 dark:text-gray-300 transition"
+              aria-label="Toggle theme"
             >
               {theme === "dark" ? (
-                <LightMode className="w-5 h-5 text-yellow-500" />
+                <LightMode className="text-gray-200 transition-all duration-300" />
               ) : (
-                <DarkMode className="w-5 h-5 text-gray-500" />
+                <DarkMode className="text-gray-800 dark:text-gray-200 transition-all duration-300" />
               )}
             </button>
 
-            {isAuthenticated && (
+            {isAuthenticated && user?.role === "USER" && (
               <div className="flex justify-center items-center lg:gap-2">
                 <Link to={isAuthenticated ? `/profile/${user.id}` : "/login"}>
                   <img
@@ -470,9 +471,9 @@ const SharedMediaPage = () => {
                     {isLiked ? (
                       <FavoriteSharp className="w-5 h-5 text-red-600 transition-colors duration-200" />
                     ) : (
-                      <FavoriteBorderSharp className="group-hover:text-red-600 w-5 h-5 text-gray-500 transition-colors duration-200" />
+                      <FavoriteBorderSharp className="w-5 h-5 text-gray-500 group-hover:text-red-600 transition-colors duration-200" />
                     )}
-                    <span className="group-hover:text-red-500 font-medium text-sm">
+                    <span className="font-medium group-hover:text-red-500 text-sm">
                       {likesCount}
                     </span>
                   </button>
@@ -506,7 +507,7 @@ const SharedMediaPage = () => {
                     className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
                     onClick={shareClickHandler}
                   >
-                    <ShareSharp className="group-hover:text-green-500 w-5 h-5 text-gray-500 transition-colors duration-200" />
+                    <ShareSharp className="w-5 h-5 text-gray-500 group-hover:text-green-500 transition-colors duration-200" />
                     <span className="group-hover:text-green-500 text-xs">
                       Share
                     </span>
@@ -549,7 +550,6 @@ const SharedMediaPage = () => {
 
                 <video
                   className="w-full h-full object-cover"
-                  poster={entityData.thumbnailUrl}
                   src={entityData.videoUrl}
                   ref={videoRef}
                   autoPlay
@@ -559,7 +559,7 @@ const SharedMediaPage = () => {
                 />
 
                 <div
-                  className="right-14 bottom-40 absolute flex flex-col justify-center items-center bg-black dark:bg-white textfrom-white bg-opacity-15 p-2 rounded-full text-white cursor-pointer"
+                  className="right-14 bottom-40 absolute flex flex-col justify-center items-center bg-black dark:bg-white bg-opacity-15 p-2 rounded-full text-white cursor-pointer textfrom-white"
                   onClick={toggleMute}
                 >
                   {isMuted ? (

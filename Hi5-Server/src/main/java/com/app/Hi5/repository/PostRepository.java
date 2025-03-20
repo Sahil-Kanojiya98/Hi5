@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +22,11 @@ public interface PostRepository extends MongoRepository<Post, ObjectId> {
     List<Post> findRandomPosts(int numberOfPosts);
 
     Page<Post> findByUserIdInOrderByCreatedAtDesc(Set<String> userIds, Pageable pageable);
+
+    Page<Post> findByIdIn(Set<ObjectId> ids, Pageable pageable);
+
+    long countByCreatedAtBetween(Date startDate, Date endDate);
+
 
 //    Page<Post> findAllByIdIn(List<ObjectId> ids, Pageable pageable);
 

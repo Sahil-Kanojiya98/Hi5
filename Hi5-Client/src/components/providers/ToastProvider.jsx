@@ -17,10 +17,14 @@ import { Link } from "react-router-dom";
 
 export const ToastProvider = ({ children }) => {
   const userId = useSelector((state) => state?.user?.profile?.id);
+  const role = useSelector((state) => state?.user?.profile?.role);
   const { subscribeTopic, unsubscribeTopic, isConnected } = useWebSocket();
 
   useEffect(() => {
     if (isConnected) {
+      if (role !== "USER") {
+        return;
+      }
       let notificationSubscription;
       let chatSubscription;
       try {
@@ -64,11 +68,14 @@ export const ToastProvider = ({ children }) => {
         console.log("error:" + e);
       }
       return () => {
+        if (role !== "USER") {
+          return;
+        }
         unsubscribeTopic(notificationSubscription);
         unsubscribeTopic(chatSubscription);
       };
     }
-  }, [userId, isConnected, subscribeTopic, unsubscribeTopic]);
+  }, [userId, role, isConnected, subscribeTopic, unsubscribeTopic]);
 
   return (
     <>
@@ -85,9 +92,8 @@ ToastProvider.propTypes = {
 export const GeneralToast = (data) => {
   t.custom((t) => (
     <div
-      className={`${
-        t.visible ? "animate-toast-enter" : "animate-toast-leave"
-      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black dark:ring-white ring-opacity-5`}
+      className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black dark:ring-white ring-opacity-5`}
     >
       <div className="flex-1 p-4 w-">
         <p className="font-medium text-gray-900 dark:text-gray-100 text-sm text-center">
@@ -101,9 +107,8 @@ export const GeneralToast = (data) => {
 export const PostCreatedToast = () => {
   t.custom((t) => (
     <div
-      className={`${
-        t.visible ? "animate-toast-enter" : "animate-toast-leave"
-      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+      className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
     >
       <CheckCircle className="text-green-500 dark:text-green-400" />
       <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
@@ -116,9 +121,8 @@ export const PostCreatedToast = () => {
 export const ReelCreatedToast = () => {
   t.custom((t) => (
     <div
-      className={`${
-        t.visible ? "animate-toast-enter" : "animate-toast-leave"
-      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+      className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
     >
       <CheckCircle className="text-blue-500 dark:text-blue-400" />
       <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
@@ -131,9 +135,8 @@ export const ReelCreatedToast = () => {
 export const StoryCreatedToast = () => {
   t.custom((t) => (
     <div
-      className={`${
-        t.visible ? "animate-toast-enter" : "animate-toast-leave"
-      } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+      className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
     >
       <CheckCircle className="text-purple-500 dark:text-purple-400" />
       <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
@@ -147,9 +150,8 @@ export const MessageToast = (messageData) => {
   t.custom((t) => (
     <Link to={`/chat/${messageData?.senderUserId}`}>
       <div
-        className={`${
-          t.visible ? "animate-toast-enter" : "animate-toast-leave"
-        } max-w-xs w-[320px] bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex flex-col ring-1 ring-black dark:ring-white ring-opacity-5 p-4`}
+        className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+          } max-w-xs w-[320px] bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex flex-col ring-1 ring-black dark:ring-white ring-opacity-5 p-4`}
       >
         <div className="sm:hidden flex items-center space-x-2">
           <ChatBubble fontSize="small" className="text-blue-500" />
@@ -218,9 +220,8 @@ export const LikeNotification = (type, username) => {
   t.custom((t) => (
     <Link to={"/notifications"}>
       <div
-        className={`${
-          t.visible ? "animate-toast-enter" : "animate-toast-leave"
-        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+        className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+          } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
       >
         <Favorite className="text-red-500 dark:text-red-400" />
         <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
@@ -250,9 +251,8 @@ export const CommentNotification = (type, username) => {
   t.custom((t) => (
     <Link to={"/notifications"}>
       <div
-        className={`${
-          t.visible ? "animate-toast-enter" : "animate-toast-leave"
-        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+        className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+          } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
       >
         <ChatBubble className="text-blue-500 dark:text-blue-400" />
         <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
@@ -278,9 +278,8 @@ export const FollowNotification = (type, username) => {
   t.custom((t) => (
     <Link to={"/notifications"}>
       <div
-        className={`${
-          t.visible ? "animate-toast-enter" : "animate-toast-leave"
-        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+        className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+          } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
       >
         <PersonAdd className="text-green-500 dark:text-green-400" />
         <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
@@ -308,9 +307,8 @@ export const NewContentNotification = (type, username) => {
   t.custom((t) => (
     <Link to={"/notifications"}>
       <div
-        className={`${
-          t.visible ? "animate-toast-enter" : "animate-toast-leave"
-        } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
+        className={`${t.visible ? "animate-toast-enter" : "animate-toast-leave"
+          } w-max bg-white dark:bg-black shadow-lg rounded-lg pointer-events-auto flex items-center gap-3 p-4 ring-1 ring-black dark:ring-white ring-opacity-5`}
       >
         {getIcon(type)}
         <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">

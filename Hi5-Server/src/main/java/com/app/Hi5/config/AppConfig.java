@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.security.SecureRandom;
@@ -23,6 +24,7 @@ import java.util.Date;
 @Configuration
 @RequiredArgsConstructor
 @EnableAsync
+@EnableScheduling
 public class AppConfig {
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -60,8 +62,7 @@ public class AppConfig {
                 log.info("Admin user created with ID: {}", user.getId());
             }
         } catch (Exception e) {
-            log.error("Error o" +
-                    "ccurred while setting up the default admin user: {}", e.getMessage(), e);
+            log.error("Error occurred while setting up the default admin user: {}", e.getMessage(), e);
         }
     }
 

@@ -3,11 +3,13 @@ package com.app.Hi5.service;
 import com.app.Hi5.dto.enums.FollowStatus;
 import com.app.Hi5.dto.request.SettingsRequest;
 import com.app.Hi5.dto.response.*;
+import com.app.Hi5.exceptions.ActionNotAllowedException;
 import com.app.Hi5.exceptions.EntityNotFoundException;
 import com.app.Hi5.exceptions.ValidationException;
 import com.app.Hi5.model.Enum.Gender;
 import com.app.Hi5.model.Enum.NotificationType;
 import com.app.Hi5.model.Enum.ProfileType;
+import com.app.Hi5.model.Enum.Role;
 import com.app.Hi5.model.Notification;
 import com.app.Hi5.model.User;
 import com.app.Hi5.repository.NotificationRepository;
@@ -24,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,6 +42,11 @@ public class UserService {
     public List<UserSearchResponse> getUsersByKeyword(String keyword, Integer page, Integer size, User myUser) {
         Page<User> users = userRepository.findUsersByUsernameAndFullname(keyword, PageRequest.of(page, size));
         return users.getContent().stream().map(user -> UserSearchResponse.builder().id(user.getId().toHexString()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).followStatus(user.getFollowerUserIds().contains(myUser.getId().toHexString()) ? FollowStatus.FOLLOWED : (user.getFollowRequestReceivedUserIds().contains(myUser.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build()).collect(Collectors.toList());
+    }
+
+    public List<UserCardResponse> getUsersByKeywordForModeration(String keyword, Integer page, Integer size, User myUser) {
+        Page<User> users = userRepository.findUsersByUsernameAndFullname(keyword, PageRequest.of(page, size));
+        return users.getContent().stream().map(user -> UserCardResponse.builder().id(user.getId().toHexString()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).banUntil(user.getBanUntil()).build()).collect(Collectors.toList());
     }
 
     public UserProfileResponse getProfile(String userId, User user) {
@@ -264,7 +268,7 @@ public class UserService {
             excludedIds.addAll(user.getFollowingUserIds().stream().map(ObjectId::new).collect(Collectors.toSet()));
             excludedIds.addAll(userCardResponses.stream().map(UserCardResponse::getId).map(ObjectId::new).collect(Collectors.toSet()));
 
-            List<UserCardResponse> additionalUsers = userRepository.findRandomUsersExceptSomeIds(remainingSlots, excludedIds).stream().map(u -> new UserCardResponse(u.getId().toHexString(), u.getUsername(), u.getFullname(), u.getProfileImageUrl())).toList();
+            List<UserCardResponse> additionalUsers = userRepository.findRandomUsersExceptSomeIds(remainingSlots, excludedIds).stream().map(u -> new UserCardResponse(u.getId().toHexString(), u.getUsername(), u.getFullname(), u.getProfileImageUrl(), u.getBanUntil())).toList();
             userCardResponses.addAll(additionalUsers);
         }
         return userCardResponses;
@@ -292,6 +296,23 @@ public class UserService {
         userRepository.save(user);
     }
 
-//    List<UserDescResponse> suggest();
+    public void changeUsername(String username, User user) {
+        if (userRepository.findByUsernameAndIsActiveTrue(username).isPresent()) {
+            throw new ActionNotAllowedException("Username already exists.");
+        }
+        user.setUsername(username);
+        userRepository.save(user);
+    }
+
+    public void deleteAccount(User user) {
+        log.info("Deleting account for user: {}", user.getUsername());
+//        delete all chats  delete all messages   delete all likes    delete all notifications   delete all opts if exsists    by user id
+//        delete all posts reel's report's saves story's users    delete user activity also
+//        userRepository.delete(user);
+    }
+
+    public List<ModeratorUserCardResponse> getModerators() {
+        return userRepository.findByRole(Role.MODERATOR).stream().map(user -> (ModeratorUserCardResponse.builder().id(user.getId().toHexString()).username(user.getUsername()).email(user.getEmail()).createdAt(user.getCreatedAt()).build())).collect(Collectors.toList());
+    }
 
 }

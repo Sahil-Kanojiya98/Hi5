@@ -23,7 +23,8 @@ import {
 } from "../../services/api";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { CommentsDisabled } from "@mui/icons-material";
+import { CommentsDisabled, PersonOutline } from "@mui/icons-material";
+import ViewLikedUsersModel from "../temp/ViewLikedUsersModel";
 
 const Post = ({ post, removePost, isMyProfilePosts }) => {
   const user = useSelector((state) => state.user.profile);
@@ -140,6 +141,15 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
     }
   };
 
+  const [isViewLikedUsersModelOpen, setIsViewLikedUsersModelOpen] =
+    useState(false);
+  const viewLikedUsersButtonClickHandler = () => {
+    setIsViewLikedUsersModelOpen(true);
+  };
+  const closeViewLikedUsersModal = () => {
+    setIsViewLikedUsersModelOpen(false);
+  };
+
   return (
     <div className="bg-white dark:bg-black shadow-md mx-auto mb-6 p-3 sm:p-4 rounded-lg w-full max-w-xl">
       <div className="flex justify-between items-center mb-4">
@@ -229,7 +239,7 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
       )}
 
       <div className="flex justify-between items-center text-gray-500">
-        <div className="flex items-center space-x-5 ml-2">
+        <div className="flex items-center space-x-5 ml-2 w-full">
           <button
             className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
             onClick={likeClickHandler}
@@ -243,6 +253,18 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
               {likesCount}
             </span>
           </button>
+
+          {isMyProfilePosts && (
+            <button
+              className="group relative flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
+              onClick={viewLikedUsersButtonClickHandler}
+            >
+              <PersonOutline className="group-hover:text-blue-600 w-5 h-5 scale-110 transition-colors duration-200" />
+              <span className="-top-8 left-1/2 absolute bg-gray-800 opacity-0 group-hover:opacity-100 px-2 py-1 rounded-md text-white text-xs whitespace-nowrap transition -translate-x-1/2 duration-200">
+                View Liked Users
+              </span>
+            </button>
+          )}
 
           {post?.isCommentsDisabled === true ? (
             <button className="flex items-center space-x-2 cursor-not-allowed">
@@ -292,6 +314,14 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
         isReporting={isReporting}
         type="POST"
       />
+      {isMyProfilePosts && (
+        <ViewLikedUsersModel
+          isOpen={isViewLikedUsersModelOpen}
+          closeModal={closeViewLikedUsersModal}
+          relevantId={post?.id}
+          type="POST"
+        />
+      )}
 
       {post?.isCommentsDisabled !== true && (
         <CommentModel

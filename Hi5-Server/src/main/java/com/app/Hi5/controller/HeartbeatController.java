@@ -2,12 +2,16 @@ package com.app.Hi5.controller;
 
 import com.app.Hi5.dto.payload.HeartbeatPayload;
 import com.app.Hi5.model.Enum.ActivityStatus;
+import com.app.Hi5.model.Enum.Role;
+import com.app.Hi5.model.User;
 import com.app.Hi5.model.UserActivity;
 import com.app.Hi5.repository.ChatRepository;
 import com.app.Hi5.repository.UserActivityRepository;
+import com.app.Hi5.repository.UserRepository;
 import com.app.Hi5.service.UserActivityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -31,24 +36,37 @@ public class HeartbeatController {
     private final UserActivityService userActivityService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
 
     @MessageMapping("/heartbeat")
     public void handleHeartbeat(@Payload HeartbeatPayload heartbeatPayload) {
         String userId = heartbeatPayload.getUserId();
-        System.out.println("Heartbeat received from: " + userId);
-        userActivityService.updateUserActivity(userId, ActivityStatus.ONLINE);
-        sendPresenceUpdate(userId);
-        if (activeUsers.containsKey(userId)) {
-            activeUsers.get(userId).cancel(false);
+        if (validUser(userId)) {
+            System.out.println("Heartbeat received from: " + userId);
+            userActivityService.updateUserActivity(userId, ActivityStatus.ONLINE);
+            sendPresenceUpdate(userId);
+            if (activeUsers.containsKey(userId)) {
+                activeUsers.get(userId).cancel(false);
+            }
+            ScheduledFuture<?> task = scheduler.schedule(() -> {
+                virtualExecutor.submit(() -> {
+                    System.out.println("No heartbeat from " + userId + ", disconnecting...");
+                    activeUsers.remove(userId);
+                    userActivityService.updateUserActivity(userId, ActivityStatus.OFFLINE);
+                });
+            }, 12, TimeUnit.SECONDS);
+            activeUsers.put(userId, task);
         }
-        ScheduledFuture<?> task = scheduler.schedule(() -> {
-            virtualExecutor.submit(() -> {
-                System.out.println("No heartbeat from " + userId + ", disconnecting...");
-                activeUsers.remove(userId);
-                userActivityService.updateUserActivity(userId, ActivityStatus.OFFLINE);
-            });
-        }, 12, TimeUnit.SECONDS);
-        activeUsers.put(userId, task);
+    }
+
+    private boolean validUser(String userId) {
+        Optional<User> optionalUser = userRepository.findById(new ObjectId(userId));
+        if (optionalUser.isEmpty()) {
+            return false;
+        } else {
+            User u = optionalUser.get();
+            return u.getRole().equals(Role.USER);
+        }
     }
 
     private void sendPresenceUpdate(String userId) {

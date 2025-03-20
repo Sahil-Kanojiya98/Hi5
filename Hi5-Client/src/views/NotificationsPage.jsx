@@ -246,53 +246,53 @@ const NotificationsPage = () => {
     }
   };
 
-  const getLink = (type, relevantId, userId) => {
-    switch (type) {
-      case "LIKE_POST":
-      case "COMMENT_POST":
-      case "NETWORK_NEW_POST":
-        return (
-          <Link
-            to={`/share/post/${relevantId}`}
-            className="ml-auto text-gray-600 hover:text-gray-900 dark:hover:text-gray-100 dark:text-gray-500 text-xs sm:text-sm"
-          >
-            View
-          </Link>
-        );
-      case "LIKE_REEL":
-      case "COMMENT_REEL":
-      case "NETWORK_NEW_REEL":
-        return (
-          <Link
-            to={`/share/reel/${relevantId}`}
-            className="ml-auto text-gray-600 hover:text-gray-900 dark:hover:text-gray-100 dark:text-gray-500 text-xs sm:text-sm"
-          >
-            View
-          </Link>
-        );
-      case "LIKE_STORY":
-      case "LIKE_COMMENT":
-      case "FOLLOW":
-      case "FOLLOW_REQUEST":
-      case "FOLLOW_REQUEST_ACCEPT":
-      case "NETWORK_NEW_STORY":
-        return (
-          <Link
-            to={`/profile/${userId}`}
-            className="ml-auto text-gray-600 hover:text-gray-900 dark:hover:text-gray-100 dark:text-gray-500 text-xs sm:text-sm"
-          >
-            View
-          </Link>
-        );
-    }
-  };
+  // const getLink = (type, relevantId, userId) => {
+  //   switch (type) {
+  //     case "LIKE_POST":
+  //     case "COMMENT_POST":
+  //     case "NETWORK_NEW_POST":
+  //       return (
+  //         <Link
+  //           to={`/share/post/${relevantId}`}
+  //           className="ml-auto text-gray-600 hover:text-gray-900 dark:hover:text-gray-100 dark:text-gray-500 text-xs sm:text-sm"
+  //         >
+  //           View
+  //         </Link>
+  //       );
+  //     case "LIKE_REEL":
+  //     case "COMMENT_REEL":
+  //     case "NETWORK_NEW_REEL":
+  //       return (
+  //         <Link
+  //           to={`/share/reel/${relevantId}`}
+  //           className="ml-auto text-gray-600 hover:text-gray-900 dark:hover:text-gray-100 dark:text-gray-500 text-xs sm:text-sm"
+  //         >
+  //           View
+  //         </Link>
+  //       );
+  //     case "LIKE_STORY":
+  //     case "LIKE_COMMENT":
+  //     case "FOLLOW":
+  //     case "FOLLOW_REQUEST":
+  //     case "FOLLOW_REQUEST_ACCEPT":
+  //     case "NETWORK_NEW_STORY":
+  //       return (
+  //         <Link
+  //           to={`/profile/${userId}`}
+  //           className="ml-auto text-gray-600 hover:text-gray-900 dark:hover:text-gray-100 dark:text-gray-500 text-xs sm:text-sm"
+  //         >
+  //           View
+  //         </Link>
+  //       );
+  //   }
+  // };
 
   return (
     <MainLayout>
       <div className="flex justify-center mx-auto pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full h-full">
         <div className="flex justify-center w-full max-w-3xl">
-          <div className="flex flex-col justify-center bg-white shadow-lg my-0 md:my-4 sm:p-4 rounded-lg w-full">
-            <div className="top-0 z-0 sticky bg-white dark:bg-black p-4 sm:px-7 sm:py-5 rounded-md">
+          <div className="flex flex-col justify-center bg-white shadow-lg my-0 md:my-4 px-4 rounded-lg w-full">
+            <div className="top-0 z-0 sticky p-2 md:p-6 rounded-md">
               <div className="flex justify-between items-center">
                 <p className="font-semibold text-gray-800 dark:text-gray-100 text-2xl">
                   Notifications
@@ -305,7 +305,7 @@ const NotificationsPage = () => {
                 </button>
               </div>
             </div>
-            <div className="bg-slate-200 dark:bg-slate-800 mx-3 rounded-lg h-1"></div>
+            <div className="bg-slate-200 dark:bg-slate-800 sm:mx-3 rounded-lg h-1"></div>
             <div className="flex flex-col flex-1 space-y-3 mt-0 mb-10 sm:mb-3 min-[450px]:p-4 pb-4 overflow-y-auto hide-scrollbar">
               {!isLoading && notifications.length === 0 && (
                 <div className="flex flex-1 justify-center items-center">
@@ -317,9 +317,9 @@ const NotificationsPage = () => {
                   {notifications.map((notification) => (
                     <div
                       key={notification?.id}
-                      className="flex sm:flex-row flex-col justify-between items-start sm:gap-4 bg-white hover:bg-gray-200 dark:hover:bg-gray-800 dark:bg-black shadow-md mx-4 p-4 rounded-lg transition-colors"
+                      className="flex sm:flex-row flex-col justify-between items-start sm:gap-4 bg-white hover:bg-gray-200 dark:hover:bg-gray-800 dark:bg-black shadow-md p-4 rounded-lg transition-colors"
                     >
-                      <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="flex items-center gap-1 sm:gap-2">
                         <Link
                           to={`/profile/${notification?.userId}`}
                           className="rounded-full w-10 sm:w-12 h-10 sm:h-12 overflow-hidden avatar"
