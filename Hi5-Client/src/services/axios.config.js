@@ -1,20 +1,18 @@
 import axios from "axios";
-import { getToken
-  // , removeToken
- } from "../utils/localStorage";
+import { getToken, removeToken } from "../utils/localStorage";
 import { removeAuth } from "../redux/slices/authSlice";
 import store from "../redux/store";
 
 const axiosInstance = axios.create({
   baseURL: "/api",
   timeout: Number(import.meta.env.VITE_HI5_API_REQUEST_TIMEOUT),
-  timeoutErrorMessage: "The request timed out, please try again."
+  timeoutErrorMessage: "The request timed out, please try again.",
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = getToken();
-    if (accessToken) {
+    if (accessToken && !config.url.startsWith("/auth")) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
@@ -33,7 +31,6 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
-
     console.log("Response Data:", response.data);
     console.log("Response Status:", response.status);
     console.log("Response Headers:", response.headers);
@@ -57,11 +54,36 @@ axiosInstance.interceptors.response.use(
       }
 
       console.error("Token expired.");
-      // removeToken();
-      // store.dispatch(removeAuth());
-      // window.location.href = "/login";
+      removeToken();
+      store.dispatch(removeAuth());
+      window.location.href = "/login";
       return Promise.reject(error);
     }
+
+    if (response?.status === 403 && response?.data?.error === "Access Denied") {
+      try {
+        if (response?.data?.banUntil) {
+          if (store.getState().auth.isAuthenticated) {
+            removeToken();
+            store.dispatch(removeAuth());
+            window.location.href = "/login";
+          } else {
+            const banData = JSON.stringify({
+              isBanned: true,
+              banUntil: response.data.banUntil,
+            });
+            sessionStorage.setItem("banData", banData);
+            window.location.href = "/banned";
+          }
+        } else {
+          console.error(response?.data?.message || "Access Denied.");
+        }
+      } catch (err) {
+        console.error("Failed to process error data:", err);
+      }
+      return Promise.reject(error);
+    }
+
     return Promise.reject(error);
   }
 );

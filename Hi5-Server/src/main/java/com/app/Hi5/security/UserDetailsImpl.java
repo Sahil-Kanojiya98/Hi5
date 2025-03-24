@@ -53,7 +53,6 @@ public class UserDetailsImpl implements UserDetails {
         return isAccountNonLocked;
     }
 
-
     //    default support from spring boot security
     @Override
     public boolean isAccountNonExpired() {

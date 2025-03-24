@@ -53,7 +53,7 @@ public class ReelService {
             reel.setVideoUrl(videoUrl);
             reel.setDuration(duration);
             Reel savedReel = reelRepository.save(reel);
-            user.getUserReelIds().add(savedReel.getUserId());
+            user.getUserReelIds().add(savedReel.getId().toHexString());
             userRepository.save(user);
             notificationService.makeNewReelSharedNotificationAndSend(user, savedReel);
             return "Reel created successfully!";
@@ -176,7 +176,4 @@ public class ReelService {
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public List<ReportedReelResponse> findRandomReelsForModeration(Integer page, Integer size) {
-        return new ArrayList<>();
-    }
 }

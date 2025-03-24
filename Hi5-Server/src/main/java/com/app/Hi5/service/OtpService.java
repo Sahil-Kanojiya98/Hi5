@@ -7,13 +7,18 @@ import com.app.Hi5.model.User;
 import com.app.Hi5.repository.OtpRepository;
 import com.app.Hi5.repository.UserRepository;
 import com.app.Hi5.utility.Conversion;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -31,9 +36,11 @@ public class OtpService {
     private final AuthenticationManager authenticationManager;
     private final IdentificationTokenService identificationTokenService;
     private final long otpExpirationTime;
+    private final UserDetailsService userDetailsService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public OtpService(SecureRandom random, OtpRepository otpRepository, MailerService mailerService, UserRepository userRepository, AuthenticationManager authenticationManager, IdentificationTokenService identificationTokenService, @Value("${otp.expiration-time}") String otpExpirationTimeStr) {
+    public OtpService(SecureRandom random, OtpRepository otpRepository, MailerService mailerService, UserRepository userRepository, AuthenticationManager authenticationManager, IdentificationTokenService identificationTokenService, @Value("${otp.expiration-time}") String otpExpirationTimeStr, UserDetailsService userDetailsService, BCryptPasswordEncoder passwordEncoder) {
         this.RANDOM = random;
         this.otpRepository = otpRepository;
         this.mailerService = mailerService;
@@ -41,6 +48,8 @@ public class OtpService {
         this.authenticationManager = authenticationManager;
         this.identificationTokenService = identificationTokenService;
         this.otpExpirationTime = Conversion.convertToMilliseconds(otpExpirationTimeStr);
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private String generateRandomOtp() {
@@ -87,7 +96,13 @@ public class OtpService {
             User user = userRepository.findByUsernameAndIsActiveTrue(username).orElseThrow(() -> new UsernameNotFoundException("Invalid username or password!"));
             email = user.getEmail();
         }
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Invalid email/username or password");
+        }
+//        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
         Otp otpEntity = createOrUpdateOtp(email, OtpType.LOGIN);
         if (!mailerService.sendOtpForLogin(email, otpEntity.getOtp())) {
             log.error("Failed to send OTP for login to email: {}", email);

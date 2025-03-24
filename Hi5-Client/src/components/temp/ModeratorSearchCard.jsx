@@ -4,7 +4,7 @@ import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
 import { useState } from "react";
 import { deleteModeratorAccount } from "../../services/api";
 
-const ModeratorSearchCard = ({ index, user }) => {
+const ModeratorSearchCard = ({ index, user, removeModerator }) => {
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -14,7 +14,7 @@ const ModeratorSearchCard = ({ index, user }) => {
         setIsDeleting(true);
         try {
             await deleteModeratorAccount(user?.id);
-            // remove user from the parent
+            removeModerator(user?.id);
             console.log("Account deleted: " + user?.id);
         } catch (error) {
             console.error("Error deleting : ", error);
@@ -29,7 +29,7 @@ const ModeratorSearchCard = ({ index, user }) => {
         className="flex flex-wrap justify-between items-center gap-3 sm:gap-0 bg-white dark:bg-black shadow-md p-3 rounded-lg transition"
     >
         <div className="flex items-center gap-3 min-[410px]:gap-4 transition duration-150">
-            <div className="flex justify-center items-center bg-blue-500 border-4 border-gray-300 rounded-full w-10 min-[410px]:w-12 h-10 min-[410px]:h-12 overflow-hidden">
+            <div className="flex justify-center items-center bg-blue-500 border-4 border-gray-300 dark:border-gray-700 rounded-full w-10 min-[410px]:w-12 h-10 min-[410px]:h-12 overflow-hidden">
                 {index + 1}
             </div>
             <div>
@@ -69,6 +69,7 @@ ModeratorSearchCard.propTypes = {
         username: PropTypes.string.isRequired,
         createdAt: PropTypes.string.isRequired,
     }).isRequired,
+    removeModerator: PropTypes.func.isRequired,
 };
 
 

@@ -13,7 +13,10 @@ import com.app.Hi5.security.AuthTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final IdentificationTokenService identificationTokenService;
+    private final UserDetailsService userDetailsService;
 
     public boolean checkEmailExsists(String email) {
         log.debug("Checking if email exists: {}", email);
@@ -97,7 +101,14 @@ public class AuthService {
             user = userRepository.findByUsernameAndIsActiveTrue(username).orElseThrow(() -> new UsernameNotFoundException("Invalid email or username!"));
             email = user.getEmail();
         }
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Invalid email/username or password");
+        }
+
+//        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
         if (!user.getTwoFactorAuthentication()) {
             log.info("2FA is off, returning auth token for email: {}", email);
             return authTokenService.generateToken(email);

@@ -327,7 +327,7 @@ const Reel = ({
         onClick={handleClick}
       />
       <div
-        className="right-14 bottom-40 absolute flex flex-col justify-center items-center bg-black dark:bg-white bg-opacity-15 p-2 rounded-full text-white cursor-pointer textfrom-white"
+        className="right-14 bottom-40 absolute flex flex-col justify-center items-center bg-black dark:bg-white bg-opacity-20 dark:bg-opacity-20 p-2 rounded-full text-white cursor-pointer textfrom-white"
         onClick={toggleMute}
       >
         {isMuted ? (
@@ -468,7 +468,7 @@ const Reel = ({
               <img
                 src={reel.profilePictureUrl}
                 alt={`${reel.username}'s profile image`}
-                className="shadow-md border-2 border-gray-800 dark:border-gray-200 rounded-full w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                className="rounded-full w-full h-full object-cover"
               />
             </Link>
             <div className="flex flex-col text-black dark:text-white">
@@ -575,6 +575,7 @@ const Reel = ({
           relevantId={reel.id}
           updateCommentCount={setCommentCount}
           commentCount={commentCount}
+          isMyProfileEntity={isMyProfileReels}
         />
       )}
     </div>

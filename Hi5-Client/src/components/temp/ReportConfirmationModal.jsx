@@ -70,11 +70,11 @@ const ReportConfirmationModal = ({
           onClick={handleOutsideClick}
         >
           <div
-            className={`bg-white dark:bg-gray-900 shadow-lg p-4 sm:p-6 md:p-8 rounded-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-md transition-transform duration-300 transform ${isOpen ? "scale-100" : "scale-95"
+            className={`bg-white dark:bg-black border border-gray-500 shadow-lg rounded-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg p-6 transition-transform duration-300 transform ${isOpen ? "scale-100" : "scale-95"
               } ${isReporting ? "opacity-50" : ""}`}
           >
             <div className="flex justify-between items-center mb-4 text-xl">
-              <h3 className="font-semibold text-red-600 dark:text-red-400">
+              <h3 className="font-semibold text-red-600 dark:text-red-600">
                 Confirm Report
               </h3>
               <button
@@ -86,6 +86,7 @@ const ReportConfirmationModal = ({
                   sx={{
                     fontSize: { xs: 25, sm: 28, md: 30 },
                   }}
+                  className="text-gray-500 hover:text-red-500 transition duration-200"
                 />
               </button>
             </div>
@@ -104,7 +105,7 @@ const ReportConfirmationModal = ({
                 Please select a reason for reporting this comment:
               </p>
             )}
-            <div className="mb-4 px-4 py-3 border-2 rounded-lg max-h-60 overflow-y-auto hide-scrollbar">
+            <div className="mb-4 px-4 py-3 border dark:border-gray-500 rounded-lg max-h-60 overflow-y-auto hide-scrollbar">
               {Object.keys(reportReasonsEnum).map((key) => (
                 <div key={key} className="flex items-center mb-3">
                   <input

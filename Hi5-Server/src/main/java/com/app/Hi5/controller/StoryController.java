@@ -18,6 +18,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/story")
+@PreAuthorize("principal.isAccountNonLocked()")
 @RequiredArgsConstructor
 public class StoryController {
 

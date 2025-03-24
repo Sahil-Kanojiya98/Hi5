@@ -199,6 +199,10 @@ const deleteUserAccount = async (userId) => {
   return axiosInstance.delete(`/moderate/user/${userId}/delete`);
 };
 
+const createModeratorAccount = async (data) => {
+  return axiosInstance.post(`/moderate/moderator`, data);
+};
+
 const deleteModeratorAccount = async (userId) => {
   return axiosInstance.delete(`/moderate/moderator/${userId}/delete`);
 };
@@ -243,6 +247,7 @@ export {
   unbanUserAccount,
   deleteUserAccount,
   getModerators,
+  createModeratorAccount,
   deleteModeratorAccount,
   // getMyStorys,
   // getFollowingUsersStorys,

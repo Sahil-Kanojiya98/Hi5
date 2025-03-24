@@ -23,6 +23,7 @@ import AdminDashboardPage from "./views/AdminDashboardPage";
 import ContentControlPage from "./views/ContentControlPage";
 import UserControlPage from "./views/UserControlPage";
 import ModeratorControlPage from "./views/ModeratorControlPage";
+import BanPage from "./views/BanPage";
 
 const roleRedirect = (user) => {
   switch (user?.role) {
@@ -273,6 +274,15 @@ const RoutesConfig = () => {
               <ModeratorControlPage />
             </RoleGuard>
           </AuthGuard>
+        }
+      />
+
+      <Route
+        path="banned"
+        element={
+          <GuestGuard>
+            <BanPage />
+          </GuestGuard>
         }
       />
 

@@ -344,8 +344,8 @@ const ProfilePage = () => {
                   <div className="flex flex-col">
                     <p className="font-bold text-xl">{profileData?.fullname}</p>
                     <span className="text-gray-600 text-sm">
-                      {profileData?.postsCount}{" "}
-                      {profileData?.postsCount === 1 ? "post" : "posts"}
+                      {/* {profileData?.postsCount}{" "} */}
+                      {/* {profileData?.postsCount === 1 ? "post" : "posts"} */}
                     </span>
                   </div>
                 </div>
@@ -382,7 +382,7 @@ const ProfilePage = () => {
                   {isMyProfile && (
                     <Link
                       to="/settings"
-                      className="text-gray-500 dark:hover:text-gray-400 hover:text-gray-600 transition duration-200 cursor-pointer"
+                      className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition duration-200 cursor-pointer"
                     >
                       <Settings className="text-2xl" />
                     </Link>
@@ -410,7 +410,7 @@ const ProfilePage = () => {
                     <>
                       <label
                         htmlFor="cover-upload"
-                        className="group-hover:block hidden right-3 bottom-3 absolute bg-black/50 p-2 rounded-full text-white cursor-pointer"
+                        className="hidden group-hover:block right-3 bottom-3 absolute bg-black/50 p-2 rounded-full text-white cursor-pointer"
                       >
                         <Edit />
                       </label>
@@ -425,7 +425,7 @@ const ProfilePage = () => {
                   )}
                 </div>
                 <div className="top-40 md:top-44 lg:top-48 left-5 md:left-10 lg:left-16 absolute">
-                  <div className="group relative border-4 border-white rounded-full w-24 md:w-32 lg:w-40 h-24 md:h-32 lg:h-40 overflow-hidden">
+                  <div className="group relative border-4 border-gray-200 dark:border-gray-800 rounded-full w-24 md:w-32 lg:w-40 h-24 md:h-32 lg:h-40 overflow-hidden">
                     <img
                       src={profileImage}
                       alt="Profile Image"
@@ -435,7 +435,7 @@ const ProfilePage = () => {
                       <>
                         <label
                           htmlFor="profile-upload"
-                          className="group-hover:block hidden right-3 bottom-3 absolute bg-black/50 p-2 rounded-full text-white cursor-pointer"
+                          className="hidden group-hover:block right-3 bottom-3 absolute bg-black/50 p-2 rounded-full text-white cursor-pointer"
                         >
                           <Edit />
                         </label>
@@ -548,7 +548,7 @@ const ProfilePage = () => {
                     placeholder="Fullname"
                     value={fullname}
                     onChange={(e) => setFullname(e.target.value)}
-                    className="block bg-gray-200 px-1 pb-1 rounded-lg font-bold text-2xl"
+                    className="block bg-gray-200 dark:bg-gray-800 px-1 pb-1 rounded-lg font-bold text-2xl"
                   />
                 )}
 
@@ -574,7 +574,7 @@ const ProfilePage = () => {
                         value={bio}
                         placeholder="Bio"
                         onChange={(e) => setBio(e.target.value)}
-                        className="bg-gray-200 mt-2 p-1 rounded-lg outline-none w-full text-gray-700 dark:text-gray-300 text-sm"
+                        className="bg-gray-200 dark:bg-gray-800 mt-2 p-1 rounded-lg outline-none w-full text-gray-700 dark:text-gray-300 text-sm"
                       />
                     )}
                   </>
@@ -597,7 +597,7 @@ const ProfilePage = () => {
                             </a>
                           )}
                           {isMyProfile && isEditable && (
-                            <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
+                            <div className="flex items-center gap-2 bg-gray-200 dark:bg-gray-800 p-1 rounded-lg text-sm">
                               <LinkIcon className="text-gray-500" />
                               <input
                                 type="text"
@@ -630,7 +630,7 @@ const ProfilePage = () => {
                             </div>
                           )}
                           {isMyProfile && isEditable && (
-                            <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
+                            <div className="flex items-center gap-2 bg-gray-200 dark:bg-gray-800 p-1 rounded-lg text-sm">
                               <CalendarToday className="text-gray-500" />
                               <input
                                 type="date"
@@ -666,7 +666,7 @@ const ProfilePage = () => {
                               </div>
                             )}
                           {isMyProfile && isEditable && (
-                            <div className="flex items-center gap-2 bg-gray-200 p-1 rounded-lg text-sm">
+                            <div className="flex items-center gap-2 bg-gray-200 dark:bg-gray-800 p-1 rounded-lg text-sm">
                               <span>Gender:</span>
                               <select
                                 value={gender}

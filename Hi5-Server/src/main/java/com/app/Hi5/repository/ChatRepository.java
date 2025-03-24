@@ -15,9 +15,6 @@ public interface ChatRepository extends MongoRepository<Chat, ObjectId> {
 
     List<Chat> findByChatUserIdsContaining(String userId);
 
-//    @Query("{ 'chat_users': { $all : [ ?0, ?1 ] } }")
-//    Optional<Chat> findByChatUserIdsContaining(String userId1, String userId2);
-
     @Query("{ $expr: { $or: [ { $and: [ { $eq: [ { $arrayElemAt: ['$chat_users', 0] }, ?0 ] }, { $eq: [ { $arrayElemAt: ['$chat_users', 1] }, ?1 ] } ] }, { $and: [ { $eq: [ { $arrayElemAt: ['$chat_users', 0] }, ?1 ] }, { $eq: [ { $arrayElemAt: ['$chat_users', 1] }, ?0 ] } ] } ] } }")
     Optional<Chat> findByChatUserIdsContaining(String userId1, String userId2);
 

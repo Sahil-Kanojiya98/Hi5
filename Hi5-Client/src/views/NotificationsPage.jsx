@@ -291,7 +291,7 @@ const NotificationsPage = () => {
     <MainLayout>
       <div className="flex justify-center mx-auto pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full h-full">
         <div className="flex justify-center w-full max-w-3xl">
-          <div className="flex flex-col justify-center bg-white shadow-lg my-0 md:my-4 px-4 rounded-lg w-full">
+          <div className="flex flex-col justify-center bg-white dark:bg-black shadow-lg my-0 md:my-4 px-4 rounded-lg w-full">
             <div className="top-0 z-0 sticky p-2 md:p-6 rounded-md">
               <div className="flex justify-between items-center">
                 <p className="font-semibold text-gray-800 dark:text-gray-100 text-2xl">
@@ -317,7 +317,7 @@ const NotificationsPage = () => {
                   {notifications.map((notification) => (
                     <div
                       key={notification?.id}
-                      className="flex sm:flex-row flex-col justify-between items-start sm:gap-4 bg-white hover:bg-gray-200 dark:hover:bg-gray-800 dark:bg-black shadow-md p-4 rounded-lg transition-colors"
+                      className="flex sm:flex-row flex-col justify-between items-start sm:gap-4 bg-white hover:bg-gray-200 dark:bg-black dark:hover:bg-gray-800 shadow-md dark:shadow-gray-900 p-4 rounded-lg transition-colors"
                     >
                       <div className="flex items-center gap-1 sm:gap-2">
                         <Link

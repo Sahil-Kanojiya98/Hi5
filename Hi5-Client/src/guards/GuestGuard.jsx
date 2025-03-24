@@ -25,6 +25,9 @@ const GuestGuard = ({ children }) => {
     } else if (user?.role === "USER") {
       console.log("redirecting to: /home");
       return <Navigate to="/home" />;
+    } else if (user?.role === "MODERATOR") {
+      console.log("redirecting to: /moderator");
+      return <Navigate to="/moderator" />;
     } else {
       console.log("redirecting to: /*");
       return <Navigate to="/*" />;

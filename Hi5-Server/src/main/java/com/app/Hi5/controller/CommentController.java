@@ -19,6 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/comment")
+@PreAuthorize("principal.isAccountNonLocked()")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -37,8 +38,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/{comment_id}")
-    public ResponseEntity<String> deletePost(@PathVariable("comment_id") String post_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        commentService.deleteComment(userDetails.getUser(), post_id);
+    public ResponseEntity<String> deleteComment(@PathVariable("comment_id") String commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        commentService.deleteComment(userDetails.getUser(), commentId);
         return new ResponseEntity<>("post deleted successfully!", HttpStatus.OK);
     }
 

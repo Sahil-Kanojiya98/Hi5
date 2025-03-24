@@ -223,7 +223,7 @@ const ChatBox = ({ chatId, receiverId }) => {
 
   return (
     <>
-      <div className="flex flex-col flex-1 gap-1 bg-gray-300 dark:bg-gray-700 p-4 rounded-lg overflow-y-auto hide-scrollbar">
+      <div className="flex flex-col flex-1 gap-1 bg-gray-300 dark:bg-gray-800 p-4 rounded-lg overflow-y-auto hide-scrollbar">
         {!chatId && (
           <p className="text-gray-400 text-center">
             Select a user to start chatting.

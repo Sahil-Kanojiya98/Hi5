@@ -42,7 +42,7 @@ const UserSearchCard = ({ user }) => {
     <>
       <div
         key={user?.id}
-        className="flex justify-between items-center gap-5 sm:gap-0 bg-white dark:bg-black shadow-md p-3 rounded-lg transition"
+        className="flex justify-between items-center gap-5 sm:gap-0 bg-white dark:bg-black shadow-md dark:shadow-gray-900 p-3 rounded-lg transition"
       >
         <div className="flex items-center gap-1 min-[410px]:gap-4 transition duration-150">
           <Link to={`/profile/${user?.id}`}>

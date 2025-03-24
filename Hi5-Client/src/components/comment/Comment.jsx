@@ -17,8 +17,9 @@ import {
 } from "../../services/api";
 import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
 import ReportConfirmationModal from "../temp/ReportConfirmationModal";
+import { Link } from "react-router-dom";
 
-const Comment = ({ comment, removeComment }) => {
+const Comment = ({ comment, removeComment, isMyProfileEntity }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const openDeleteModal = () => setIsDeleteModalOpen(true);
@@ -92,13 +93,16 @@ const Comment = ({ comment, removeComment }) => {
   const isMyComment = comment.userId === user.id;
 
   return (
-    <div className="flex flex-col justify-between items-start mb-6 p-3 border-gray-200 border-b">
+    <div className="flex flex-col justify-between items-start mb-6 p-3 border-gray-200 dark:border-gray-700 border-b">
       <div className="flex items-center space-x-4">
-        <img
-          src={comment.profilePictureUrl}
-          alt={`${comment.fullname}'s profile`}
-          className="border border-gray-300 rounded-full w-12 h-12 object-cover"
-        />
+        <Link to={`/profile/${comment.userId}`}>
+          <img
+            src={comment.profilePictureUrl}
+            alt={`${comment.fullname}'s profile`}
+            className="rounded-full w-12 h-12 object-cover"
+          />
+
+        </Link>
         <div className="flex flex-col">
           <p className="font-semibold text-lg">{comment.fullname}</p>
           <p className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -112,7 +116,7 @@ const Comment = ({ comment, removeComment }) => {
         </div>
       </div>
 
-      <div className="px-3 py-2 text-gray-800 leading-relaxed">
+      <div className="px-3 py-2 text-gray-800 dark:text-gray-400 leading-relaxed">
         {comment.content}
       </div>
 
@@ -124,21 +128,22 @@ const Comment = ({ comment, removeComment }) => {
           {isLiked ? (
             <LikedIcon className="w-5 h-5 text-red-600 transition-colors duration-200" />
           ) : (
-            <UnlikedIcon className="group-hover:text-red-600 w-5 h-5 text-gray-500 transition-colors duration-200" />
+            <UnlikedIcon className="w-5 h-5 text-gray-500 group-hover:text-red-600 transition-colors duration-200" />
           )}
-          <span className="group-hover:text-red-500 font-medium text-sm">
+          <span className="font-medium group-hover:text-red-500 text-sm">
             {likesCount}
           </span>
         </button>
 
-        {isMyComment && (
+        {(isMyComment || isMyProfileEntity) && (
           <button
             className="flex items-center hover:text-red-500 hover:scale-105 transition duration-200"
             onClick={openDeleteModal}
           >
-            <DeleteIcon className="text-gray-600 hover:text-red-500 cursor-pointer" />
+            <DeleteIcon className="text-gray-500 hover:text-red-500 cursor-pointer" />
           </button>
         )}
+
 
         {!isMyComment &&
           (isReported ? (
@@ -148,7 +153,7 @@ const Comment = ({ comment, removeComment }) => {
             />
           ) : (
             <ReportIcon
-              className="text-gray-600 hover:text-red-500 hover:scale-105 transition duration-200 cursor-pointer transform"
+              className="text-gray-500 hover:text-red-500 hover:scale-105 transition duration-200 cursor-pointer transform"
               onClick={openReportModal}
               title="Report this comment"
             />
@@ -186,6 +191,7 @@ Comment.propTypes = {
     reportStatus: PropTypes.string,
   }).isRequired,
   removeComment: PropTypes.func.isRequired,
+  isMyProfileEntity: PropTypes.bool.isRequired,
 };
 
 export default Comment;

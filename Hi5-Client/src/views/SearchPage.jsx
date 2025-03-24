@@ -93,7 +93,7 @@ const SearchPage = () => {
     <MainLayout>
       <div className="flex justify-center mx-auto pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full h-full">
         <div className="flex justify-center w-full max-w-3xl">
-          <div className="flex flex-col justify-center bg-white shadow-lg my-0 md:my-4 px-4 rounded-lg w-full">
+          <div className="flex flex-col justify-center bg-white dark:bg-black shadow-lg my-0 md:my-4 px-4 rounded-lg w-full">
             <div className="top-0 sticky p-2 md:p-6 w-full">
               <div className="flex justify-between items-center">
                 <h1 className="hidden md:block font-semibold text-xl lg:text-2xl">

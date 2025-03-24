@@ -171,7 +171,7 @@ const RequestsModel = ({ isOpen, closeModal, type }) => {
         onClick={handleOutsideClick}
       >
         <div
-          className={`bg-white dark:bg-gray-900 shadow-lg p-4 rounded-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-md transition-transform duration-300 transform ${
+          className={`bg-white dark:bg-black border border-gray-500 shadow-lg p-4 rounded-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-md transition-transform duration-300 transform ${
             isOpen ? "scale-100" : "scale-95"
           }`}
         >
@@ -191,6 +191,7 @@ const RequestsModel = ({ isOpen, closeModal, type }) => {
                 sx={{
                   fontSize: { xs: 25, sm: 28, md: 30 },
                 }}
+                className="text-gray-500 hover:text-red-500 transition duration-200"
               />
             </button>
           </div>

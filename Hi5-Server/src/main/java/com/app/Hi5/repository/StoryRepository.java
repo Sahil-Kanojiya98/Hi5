@@ -15,4 +15,7 @@ public interface StoryRepository extends MongoRepository<Story, ObjectId> {
     @Query("{ 'userId': ?0, 'createdAt': { $gte: ?1, $lte: ?2 } }")
     List<Story> findStoriesFromLast24Hours(String userId, Date from, Date to);
 
+    void deleteByUserId(String userId);
+
 }
+

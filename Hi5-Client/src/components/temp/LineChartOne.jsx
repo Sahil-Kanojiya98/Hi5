@@ -50,6 +50,12 @@ export default function LineChartOne({ name, fileName, seriesData }) {
       categories: seriesData?.x || [],
       axisBorder: { show: false },
       axisTicks: { show: false },
+      labels: {
+        style: {
+          colors: "#787878",
+          fontSize: "14px",
+        },
+      },
     },
     legend: {
       show: true,
@@ -59,22 +65,60 @@ export default function LineChartOne({ name, fileName, seriesData }) {
     },
     yaxis: {
       title: { text: undefined },
+      labels: {
+        style: {
+          colors: "#787878",
+          fontSize: "14px",
+        },
+      },
     },
     grid: {
       yaxis: { lines: { show: true } },
     },
+    // tooltip: {
+    //   enabled: true,
+    //   x: { show: false },
+    //   // y: { formatter: (val) => `${val}` },
+    //   y: {
+    //     formatter: (val, { seriesIndex, dataPointIndex, w }) => {
+    //       const prev = dataPointIndex > 0 ? w.config.series[seriesIndex].data[dataPointIndex - 1] : 0;
+    //       const change = prev ? ((val - prev) / prev * 100).toFixed(2) : "N/A";
+    //       return `${val}     (${change > 0 ? "+" : ""}${change}%)`;
+    //     },
+    //     style: {
+    //       fontSize: '18px',
+    //       colors: ['#787878']
+    //     }
+    //   },
+    //   style: {
+    //     background: '#333333',
+    //     color: '#ffffff'
+    //   }
+    // },
     tooltip: {
       enabled: true,
       x: { show: false },
-      // y: { formatter: (val) => `${val}` },
       y: {
         formatter: (val, { seriesIndex, dataPointIndex, w }) => {
           const prev = dataPointIndex > 0 ? w.config.series[seriesIndex].data[dataPointIndex - 1] : 0;
           const change = prev ? ((val - prev) / prev * 100).toFixed(2) : "N/A";
           return `${val}     (${change > 0 ? "+" : ""}${change}%)`;
         },
+      },
+      style: {
+        fontSize: "12px",
+        colors: ["#ffcc00"]
+      },
+      theme: "dark", // Makes the tooltip background dark
+      fillSeriesColor: false,
+      marker: {
+        show: false
+      },
+      onDatasetHover: {
+        highlightDataSeries: true
       }
-    },
+    }
+    
   };
 
   return (

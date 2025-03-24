@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/report")
+@PreAuthorize("principal.isAccountNonLocked()")
 @RequiredArgsConstructor
 public class ReportController {
 
     private final ReportService reportService;
 
     @PostMapping
-    public ResponseEntity<String> reportPost(@RequestBody ReportRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<String> report(@RequestBody ReportRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         reportService.reportPost(userDetails.getUser(),request.getRelevantId(),request.getType(),request.getReason());
         return new ResponseEntity<>("reported successfully.", HttpStatus.CREATED);
     }

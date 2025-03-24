@@ -66,6 +66,7 @@ public class MessageController {
 
     @ResponseBody
     @GetMapping("/{chatId}")
+    @PreAuthorize("principal.isAccountNonLocked()")
     public ResponseEntity<List<MessageResponse>> findChatMessages(@PathVariable String chatId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Chat chat = chatRepository.findById(new ObjectId(chatId)).orElseThrow(() -> new EntityNotFoundException("Chat not found."));
         if (!chat.getChatUserIds().contains(userDetails.getUser().getId().toHexString())) {

@@ -17,7 +17,8 @@ import { Link } from "react-router-dom";
 
 export const ToastProvider = ({ children }) => {
   const userId = useSelector((state) => state?.user?.profile?.id);
-  const role = useSelector((state) => state?.user?.profile?.role);
+  const role =
+    useSelector((state) => state?.user?.profile?.role);
   const { subscribeTopic, unsubscribeTopic, isConnected } = useWebSocket();
 
   useEffect(() => {

@@ -1,15 +1,17 @@
 package com.app.Hi5;
 
+import com.app.Hi5.controller.ModerationController;
 import com.app.Hi5.model.Chat;
+import com.app.Hi5.model.Enum.ReportReason;
+import com.app.Hi5.model.Enum.ReportType;
 import com.app.Hi5.model.User;
-import com.app.Hi5.repository.ChatRepository;
-import com.app.Hi5.repository.PostRepository;
-import com.app.Hi5.repository.ReelRepository;
-import com.app.Hi5.repository.UserRepository;
+import com.app.Hi5.repository.*;
+import com.app.Hi5.service.ReportService;
 import com.app.Hi5.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Date;
 import java.util.List;
@@ -20,36 +22,19 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 class Hi5ApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+//    @Test
+//    void contextLoads() {
+//    }
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private ReelRepository reelRepository;
-
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private ReportRepository reportRepository;
 
     @Test
-    void testFindByChatUserIdsAtSpecificPositions() {
-//        Optional<Chat> chat1 = chatRepository.findByChatUserIdsContaining("67bc6b93dd2cc8596bb21e97", "67bc6b93dd2cc8596bb21e97");
-////        Optional<Chat> chat1 = chatRepository.findByChatUserIdsContaining("67bc6a8bdd2cc8596bb21e91", "67bc6b93dd2cc8596bb21e97");
-//        assertThat(chat1).isPresent();
-
-//        userRepository.saveAll(userRepository.findAll());
-//        postRepository.saveAll(postRepository.findAll());
-//        reelRepository.saveAll(reelRepository.findAll());
-
-//        System.out.println(userService.getUserCountForLast7Days());
-//        System.out.println(userService.getUserCountForLast12Months());
-//        System.out.println(userService.getUserCountForLast6Years());
-
+    void test() {
+//        System.out.println("\n \n \n \n \n ==============");
+//        System.out.println(reportRepository.findReportCountsByType(ReportType.POST));
+//        System.out.println(reportRepository.findReasonCountsByTypeAndRelevantId(ReportType.POST,"67df12c43d7be313ae88147c"));
+//        System.out.println(reportRepository.findUsersByTypeRelevantAndReason(ReportType.POST, "67df12c43d7be313ae88147c", ReportReason.HARASSMENT_BULLYING));
     }
 
 }

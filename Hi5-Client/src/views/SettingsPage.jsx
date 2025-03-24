@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { setUser } from "../redux/slices/userSlice";
 
 const SettingsPage = () => {
-  const user = useSelector((state) => state.user.profile);
+  const userProfileData = useSelector((state) => state.user.profile);
 
   const navigate = useNavigate();
   const handleBackClick = () => {
@@ -59,12 +59,8 @@ const SettingsPage = () => {
       setIsUsernameUpdateModalOpen(false);
       dispatch(
         setUser({
-          id: user?.id,
-          email: user?.email,
-          username: username,
-          role: user?.role,
-          fullname: user?.fullname,
-          profilePictureUrl: user?.profilePictureUrl,
+          ...userProfileData,
+          username,
         })
       );
     } catch (e) {
@@ -73,7 +69,7 @@ const SettingsPage = () => {
       } else {
         toast.error(
           e?.response?.data?.message ||
-            "Failed to update username. Please try again."
+          "Failed to update username. Please try again."
         );
         console.error(e);
       }
@@ -120,7 +116,7 @@ const SettingsPage = () => {
     useState(false);
   const handleDeleteAccount = async () => {
     try {
-      // await axiosInstance.delete("/user/myaccount");
+      await axiosInstance.delete("/user/myaccount");
       setIsDeleteAccountModalOpen(false);
       logout();
     } catch (e) {
@@ -129,8 +125,8 @@ const SettingsPage = () => {
   };
 
   useEffect(() => {
-    setUsername(user.username);
-  }, [user]);
+    setUsername(userProfileData.username);
+  }, [userProfileData]);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -242,25 +238,22 @@ const SettingsPage = () => {
                   {/* Sun Icon */}
                   <div className="text-gray-800">
                     <LightMode
-                      className={`transition-all duration-300 ${
-                        theme === "dark" ? "opacity-0" : "opacity-100"
-                      }`}
+                      className={`transition-all duration-300 ${theme === "dark" ? "opacity-0" : "opacity-100"
+                        }`}
                     />
                   </div>
 
                   <div className="relative bg-gray-300 dark:bg-gray-700 rounded-full w-12 h-6">
                     <div
-                      className={`w-6 h-6 bg-blue-400 dark:bg-blue-600 rounded-full absolute transition-all duration-300 transform ${
-                        theme === "dark" ? "translate-x-6" : "translate-x-0"
-                      }`}
+                      className={`w-6 h-6 bg-blue-400 dark:bg-blue-600 rounded-full absolute transition-all duration-300 transform ${theme === "dark" ? "translate-x-6" : "translate-x-0"
+                        }`}
                     />
                   </div>
 
                   <div className="dark:text-gray-200">
                     <DarkMode
-                      className={`transition-all duration-300 ${
-                        theme === "light" ? "opacity-0" : "opacity-100"
-                      }`}
+                      className={`transition-all duration-300 ${theme === "light" ? "opacity-0" : "opacity-100"
+                        }`}
                     />
                   </div>
                 </div>
@@ -280,7 +273,7 @@ const SettingsPage = () => {
                   </span>
                   <button
                     onClick={() => setIsUsernameUpdateModalOpen(true)}
-                    className="bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-900 dark:bg-blue-800 mt-1 sm:mt-0 px-4 py-2 rounded-md sm:w-max text-white"
+                    className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 mt-1 sm:mt-0 px-4 py-2 rounded-md sm:w-max text-white"
                   >
                     Change Username
                   </button>
@@ -293,7 +286,7 @@ const SettingsPage = () => {
                 </p>
                 <button
                   onClick={logout}
-                  className="flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 dark:hover:bg-red-900 dark:bg-red-800 mt-2 px-4 py-2 rounded-md sm:w-max text-white"
+                  className="flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 dark:bg-red-800 dark:hover:bg-red-900 mt-2 px-4 py-2 rounded-md sm:w-max text-white"
                 >
                   <Logout className="text-xl" />
                   Logout
@@ -311,13 +304,13 @@ const SettingsPage = () => {
                 <div className="flex sm:flex-row flex-col gap-3">
                   <button
                     onClick={() => setIsProfileTypeSettingModalOpen(true)}
-                    className="bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-900 dark:bg-blue-800 px-4 py-2 rounded-md text-white whitespace-nowrap"
+                    className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 px-4 py-2 rounded-md text-white whitespace-nowrap"
                   >
                     Profile Type
                   </button>
                   <button
                     onClick={() => setIsAutoFollowSettingModalOpen(true)}
-                    className="bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-900 dark:bg-blue-800 px-4 py-2 rounded-md text-white whitespace-nowrap"
+                    className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 px-4 py-2 rounded-md text-white whitespace-nowrap"
                   >
                     Follow Request Behavior
                   </button>
@@ -334,7 +327,7 @@ const SettingsPage = () => {
                 </p>
                 <button
                   onClick={() => setIsNotificationsModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-900 dark:bg-blue-800 px-4 py-2 rounded-md sm:w-max text-white"
+                  className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 px-4 py-2 rounded-md sm:w-max text-white"
                 >
                   Notifications
                 </button>
@@ -350,7 +343,7 @@ const SettingsPage = () => {
                 </p>
                 <button
                   onClick={() => setIsTwoFactorAuthModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-900 dark:bg-blue-800 px-4 py-2 rounded-md sm:w-max text-white"
+                  className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 px-4 py-2 rounded-md sm:w-max text-white"
                 >
                   Enable Two-Factor Authentication
                 </button>
@@ -539,7 +532,7 @@ const InputField = ({ label, type, value, onChange }) => (
       id={label}
       value={value}
       onChange={onChange}
-      className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+      className="dark:bg-black px-3 py-2 border dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
     />
   </div>
 );
@@ -563,7 +556,7 @@ const SelectField = ({ label, value, onChange, options }) => (
       id={label}
       value={value}
       onChange={onChange}
-      className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-black"
+      className="dark:bg-black px-3 py-2 border dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
     >
       {options.map((option, index) => (
         <option key={index} value={option}>
@@ -637,7 +630,7 @@ const Modal = ({ isOpen, onClose, title, content, onSave, type }) => {
 
   return (
     <div className="z-20 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-lg w-full max-w-sm">
+      <div className="bg-white dark:bg-black shadow-lg p-6 border border-gray-500 rounded-lg w-full max-w-sm">
         <h3 className="mb-4 font-semibold text-black dark:text-white text-lg">
           {title}
         </h3>

@@ -27,6 +27,7 @@ public interface PostRepository extends MongoRepository<Post, ObjectId> {
 
     long countByCreatedAtBetween(Date startDate, Date endDate);
 
+    void deleteByUserId(String userId);
 
 //    Page<Post> findAllByIdIn(List<ObjectId> ids, Pageable pageable);
 

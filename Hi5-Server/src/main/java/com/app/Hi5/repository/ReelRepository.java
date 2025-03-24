@@ -29,4 +29,6 @@ public interface ReelRepository extends MongoRepository<Reel, ObjectId> {
 
     long countByCreatedAtBetween(Date startDate, Date endDate);
 
+    void deleteByUserId(String userId);
+
 }

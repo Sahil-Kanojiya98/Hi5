@@ -5,6 +5,7 @@ import axiosInstance from "../../services/axios.config";
 import { makeComment } from "../../services/api";
 import Comment from "./Comment";
 
+
 const CommentModel = ({
   isOpen,
   onClose,
@@ -12,6 +13,7 @@ const CommentModel = ({
   relevantId,
   updateCommentCount,
   commentCount,
+  isMyProfileEntity = false,
 }) => {
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -137,7 +139,7 @@ const CommentModel = ({
       className="z-20 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
       onClick={handleOutsideClick}
     >
-      <div className="bg-white shadow-lg p-4 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-xl">
+      <div className="bg-white dark:bg-black shadow-lg p-4 border border-gray-500 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-xl">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold text-lg">Comments</h2>
           <button
@@ -152,7 +154,7 @@ const CommentModel = ({
           </button>
         </div>
 
-        <div className="max-h-60 overflow-y-auto">
+        <div className="max-h-60 overflow-y-auto hide-scrollbar">
           {!isLoading && comments.length > 0 && (
             <>
               {comments.map((comment) => (
@@ -160,6 +162,7 @@ const CommentModel = ({
                   key={comment.id}
                   comment={comment}
                   removeComment={removeComment}
+                  isMyProfileEntity={isMyProfileEntity}
                 />
               ))}
               {!isLoading && error === null && (
@@ -171,7 +174,7 @@ const CommentModel = ({
               {!isLoading && error !== null && (
                 <div
                   ref={loaderRef}
-                  className="flex justify-center items-center h-16 text-white"
+                  className="flex justify-center items-center h-16 text-white dark:text-black"
                 >
                   Something error occured.
                 </div>
@@ -181,13 +184,13 @@ const CommentModel = ({
         </div>
 
         {error && <p className="font-semibold text-red-500 text-sm">{error}</p>}
-        <div className="flex items-center space-x-2 pt-4 border-t">
+        <div className="flex items-center space-x-2 pt-4 border-gray-200 dark:border-gray-700 border-t">
           <input
             type="text"
             value={newComment}
             onChange={handleCommentChange}
             placeholder="Write a comment..."
-            className="p-2 border rounded-lg w-full"
+            className="bg-white dark:bg-black p-2 border dark:border-gray-500 rounded-lg outline-none w-full"
             disabled={isPosting}
           />
           <button
@@ -210,6 +213,7 @@ CommentModel.propTypes = {
   relevantId: PropTypes.string.isRequired,
   updateCommentCount: PropTypes.func.isRequired,
   commentCount: PropTypes.number.isRequired,
+  isMyProfileEntity: PropTypes.bool.isRequired,
 };
 
 export default CommentModel;

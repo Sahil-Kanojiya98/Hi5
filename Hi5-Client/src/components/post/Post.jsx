@@ -247,9 +247,9 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
             {isLiked ? (
               <FavoriteSharpIcon className="w-5 h-5 text-red-600 transition-colors duration-200" />
             ) : (
-              <FavoriteBorderSharpIcon className="group-hover:text-red-600 w-5 h-5 text-gray-500 transition-colors duration-200" />
+              <FavoriteBorderSharpIcon className="w-5 h-5 text-gray-500 group-hover:text-red-600 transition-colors duration-200" />
             )}
-            <span className="group-hover:text-red-500 font-medium text-sm">
+            <span className="font-medium group-hover:text-red-500 text-sm">
               {likesCount}
             </span>
           </button>
@@ -259,7 +259,7 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
               className="group relative flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
               onClick={viewLikedUsersButtonClickHandler}
             >
-              <PersonOutline className="group-hover:text-blue-600 w-5 h-5 scale-110 transition-colors duration-200" />
+              <PersonOutline className="w-5 h-5 group-hover:text-blue-600 scale-110 transition-colors duration-200" />
               <span className="-top-8 left-1/2 absolute bg-gray-800 opacity-0 group-hover:opacity-100 px-2 py-1 rounded-md text-white text-xs whitespace-nowrap transition -translate-x-1/2 duration-200">
                 View Liked Users
               </span>
@@ -281,8 +281,8 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
               className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
               onClick={openCommentModel}
             >
-              <CommentOutlinedIcon className="group-hover:text-blue-500 w-5 h-5 text-gray-500 transition-colors duration-200" />
-              <span className="group-hover:text-blue-500 font-medium text-sm">
+              <CommentOutlinedIcon className="w-5 h-5 text-gray-500 group-hover:text-blue-500 transition-colors duration-200" />
+              <span className="font-medium group-hover:text-blue-500 text-sm">
                 {commentCount}
               </span>
             </button>
@@ -293,7 +293,7 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
               className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
               onClick={shareClickHandler}
             >
-              <ShareSharpIcon className="group-hover:text-green-500 w-5 h-5 text-gray-500 transition-colors duration-200" />
+              <ShareSharpIcon className="w-5 h-5 text-gray-500 group-hover:text-green-500 transition-colors duration-200" />
               <span className="group-hover:text-green-500 text-xs">Share</span>
             </button>
           )}
@@ -331,6 +331,7 @@ const Post = ({ post, removePost, isMyProfilePosts }) => {
           relevantId={post.id}
           updateCommentCount={setCommentCount}
           commentCount={commentCount}
+          isMyProfileEntity={isMyProfilePosts}
         />
       )}
     </div>

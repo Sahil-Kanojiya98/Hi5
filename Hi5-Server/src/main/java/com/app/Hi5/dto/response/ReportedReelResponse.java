@@ -19,6 +19,8 @@ import java.util.Date;
 public class ReportedReelResponse {
 
     private String id;
+    private String reelId;
+    private String userId;
     private String description;
     private String videoUrl;
     private Date createdAt;
@@ -31,10 +33,10 @@ public class ReportedReelResponse {
     @JsonProperty("isCommentsDisabled")
     private Boolean isCommentsDisabled;
 
-    private String userId;
     private String username;
     private String fullname;
     private String profilePictureUrl;
 
+    private Long totalReportsCount;
 
 }

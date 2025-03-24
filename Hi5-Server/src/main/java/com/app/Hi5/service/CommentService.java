@@ -88,26 +88,28 @@ public class CommentService {
     }
 
     public void deleteComment(User user, String commentId) {
-        Comment comment = commentRepository.findById(new ObjectId(commentId)).orElseThrow(() -> new EntityNotFoundException("Comment not found."));
-        if (!comment.getUserId().equals(user.getId().toHexString())) {
-            throw new UnauthorizedAccessException("You are not authorized to delete this post.");
+        if (!ObjectId.isValid(commentId)) {
+            throw new ValidationException("Invalid comment id");
         }
+        Comment comment = commentRepository.findById(new ObjectId(commentId)).orElseThrow(() -> new EntityNotFoundException("Comment not found."));
         if (comment.getType().equals(CommentType.POST)) {
             Post post = postRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(() -> new EntityNotFoundException("Post not found"));
+            if (!(comment.getUserId().equals(user.getId().toHexString()) || post.getUserId().equals(user.getId().toHexString()))) {
+                throw new UnauthorizedAccessException("You are not authorized to delete this post.");
+            }
             post.getCommentIds().remove(comment.getId().toHexString());
             postRepository.save(post);
         } else if (comment.getType().equals(CommentType.REEL)) {
             Reel reel = reelRepository.findById(new ObjectId(comment.getRelevantId())).orElseThrow(() -> new EntityNotFoundException("Reel not found"));
+            if ((!comment.getUserId().equals(user.getId().toHexString())) || reel.getUserId().equals(user.getId().toHexString())) {
+                throw new UnauthorizedAccessException("You are not authorized to delete this reel.");
+            }
             reel.getCommentIds().remove(comment.getId().toHexString());
             reelRepository.save(reel);
         } else {
             throw new ValidationException("Invalid Type");
         }
         commentRepository.delete(comment);
-    }
-
-    public List<ReportedCommentResponse> getCommentListForModeration(Integer page, Integer size) {
-        return new ArrayList<>();
     }
 
 //    List<CommentResponseDTO> getComment(String postId, int page, int pageSize, User user);

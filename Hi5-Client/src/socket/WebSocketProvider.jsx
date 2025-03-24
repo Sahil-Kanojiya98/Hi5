@@ -11,8 +11,8 @@ const WebSocketProvider = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isInitializing = useSelector((state) => state.auth.isInitializing);
   const userId = useSelector((state) => state?.user?.profile?.id);
-  const clientRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
+  const clientRef = useRef(null);
 
   useEffect(() => {
     if (isAuthenticated && !isInitializing && userId) {

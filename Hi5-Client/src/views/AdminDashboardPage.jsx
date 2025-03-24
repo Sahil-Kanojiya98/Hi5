@@ -117,7 +117,7 @@ export default function SocialMediaDashboard() {
     <MainLayout>
       <div className="flex justify-center mx-auto pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full h-full">
         <div className="flex justify-center w-full max-w-5xl">
-          <div className="flex flex-col items-center bg-white shadow-md my-0 md:my-4 px-3 sm:px-6 py-10 rounded-lg w-full overflow-y-auto hide-scrollbar">
+          <div className="flex flex-col items-center bg-white dark:bg-black shadow-md my-0 md:my-4 px-3 sm:px-6 py-10 rounded-lg w-full overflow-y-auto hide-scrollbar">
             <div className="flex flex-col items-center">
               <h2 className="flex flex-wrap items-center gap-2 bg-gray-200 mb-6 px-4 py-3 rounded-lg font-bold text-gray-800 text-xl sm:text-2xl md:text-4xl">
                 <DashboardRounded
@@ -130,7 +130,7 @@ export default function SocialMediaDashboard() {
               </p>
             </div>
 
-            <div className="gap-4 sm:gap-3 md:gap-4 grid grid-cols-1 xs:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 bg-gray-100 shadow-md mb-8 p-4 rounded-3xl w-full">
+            <div className="gap-4 sm:gap-3 md:gap-4 grid grid-cols-1 xs:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 bg-gray-100 dark:bg-gray-900 shadow-md mb-8 p-4 rounded-3xl w-full">
               {[
                 { label: "Total Users", value: totalUsers },
                 { label: "Total Moderators", value: totalModerators },
@@ -150,18 +150,18 @@ export default function SocialMediaDashboard() {
             </div>
 
             <div className="flex flex-col gap-3 sm:gap-6 w-full">
-              <div className="flex flex-col gap-3 bg-white shadow-md hover:shadow-lg p-2 sm:p-4 rounded-xl">
+              <div className="flex flex-col gap-3 shadow-md hover:shadow-lg p-2 sm:p-4 rounded-xl">
                 <div className="flex flex-wrap justify-between items-center">
-                  <h3 className="p-2 font-semibold text-gray-700 text-2xl">
+                  <h3 className="p-2 font-semibold text-gray-700 dark:text-gray-300 text-2xl">
                     User Growth
                   </h3>
 
                   <div className="flex flex-wrap gap-2 p-3 sm:p-0">
-                    <div className="flex gap-2 bg-blue bg-gray-200 p-1 rounded-md transition duration-300">
+                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300">
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowthTimeType === "day"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() => setChartTypeUserGrowthTimeType("day")}
                       >
@@ -170,7 +170,7 @@ export default function SocialMediaDashboard() {
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowthTimeType === "month"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() => setChartTypeUserGrowthTimeType("month")}
                       >
@@ -179,7 +179,7 @@ export default function SocialMediaDashboard() {
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowthTimeType === "year"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() => setChartTypeUserGrowthTimeType("year")}
                       >
@@ -187,11 +187,11 @@ export default function SocialMediaDashboard() {
                       </button>
                     </div>
 
-                    <div className="flex gap-2 bg-blue bg-gray-200 p-1 rounded-md transition duration-300">
+                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300">
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowth === "bar"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() => setChartTypeUserGrowth("bar")}
                       >
@@ -200,7 +200,7 @@ export default function SocialMediaDashboard() {
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowth === "line"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() => setChartTypeUserGrowth("line")}
                       >
@@ -216,18 +216,18 @@ export default function SocialMediaDashboard() {
                 )}
               </div>
 
-              <div className="flex flex-col gap-3 bg-white shadow-md hover:shadow-lg p-2 sm:p-4 rounded-xl">
+              <div className="flex flex-col gap-3 shadow-md hover:shadow-lg p-2 sm:p-4 rounded-xl">
                 <div className="flex flex-wrap justify-between items-center">
-                  <h3 className="p-2 font-semibold text-gray-700 text-2xl">
+                  <h3 className="p-2 font-semibold text-gray-700 dark:text-gray-300 text-2xl">
                     Content Engagement Growth
                   </h3>
 
                   <div className="flex flex-wrap gap-2 p-3 sm:p-0">
-                    <div className="flex gap-2 bg-blue bg-gray-200 p-1 rounded-md transition duration-300">
+                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300">
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowthTimeType === "day"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() =>
                           setchartTypeEngagementGrowthTimeType("day")
@@ -238,7 +238,7 @@ export default function SocialMediaDashboard() {
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowthTimeType === "month"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() =>
                           setchartTypeEngagementGrowthTimeType("month")
@@ -249,7 +249,7 @@ export default function SocialMediaDashboard() {
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowthTimeType === "year"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() =>
                           setchartTypeEngagementGrowthTimeType("year")
@@ -259,11 +259,11 @@ export default function SocialMediaDashboard() {
                       </button>
                     </div>
 
-                    <div className="flex gap-2 bg-blue bg-gray-200 p-1 rounded-md transition duration-300">
+                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300">
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowth === "bar"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() => setchartTypeEngagementGrowth("bar")}
                       >
@@ -272,7 +272,7 @@ export default function SocialMediaDashboard() {
                       <button
                         className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowth === "line"
                           ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                           }`}
                         onClick={() => setchartTypeEngagementGrowth("line")}
                       >

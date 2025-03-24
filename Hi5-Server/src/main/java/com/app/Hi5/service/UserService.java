@@ -12,8 +12,7 @@ import com.app.Hi5.model.Enum.ProfileType;
 import com.app.Hi5.model.Enum.Role;
 import com.app.Hi5.model.Notification;
 import com.app.Hi5.model.User;
-import com.app.Hi5.repository.NotificationRepository;
-import com.app.Hi5.repository.UserRepository;
+import com.app.Hi5.repository.*;
 import com.app.Hi5.utility.FileStorage;
 import com.app.Hi5.utility.enums.FileType;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +21,13 @@ import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final FileStorage fileStorage;
     private final NotificationService notificationService;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final ChatRepository chatRepository;
+    private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
+    private final MessageRepository messageRepository;
     private final NotificationRepository notificationRepository;
+    private final OtpRepository optRepository;
+    private final PostRepository postRepository;
+    private final ReelRepository reelRepository;
+    private final ReportRepository reportRepository;
+    private final SaveRepository saveRepository;
+    private final StoryRepository storyRepository;
+    private final UserActivityRepository userActivityRepository;
 
     public List<UserSearchResponse> getUsersByKeyword(String keyword, Integer page, Integer size, User myUser) {
         Page<User> users = userRepository.findUsersByUsernameAndFullname(keyword, PageRequest.of(page, size));
@@ -304,15 +318,88 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteAccount(User user) {
-        log.info("Deleting account for user: {}", user.getUsername());
-//        delete all chats  delete all messages   delete all likes    delete all notifications   delete all opts if exsists    by user id
-//        delete all posts reel's report's saves story's users    delete user activity also
-//        userRepository.delete(user);
-    }
-
     public List<ModeratorUserCardResponse> getModerators() {
         return userRepository.findByRole(Role.MODERATOR).stream().map(user -> (ModeratorUserCardResponse.builder().id(user.getId().toHexString()).username(user.getUsername()).email(user.getEmail()).createdAt(user.getCreatedAt()).build())).collect(Collectors.toList());
     }
+
+    public void makeModeratorAccount(String email, String username, String password) {
+        if (userRepository.findByEmailAndIsActiveTrue(email).isPresent()) {
+            throw new ActionNotAllowedException("email already exists.");
+        }
+        if (userRepository.findByUsernameAndIsActiveTrue(username).isPresent()) {
+            throw new ActionNotAllowedException("username already exists.");
+        }
+        log.info("Creating moderator account for email: {}", email);
+        User user = userRepository.save(User.builder().email(email).password(passwordEncoder.encode(password)).username(username).role(Role.MODERATOR).isActive(true).gender(Gender.PREFER_NOT_TO_SAY).isAllowedNetworkPostNotification(false).isAllowedNetworkReelNotification(false).isAllowedNetworkStoryNotification(false).isAllowedPostsLikeNotification(false).isAllowedReelsLikeNotification(false).isAllowedStorysLikeNotification(false).isAllowedCommentsLikeNotification(false).isAllowedPostsCommentNotification(false).isAllowedReelsCommentNotification(false).isAllowedUsersFollowNotification(false).isAllowedUsersFollowRequestNotification(false).profileType(ProfileType.PRIVATE).build());
+        userRepository.save(user);
+    }
+
+    public void banUser(String userId, Date banToDate) {
+        if (!ObjectId.isValid(userId)) {
+            throw new ValidationException("Invalid userId");
+        }
+        User user = userRepository.findUserById(new ObjectId(userId)).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        user.setBanUntil(banToDate);
+        userRepository.save(user);
+    }
+
+    public void unbanUser(String userId) {
+        if (!ObjectId.isValid(userId)) {
+            throw new ValidationException("Invalid userId");
+        }
+        User user = userRepository.findUserById(new ObjectId(userId)).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        user.setBanUntil(Date.from(Instant.now().minus(1, ChronoUnit.DAYS)));
+        userRepository.save(user);
+    }
+
+    public void deleteModeratorAccount(String userId) {
+        if (!ObjectId.isValid(userId)) {
+            throw new ValidationException("Invalid userId");
+        }
+        User user = userRepository.findById(new ObjectId(userId)).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        if (user.getRole().equals(Role.MODERATOR)) {
+            userRepository.delete(user);
+        } else {
+            throw new ActionNotAllowedException("User is not a moderator.");
+        }
+    }
+
+    public void deleteUserAccount(String userId) {
+        if (!ObjectId.isValid(userId)) {
+            throw new ValidationException("Invalid userId");
+        }
+        User user = userRepository.findById(new ObjectId(userId)).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        if (user.getRole().equals(Role.USER)) {
+            userRepository.delete(user);
+            userActivityRepository.findByUserId(userId).ifPresent(userActivityRepository::delete);
+            optRepository.findByEmail(user.getEmail()).ifPresent(optRepository::delete);
+            notificationRepository.deleteByNotificationUserId(userId);
+            postRepository.deleteByUserId(userId);
+            reelRepository.deleteByUserId(userId);
+            storyRepository.deleteByUserId(userId);
+        } else {
+            throw new ActionNotAllowedException("this action is not allowed.");
+        }
+        log.info("Deleting account for userId: {}", userId);
+    }
+
+    public void deleteAccount(User user) {
+        if (user.getRole().equals(Role.USER)) {
+            userRepository.delete(user);
+            userActivityRepository.findByUserId(user.getId().toHexString()).ifPresent(userActivityRepository::delete);
+            optRepository.findByEmail(user.getEmail()).ifPresent(optRepository::delete);
+            notificationRepository.deleteByNotificationUserId(user.getId().toHexString());
+            postRepository.deleteByUserId(user.getId().toHexString());
+            reelRepository.deleteByUserId(user.getId().toHexString());
+            storyRepository.deleteByUserId(user.getId().toHexString());
+        } else {
+            throw new ActionNotAllowedException("this action is not allowed.");
+        }
+        log.info("Deleting account for user: {}", user.getUsername());
+    }
+
+//        delete all chats  delete all messages   delete all likes    delete all notifications   delete all opts if exsists    by user id
+//        delete all posts reel's report's saves story's users    delete user activity also
+//        userRepository.delete(user);
 
 }

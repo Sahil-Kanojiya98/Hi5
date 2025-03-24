@@ -123,7 +123,7 @@ const ReelUploadModal = ({ isOpen, onClose }) => {
       className="z-20 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50"
       onClick={handleOutsideClick}
     >
-      <div className="bg-white shadow-lg p-4 px-5 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-xl">
+      <div className="bg-white dark:bg-black shadow-lg p-4 px-5 border border-gray-500 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-xl">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold text-lg">Upload Reel</h2>
           <button

@@ -3,10 +3,7 @@ package com.app.Hi5.service;
 import com.app.Hi5.dto.enums.LikeStatus;
 import com.app.Hi5.dto.enums.ReportStatus;
 import com.app.Hi5.dto.enums.SaveStatus;
-import com.app.Hi5.dto.response.LikedUserCardResponse;
-import com.app.Hi5.dto.response.PostResponse;
-import com.app.Hi5.dto.response.ReportedPostResponse;
-import com.app.Hi5.dto.response.UserCardResponse;
+import com.app.Hi5.dto.response.*;
 import com.app.Hi5.exceptions.EntityNotFoundException;
 import com.app.Hi5.exceptions.UnauthorizedAccessException;
 import com.app.Hi5.exceptions.ValidationException;
@@ -62,9 +59,12 @@ public class PostService {
                 String videoUrl = fileStorage.saveFile(videoFile, FileType.POST_VIDEO);
                 post.setVideoUrl(videoUrl);
             }
+            log.info("Post to save: {}", post);
             Post savedPost = postRepository.save(post);
-            user.getUserPostIds().add(savedPost.getUserId());
-            userRepository.save(user);
+            user.getUserPostIds().add(savedPost.getId().toHexString());
+            log.info("User to save post: {}", user);
+            User savedUser = userRepository.save(user);
+            log.info("saved User {}", savedUser);
             notificationService.makeNewPostSharedNotificationAndSend(user, savedPost);
             return "Post created successfully!";
         } catch (IOException e) {
@@ -203,7 +203,4 @@ public class PostService {
         }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public List<ReportedPostResponse> findRandomPostsForModeration(Integer page, Integer size) {
-        return new ArrayList<>();
-    }
 }

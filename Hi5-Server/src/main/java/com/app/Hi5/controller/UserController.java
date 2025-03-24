@@ -4,7 +4,6 @@ import com.app.Hi5.dto.request.*;
 import com.app.Hi5.dto.response.*;
 import com.app.Hi5.model.User;
 import com.app.Hi5.security.UserDetailsImpl;
-import com.app.Hi5.service.AuthService;
 import com.app.Hi5.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +15,20 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
+@PreAuthorize("principal.isAccountNonLocked()")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping("/get-me")
-    @PreAuthorize("principal.isAccountNonLocked()")
     public ResponseEntity<GetMeResponse> getMe(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         log.info("Received request to get user details for username: {}", userDetails.getUsername());
         User user = userDetails.getUser();
@@ -37,7 +37,6 @@ public class UserController {
     }
 
     @GetMapping("/search/{keyword}")
-    @PreAuthorize("principal.isAccountNonLocked()")
     public ResponseEntity<List<UserSearchResponse>> getUsersByPrefix(@PathVariable("keyword") String keyword, @RequestParam("page") Integer page, @RequestParam("size") Integer size, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<UserSearchResponse> responses = userService.getUsersByKeyword(keyword, page, size, userDetails.getUser());
         return new ResponseEntity<>(responses, HttpStatus.OK);
@@ -153,10 +152,8 @@ public class UserController {
     }
 
     @DeleteMapping("/myaccount")
-    public ResponseEntity<String> deleteAccount(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<String> deleteAccount(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.deleteAccount(userDetails.getUser());
-        return new ResponseEntity<>("Account Deleted",HttpStatus.OK);
+        return new ResponseEntity<>("Account Deleted", HttpStatus.OK);
     }
-
-//    on user account delete remove all the posts and its all history
 }

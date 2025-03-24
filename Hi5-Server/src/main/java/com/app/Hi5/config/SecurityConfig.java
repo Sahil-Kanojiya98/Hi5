@@ -2,6 +2,7 @@ package com.app.Hi5.config;
 
 import com.app.Hi5.filter.AuthTokenFilter;
 import com.app.Hi5.security.AuthEntryPointHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Max;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -39,6 +41,7 @@ public class SecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider(
@@ -81,7 +84,8 @@ public class SecurityConfig {
             SimpleUrlAuthenticationSuccessHandler oauth2AuthenticationSuccessHandler,
             SimpleUrlAuthenticationFailureHandler oauth2AuthenticationFailureHandler,
             AuthTokenFilter authTokenFilter,
-            AuthEntryPointHandler authenticationEntryPoint
+            AuthEntryPointHandler authenticationEntryPoint,
+            AccessDeniedHandler accessDeniedHandler
     ) throws Exception {
         http
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource))
@@ -118,7 +122,10 @@ public class SecurityConfig {
                         .failureHandler(oauth2AuthenticationFailureHandler)
                 )
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint));
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                );
         return http.build();
     }
 

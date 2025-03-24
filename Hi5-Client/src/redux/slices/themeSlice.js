@@ -1,9 +1,7 @@
-// redux/slices/themeSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  theme: 'light', // 'light' or 'dark'
-  // theme: "dark", // 'light' or 'dark'
+  theme: 'light', // 'light' or 'dark'     default theme
 };
 
 const themeSlice = createSlice({
