@@ -44,7 +44,7 @@ public class MailerService {
             helper.setTo(email);
             helper.setSubject(subject);
             helper.setText(content, true);
-//            mailSender.send(message);
+            mailSender.send(message);
 
             log.info("Email successfully sent to: {} with subject: {}", email, subject);
             return true;
@@ -60,7 +60,7 @@ public class MailerService {
             message.setTo(to);
             message.setSubject(subject);
             message.setText(body);
-//            mailSender.send(message);
+            mailSender.send(message);
 
             log.info("Simple email successfully sent to: {} with subject: {}", to, subject);
             return true;

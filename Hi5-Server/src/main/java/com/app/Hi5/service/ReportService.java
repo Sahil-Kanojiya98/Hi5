@@ -51,7 +51,7 @@ public class ReportService {
     }
 
     public List<ReportedPostResponse> findReportedPostsForModeration(Integer page, Integer size) {
-        int skip = (page - 1) * size;
+        int skip = page * size;
         return reportRepository.findReportCountsByType(ReportType.POST, skip, size).stream().map(data -> {
             Post post = postRepository.findById(new ObjectId(data.getId())).orElse(null);
             if (post == null) {
@@ -66,7 +66,7 @@ public class ReportService {
     }
 
     public List<ReportedReelResponse> findReportedReelsForModeration(Integer page, Integer size) {
-        int skip = (page - 1) * size;
+        int skip = page * size;
         return reportRepository.findReportCountsByType(ReportType.REEL, skip, size).stream().map(data -> {
             Reel reel = reelRepository.findById(new ObjectId(data.getId())).orElse(null);
             if (reel == null) {
@@ -81,7 +81,7 @@ public class ReportService {
     }
 
     public List<ReportedCommentResponse> getReportedCommentsForModeration(Integer page, Integer size) {
-        int skip = (page - 1) * size;
+        int skip = page * size;
         return reportRepository.findReportCountsByType(ReportType.COMMENT, skip, size).stream().map(data -> {
             Comment comment = commentRepository.findById(new ObjectId(data.getId())).orElse(null);
             if (comment == null) {

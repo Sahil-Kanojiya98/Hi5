@@ -73,7 +73,7 @@ const BanConfirmationModal = ({
                     onClick={handleOutsideClick}
                 >
                     <div
-                        className={`bg-white dark:bg-gray-900 shadow-xl rounded-lg w-full sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl p-6 sm:p-8 transition-transform duration-300 transform ${isBanning ? "scale-95 pointer-events-none" : "scale-100"
+                        className={`bg-white dark:bg-black border border-gray-500 shadow-lg rounded-lg  w-full sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl p-6 sm:p-8 transition-transform duration-300 transform ${isBanning ? "scale-95 pointer-events-none" : "scale-100"
                             }`}
                     >
                         <div className="flex justify-between items-center mb-4">
@@ -104,7 +104,7 @@ const BanConfirmationModal = ({
                                 selected={banDate}
                                 onChange={handleTimeChange}
                                 dateFormat="yyyy-MM-dd"
-                                className="dark:bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 w-full dark:text-white"
+                                className="dark:bg-gray-800 px-4 py-2 border border-gray-500 rounded-lg outline-none w-full dark:text-white"
                                 disabled={isBanning}
                                 placeholderText="Select a date"
                             />
@@ -118,7 +118,7 @@ const BanConfirmationModal = ({
                                         type="number"
                                         value={yearsToAdd}
                                         onChange={(e) => handleInputChange(e, "year")}
-                                        className="px-4 py-2 border rounded-lg w-full dark:text-white"
+                                        className="dark:bg-gray-800 px-4 py-2 border border-gray-500 rounded-lg outline-none w-full dark:text-white"
                                         disabled={isBanning}
                                     />
                                 </div>
@@ -128,7 +128,7 @@ const BanConfirmationModal = ({
                                         type="number"
                                         value={monthsToAdd}
                                         onChange={(e) => handleInputChange(e, "month")}
-                                        className="px-4 py-2 border rounded-lg w-full dark:text-white"
+                                        className="dark:bg-gray-800 px-4 py-2 border border-gray-500 rounded-lg outline-none w-full dark:text-white"
                                         disabled={isBanning}
                                     />
                                 </div>
@@ -138,7 +138,7 @@ const BanConfirmationModal = ({
                                         type="number"
                                         value={daysToAdd}
                                         onChange={(e) => handleInputChange(e, "day")}
-                                        className="px-4 py-2 border rounded-lg w-full dark:text-white"
+                                        className="dark:bg-gray-800 px-4 py-2 border border-gray-500 rounded-lg outline-none w-full dark:text-white"
                                         disabled={isBanning}
                                     />
                                 </div>

@@ -5,6 +5,7 @@ import MainLayout from "../components/layout/MainLayout";
 import { DashboardRounded } from "@mui/icons-material";
 import axiosInstance from "../services/axios.config";
 import { useWebSocket } from "../socket/WebSocketProvider";
+import { useSelector } from "react-redux";
 
 export default function SocialMediaDashboard() {
 
@@ -113,13 +114,15 @@ export default function SocialMediaDashboard() {
     }
   }, [chartTypeEngagementGrowthTimeType, contentEngagementGrowthDayStats, contentEngagementGrowthMonthStats, contentEngagementGrowthYearStats]);
 
+  const mode = useSelector((state) => state.theme.theme);
+
   return (
     <MainLayout>
       <div className="flex justify-center mx-auto pt-[70px] md:pt-0 md:pl-[70px] lg:pl-[260px] w-full h-full">
         <div className="flex justify-center w-full max-w-5xl">
           <div className="flex flex-col items-center bg-white dark:bg-black shadow-md my-0 md:my-4 px-3 sm:px-6 py-10 rounded-lg w-full overflow-y-auto hide-scrollbar">
             <div className="flex flex-col items-center">
-              <h2 className="flex flex-wrap items-center gap-2 bg-gray-200 mb-6 px-4 py-3 rounded-lg font-bold text-gray-800 text-xl sm:text-2xl md:text-4xl">
+              <h2 className="flex flex-wrap items-center gap-2 bg-gray-200 dark:bg-gray-800 mb-6 px-4 py-3 rounded-lg font-bold text-gray-800 dark:text-gray-200 text-xl sm:text-2xl md:text-4xl">
                 <DashboardRounded
                   sx={{ fontSize: { xs: 20, sm: 35, md: 40 } }}
                 />
@@ -157,51 +160,52 @@ export default function SocialMediaDashboard() {
                   </h3>
 
                   <div className="flex flex-wrap gap-2 p-3 sm:p-0">
-                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300">
+                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300"
+                      style={{
+                        backgroundColor: mode === "dark" ? "#121212" : "#F4F4F5",
+                      }}>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowthTimeType === "day"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeUserGrowthTimeType === "day" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() => setChartTypeUserGrowthTimeType("day")}
                       >
                         Day
                       </button>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowthTimeType === "month"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeUserGrowthTimeType === "month" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() => setChartTypeUserGrowthTimeType("month")}
                       >
                         Month
                       </button>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowthTimeType === "year"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeUserGrowthTimeType === "year" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() => setChartTypeUserGrowthTimeType("year")}
                       >
                         Year
                       </button>
                     </div>
 
-                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300">
+                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300"
+                      style={{
+                        backgroundColor: mode === "dark" ? "#121212" : "#F4F4F5",
+                      }}>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowth === "bar"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeUserGrowth === "bar" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() => setChartTypeUserGrowth("bar")}
                       >
                         Bar Chart
                       </button>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeUserGrowth === "line"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeUserGrowth === "line" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() => setChartTypeUserGrowth("line")}
                       >
                         Line Chart
@@ -223,12 +227,14 @@ export default function SocialMediaDashboard() {
                   </h3>
 
                   <div className="flex flex-wrap gap-2 p-3 sm:p-0">
-                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300">
+                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300"
+                      style={{
+                        backgroundColor: mode === "dark" ? "#121212" : "#F4F4F5",
+                      }}>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowthTimeType === "day"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeEngagementGrowthTimeType === "day" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() =>
                           setchartTypeEngagementGrowthTimeType("day")
                         }
@@ -236,10 +242,9 @@ export default function SocialMediaDashboard() {
                         Day
                       </button>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowthTimeType === "month"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeEngagementGrowthTimeType === "month" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() =>
                           setchartTypeEngagementGrowthTimeType("month")
                         }
@@ -247,10 +252,9 @@ export default function SocialMediaDashboard() {
                         Month
                       </button>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowthTimeType === "year"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeEngagementGrowthTimeType === "year" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() =>
                           setchartTypeEngagementGrowthTimeType("year")
                         }
@@ -259,21 +263,22 @@ export default function SocialMediaDashboard() {
                       </button>
                     </div>
 
-                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300">
+                    <div className="flex gap-2 bg-blue bg-gray-200 dark:bg-gray-800 p-1 rounded-md transition duration-300"
+                      style={{
+                        backgroundColor: mode === "dark" ? "#121212" : "#F4F4F5",
+                      }}>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowth === "bar"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeEngagementGrowth === "bar" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() => setchartTypeEngagementGrowth("bar")}
                       >
                         Bar Chart
                       </button>
                       <button
-                        className={`px-4 py-2 text-sm font-medium rounded transition ${chartTypeEngagementGrowth === "line"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                          }`}
+                        className={`px-4 py-2 text-sm font-medium rounded transition 
+                          ${chartTypeEngagementGrowth === "line" && "bg-blue-500 text-white"}
+                        `}
                         onClick={() => setchartTypeEngagementGrowth("line")}
                       >
                         Line Chart

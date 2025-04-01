@@ -38,7 +38,7 @@ const UnbanConfirmationModal = ({
                     onClick={handleOutsideClick}
                 >
                     <div
-                        className={`bg-white dark:bg-gray-900 shadow-xl rounded-lg w-full sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl p-6 sm:p-8 transition-transform duration-300 transform ${isUnbanning ? "scale-95 pointer-events-none" : "scale-100"
+                        className={`bg-white dark:bg-black border border-gray-500 shadow-lg rounded-lg  w-full sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl p-6 sm:p-8 transition-transform duration-300 transform ${isUnbanning ? "scale-95 pointer-events-none" : "scale-100"
                             }`}
                     >
                         <div className="flex justify-between items-center mb-4">
