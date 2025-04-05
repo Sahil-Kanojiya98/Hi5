@@ -11,26 +11,31 @@ export default defineConfig({
         target: "http://localhost:8080",
         changeOrigin: true,
       },
-      "/resource/user/": {
+      "/resource": {
         target: "http://localhost:8080",
         changeOrigin: true,
+        secure: false,
       },
-      "/resource/post/": {
-        target: "http://localhost:8080",
-        changeOrigin: true,
-      },
-      "/resource/story/": {
-        target: "http://localhost:8080",
-        changeOrigin: true,
-      },
-      "/resource/reel/": {
-        target: "http://localhost:8080",
-        changeOrigin: true,
-      },
-      "/resource/chat/": {
-        target: "http://localhost:8080",
-        changeOrigin: true,
-      },
+      // "/resource/user/": {
+      //   target: "http://localhost:8080",
+      //   changeOrigin: true,
+      // },
+      // "/resource/post/": {
+      //   target: "http://localhost:8080",
+      //   changeOrigin: true,
+      // },
+      // "/resource/story/": {
+      //   target: "http://localhost:8080",
+      //   changeOrigin: true,
+      // },
+      // "/resource/reel/": {
+      //   target: "http://localhost:8080",
+      //   changeOrigin: true,
+      // },
+      // "/resource/chat/": {
+      //   target: "http://localhost:8080",
+      //   changeOrigin: true,
+      // },
     },
   },
   define: {

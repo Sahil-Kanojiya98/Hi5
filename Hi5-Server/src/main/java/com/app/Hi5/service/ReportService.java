@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -61,8 +62,8 @@ public class ReportService {
             if (user == null) {
                 return null;
             }
-            return ReportedPostResponse.builder().id(data.getId()).postId(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).totalReportsCount(data.getReportCount()).build();
-        }).collect(Collectors.toList());
+            return ReportedPostResponse.builder().id(data.getId()).postId(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).totalReportsCount(data.getReportCount()).banUntil(user.getBanUntil()).build();
+        }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public List<ReportedReelResponse> findReportedReelsForModeration(Integer page, Integer size) {
@@ -76,8 +77,8 @@ public class ReportService {
             if (user == null) {
                 return null;
             }
-            return ReportedReelResponse.builder().id(data.getId()).reelId(reel.getId().toHexString()).userId(reel.getUserId()).description(reel.getDescription()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).isPrivate(reel.getIsPrivate()).isCommentsDisabled(reel.getIsCommentsDisabled()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).totalReportsCount(data.getReportCount()).build();
-        }).collect(Collectors.toList());
+            return ReportedReelResponse.builder().id(data.getId()).reelId(reel.getId().toHexString()).userId(reel.getUserId()).description(reel.getDescription()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).isPrivate(reel.getIsPrivate()).isCommentsDisabled(reel.getIsCommentsDisabled()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).totalReportsCount(data.getReportCount()).banUntil(user.getBanUntil()).build();
+        }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public List<ReportedCommentResponse> getReportedCommentsForModeration(Integer page, Integer size) {
@@ -87,34 +88,32 @@ public class ReportService {
             if (comment == null) {
                 return null;
             }
-
             User user = userRepository.findById(new ObjectId(comment.getUserId())).orElse(null);
             if (user == null) {
                 return null;
             }
-
             if (comment.getType() == CommentType.POST) {
                 Post post = postRepository.findById(new ObjectId(comment.getRelevantId())).orElse(null);
                 if (post == null) {
                     return null;
                 }
-                User entityOwner = userRepository.findById(new ObjectId(comment.getUserId())).orElse(null);
-                if (entityOwner == null) {
+                User postOwner = userRepository.findById(new ObjectId(post.getUserId())).orElse(null);
+                if (postOwner == null) {
                     return null;
                 }
-                ReportedCommentResponse build = ReportedCommentResponse.builder().id(data.getId()).commentId(comment.getId().toHexString()).relevantId(comment.getRelevantId()).type(comment.getType()).userId(comment.getUserId()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).content(comment.getContent()).createdAt(comment.getCreatedAt()).likesCount(comment.getLikedUserIds().size()).postResponse(new ReportedCommentResponse.CommentTypePostResponse()).totalReportsCount(data.getReportCount()).build();
-                return build;
+                ReportedCommentResponse.CommentTypePostResponse postResponse = ReportedCommentResponse.CommentTypePostResponse.builder().id(data.getId()).postId(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(postOwner.getUsername()).fullname(postOwner.getFullname()).profilePictureUrl(postOwner.getProfileImageUrl()).build();
+                return ReportedCommentResponse.builder().id(data.getId()).commentId(comment.getId().toHexString()).relevantId(comment.getRelevantId()).type(comment.getType()).userId(comment.getUserId()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).content(comment.getContent()).createdAt(comment.getCreatedAt()).likesCount(comment.getLikedUserIds().size()).postResponse(postResponse).totalReportsCount(data.getReportCount()).banUntil(user.getBanUntil()).build();
             } else if (comment.getType() == CommentType.REEL) {
                 Reel reel = reelRepository.findById(new ObjectId(comment.getRelevantId())).orElse(null);
                 if (reel == null) {
                     return null;
                 }
-                User entityOwner = userRepository.findById(new ObjectId(comment.getUserId())).orElse(null);
-                if (entityOwner == null) {
+                User reelOwner = userRepository.findById(new ObjectId(reel.getUserId())).orElse(null);
+                if (reelOwner == null) {
                     return null;
                 }
-                ReportedCommentResponse build = ReportedCommentResponse.builder().id(data.getId()).commentId(comment.getId().toHexString()).relevantId(comment.getRelevantId()).type(comment.getType()).userId(comment.getUserId()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).content(comment.getContent()).createdAt(comment.getCreatedAt()).likesCount(comment.getLikedUserIds().size()).reelResponse(new ReportedCommentResponse.CommentTypeReelResponse()).totalReportsCount(data.getReportCount()).build();
-                return build;
+                ReportedCommentResponse.CommentTypeReelResponse reelResponse = ReportedCommentResponse.CommentTypeReelResponse.builder().id(data.getId()).reelId(reel.getId().toHexString()).userId(reel.getUserId()).description(reel.getDescription()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).isPrivate(reel.getIsPrivate()).isCommentsDisabled(reel.getIsCommentsDisabled()).username(reelOwner.getUsername()).fullname(reelOwner.getFullname()).profilePictureUrl(reelOwner.getProfileImageUrl()).build();
+                return ReportedCommentResponse.builder().id(data.getId()).commentId(comment.getId().toHexString()).relevantId(comment.getRelevantId()).type(comment.getType()).userId(comment.getUserId()).username(user.getUsername()).fullname(user.getFullname()).profilePictureUrl(user.getProfileImageUrl()).content(comment.getContent()).createdAt(comment.getCreatedAt()).likesCount(comment.getLikedUserIds().size()).reelResponse(reelResponse).totalReportsCount(data.getReportCount()).banUntil(user.getBanUntil()).build();
             } else {
                 return null;
             }
@@ -126,7 +125,7 @@ public class ReportService {
     }
 
     public List<ReportedUserResponse> getReportedUsersByReason(ReportType type, String relevantId, ReportReason reason, Integer page, Integer size) {
-        int skip = (page - 1) * size;
+        int skip = page * size;
         return reportRepository.findUsersByTypeRelevantAndReason(type, relevantId, reason, skip, size).stream().map(reportData -> {
             User user = userRepository.findById(new ObjectId(reportData.getUser())).orElse(null);
             if (user == null) {
@@ -135,4 +134,5 @@ public class ReportService {
             return ReportedUserResponse.builder().userId(user.getId().toHexString()).fullname(user.getFullname()).username(user.getUsername()).profilePictureUrl(user.getProfileImageUrl()).reportedAt(reportData.getReportedAt()).build();
         }).collect(Collectors.toList());
     }
+
 }

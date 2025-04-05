@@ -35,6 +35,7 @@ public class ReportedPostResponse {
     private String username;
     private String fullname;
     private String profilePictureUrl;
+    private Date banUntil;
 
     private Long totalReportsCount;
 

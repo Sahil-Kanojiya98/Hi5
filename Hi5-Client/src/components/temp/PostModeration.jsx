@@ -67,15 +67,39 @@ const PostModeration = () => {
         };
     }, [loadMorePosts]);
 
+    const removePost = (postId) => {
+        setPosts((prevPosts) => {
+            console.log(prevPosts);
+            const newPosts = prevPosts.filter((post) => post.id !== postId);
+            console.log(newPosts);
+            return newPosts;
+        });
+    };
+
+    const updateBanUntill = (userId, banUntil) => {
+        setPosts((prevPosts) => {
+            console.log(prevPosts)
+            const newPosts = prevPosts.map((post) =>
+                post.userId === userId ? { ...post, banUntil } : post
+            )
+            console.log(newPosts);
+            return newPosts;
+        });
+    };
+
     return (
         <>
-            <div className="pt-2 overflow-y-auto hide-scrollbar">
+            <div className="pt-2 w-full overflow-y-auto hide-scrollbar">
                 {!isLoading && posts.length > 0 && (
                     <>
                         {posts.map((post) => (
-                            <ReportedPost post={post} key={post.id} />
+                            <ReportedPost
+                                key={post.id}
+                                post={post}
+                                removePost={removePost}
+                                updateBanUntill={updateBanUntill}
+                            />
                         ))}
-
                         {isLoading && error === null && (
                             <div
                                 ref={loaderRef}
@@ -84,7 +108,6 @@ const PostModeration = () => {
                                 <span className="text-gray-500">Loading more posts...</span>
                             </div>
                         )}
-
                         {!isLoading && error === null && (
                             <div
                                 ref={loaderRef}
@@ -93,7 +116,6 @@ const PostModeration = () => {
                                 <span className="text-gray-500">No more posts available.</span>
                             </div>
                         )}
-
                         {!isLoading && error !== null && (
                             <div
                                 ref={loaderRef}

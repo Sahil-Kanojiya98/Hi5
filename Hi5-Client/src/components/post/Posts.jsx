@@ -1,5 +1,5 @@
 import PostSkeleton from "../skeletons/PostSkeleton";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Post from "./Post";
 import PropTypes from "prop-types";
 import axiosInstance from "../../services/axios.config";
@@ -16,7 +16,7 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
   const [error, setError] = useState(null);
 
   const size = 10;
-  const getPostEndpoint = () => {
+  const getPostEndpoint = useCallback(() => {
     switch (feedType) {
       case "FOR_YOU":
         return `/post?size=${size}`;
@@ -29,9 +29,9 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
       default:
         return `/post?size=${size}`;
     }
-  };
+  }, [size, page, userId, feedType])
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       const endpoint = getPostEndpoint();
       const response = await axiosInstance.get(endpoint);
@@ -46,7 +46,7 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [getPostEndpoint])
 
   useEffect(() => {
     setPosts([]);
@@ -58,7 +58,7 @@ const Posts = ({ feedType, userId = "", isMyProfilePosts = false }) => {
 
   useEffect(() => {
     fetchPosts();
-  }, [page, feedType, userId]);
+  }, [page, feedType, userId, fetchPosts]);
 
   const loadMorePosts = () => {
     if (!isLoading && hasMore) {

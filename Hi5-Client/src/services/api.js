@@ -175,15 +175,15 @@ const unfollow = async (userId) => {
   return axiosInstance.post(`/user/unfollow/${userId}`);
 };
 
-// const getMyStorys = async () => {
-//   return axiosInstance.get("/story/my");
-// };
-// const getFollowingUsersStorys = async () => {
-//   return axiosInstance.get("/story");
-// };
-// const deleteStory = async (storyId) => {
-//   return axiosInstance.delete(`/story/${encodeURIComponent(storyId)}`);
-// };
+const getMyStorys = async () => {
+  return axiosInstance.get("/story/my");
+};
+const getFollowingUsersStorys = async () => {
+  return axiosInstance.get("/story");
+};
+const deleteStory = async (storyId) => {
+  return axiosInstance.delete(`/story/${encodeURIComponent(storyId)}`);
+};
 
 const banUserAccount = async (userId, date) => {
   return axiosInstance.patch(`/moderate/user/${userId}/ban`, {
@@ -205,6 +205,15 @@ const createModeratorAccount = async (data) => {
 
 const deleteModeratorAccount = async (userId) => {
   return axiosInstance.delete(`/moderate/moderator/${userId}/delete`);
+};
+
+const deleteEntity = async (relevantId, reportType) => {
+  return axiosInstance.delete(`/moderate/content`, {
+    params: {
+      relevantId: relevantId,
+      reportType: reportType,
+    },
+  });
 };
 
 export {
@@ -249,7 +258,8 @@ export {
   getModerators,
   createModeratorAccount,
   deleteModeratorAccount,
-  // getMyStorys,
-  // getFollowingUsersStorys,
-  // deleteStory,
+  deleteEntity,
+  getMyStorys,
+  getFollowingUsersStorys,
+  deleteStory,
 };

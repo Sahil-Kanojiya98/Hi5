@@ -44,12 +44,19 @@ public class MailerService {
             helper.setTo(email);
             helper.setSubject(subject);
             helper.setText(content, true);
-            mailSender.send(message);
+            helper.setFrom("hi5connect567@gmail.com","Hi5");
+//            helper.setFrom("superhero1000@gmail.com","Hi5");
+            helper.getMimeMessage().addHeader("X-Priority", "1"); // 1 = High, 3 = Normal, 5 = Low
+            helper.setReplyTo("hi5connect567@gmail.com","Hi5");
+//            helper.setReplyTo("superhero100.1000@gmail.com","Hi5");
+
+//            mailSender.send(message);
 
             log.info("Email successfully sent to: {} with subject: {}", email, subject);
             return true;
         } catch (Exception e) {
             log.error("Failed to send email to {} with subject '{}': {}", email, subject, e.getMessage());
+            System.out.println("MESSAGE:"+e.getMessage());
             return false;
         }
     }
@@ -69,4 +76,5 @@ public class MailerService {
             return false;
         }
     }
+
 }

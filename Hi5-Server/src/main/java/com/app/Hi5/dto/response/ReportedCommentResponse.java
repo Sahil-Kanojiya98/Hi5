@@ -27,6 +27,7 @@ public class ReportedCommentResponse {
     private String username;
     private String fullname;
     private String profilePictureUrl;
+    private Date banUntil;
     private String content;
     private Date createdAt;
     private Integer likesCount;
@@ -35,6 +36,9 @@ public class ReportedCommentResponse {
     private Long totalReportsCount;
 
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class CommentTypePostResponse {
         private String id;
         private String postId;
@@ -58,6 +62,9 @@ public class ReportedCommentResponse {
     }
 
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class CommentTypeReelResponse {
         private String id;
         private String reelId;

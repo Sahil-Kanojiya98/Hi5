@@ -2,6 +2,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../services/axios.config";
+import ReportDetail from "./ReportDetail";
 
 const ReportDetailsModel = ({
     isOpen,
@@ -75,19 +76,16 @@ const ReportDetailsModel = ({
                     {!isLoading && reportDetails.length > 0 && (
                         <>
                             {reportDetails.map((reportDetail, index) => (
-                                <div key={index} className="flex justify-between items-center px-3 py-2 w-full">
-                                    <p className="font-medium text-gray-700 dark:text-gray-300">
-                                        {reportDetail.reason}
-                                    </p>
-                                    <span className="font-semibold text-gray-900 dark:text-gray-100">
-                                        {reportDetail.count}
-                                    </span>
-                                </div>
+                                <ReportDetail key={index} reportDetail={reportDetail} type={type} relevantId={relevantId} />
                             ))}
                         </>
                     )}
                 </div>
-
+                {isLoading && (<div className="flex justify-between items-center hover:bg-gray-300 dark:hover:bg-gray-700 px-3 py-2 w-full transition-all duration-300 ease-in-out">
+                    <p className="font-medium text-gray-700 dark:text-gray-300 text-center">
+                        loading
+                    </p>
+                </div>)}
                 {error && <p className="font-semibold text-red-500 text-sm">{error}</p>}
             </div>
         </div>
