@@ -25,6 +25,8 @@ public interface ReelRepository extends MongoRepository<Reel, ObjectId> {
 
     Page<Reel> findByUserIdInOrderByCreatedAtDesc(Set<String> userIds, Pageable pageable);
 
+    Page<Reel> findByUserIdInAndIsPrivateFalseOrderByCreatedAtDesc(Set<String> userIds, Pageable pageable);
+
     Page<Reel> findByIdIn(Set<ObjectId> ids, Pageable pageable);
 
     long countByCreatedAtBetween(Date startDate, Date endDate);

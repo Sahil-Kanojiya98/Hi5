@@ -23,6 +23,8 @@ public interface PostRepository extends MongoRepository<Post, ObjectId> {
 
     Page<Post> findByUserIdInOrderByCreatedAtDesc(Set<String> userIds, Pageable pageable);
 
+    Page<Post> findByUserIdInAndIsPrivateFalseOrderByCreatedAtDesc(Set<String> userIds, Pageable pageable);
+
     Page<Post> findByIdIn(Set<ObjectId> ids, Pageable pageable);
 
     long countByCreatedAtBetween(Date startDate, Date endDate);

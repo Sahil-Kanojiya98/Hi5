@@ -144,14 +144,25 @@ public class PostService {
         if (!ObjectId.isValid(userId)) {
             throw new ValidationException("userId not valid");
         }
-        Page<Post> posts = postRepository.findByUserIdInOrderByCreatedAtDesc(Set.of(userId), PageRequest.of(page, size));
-        return posts.getContent().stream().map(post -> {
-            User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElse(null);
-            if (postUser == null) {
-                return null;
-            }
-            return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+        if (userId.equals(user.getId().toHexString()) || user.getFollowingUserIds().contains(userId)) {
+            Page<Post> posts = postRepository.findByUserIdInOrderByCreatedAtDesc(Set.of(userId), PageRequest.of(page, size));
+            return posts.getContent().stream().map(post -> {
+                User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElse(null);
+                if (postUser == null) {
+                    return null;
+                }
+                return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+        } else {
+            Page<Post> posts = postRepository.findByUserIdInAndIsPrivateFalseOrderByCreatedAtDesc(Set.of(userId), PageRequest.of(page, size));
+            return posts.getContent().stream().map(post -> {
+                User postUser = userRepository.findById(new ObjectId(post.getUserId())).orElse(null);
+                if (postUser == null) {
+                    return null;
+                }
+                return PostResponse.builder().id(post.getId().toHexString()).userId(post.getUserId()).content(post.getContent()).imageUrl(post.getImageUrl()).videoUrl(post.getVideoUrl()).createdAt(post.getCreatedAt()).likesCount(post.getLikedUserIds().size()).commentsCount(post.getCommentIds().size()).likeStatus(post.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(post.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(post.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(post.getIsPrivate()).isCommentsDisabled(post.getIsCommentsDisabled()).username(postUser.getUsername()).fullname(postUser.getFullname()).profilePictureUrl(postUser.getProfileImageUrl()).build();
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+        }
     }
 
 //    public List<PostResponse> findUserSavedPosts(Integer size, Integer page, User user) {

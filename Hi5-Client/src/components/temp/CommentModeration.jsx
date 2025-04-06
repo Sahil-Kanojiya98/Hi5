@@ -76,13 +76,29 @@ const CommentModeration = () => {
         });
     };
 
+    const updateBanUntill = (userId, banUntil) => {
+        setComments((prevComments) => {
+            console.log(prevComments)
+            const newComments = prevComments.map((comment) =>
+                comment.userId === userId ? { ...comment, banUntil } : comment
+            )
+            console.log(newComments);
+            return newComments;
+        });
+    };
+
     return (
         <>
             <div className="pt-2 w-full overflow-y-auto hide-scrollbar">
                 {!isLoading && comments.length > 0 && (
                     <>
                         {comments.map((comment) => (
-                            <ReportedComment key={comment.id} comment={comment} removeComment={removeComment} />
+                            <ReportedComment
+                                key={comment.id}
+                                comment={comment}
+                                removeComment={removeComment}
+                                updateBanUntill={updateBanUntill}
+                            />
                         ))}
                         {isLoading && error === null && (
                             <div

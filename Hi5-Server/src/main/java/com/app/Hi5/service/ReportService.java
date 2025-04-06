@@ -2,6 +2,7 @@ package com.app.Hi5.service;
 
 import com.app.Hi5.dto.response.*;
 import com.app.Hi5.exceptions.EntityNotFoundException;
+import com.app.Hi5.exceptions.ValidationException;
 import com.app.Hi5.model.*;
 import com.app.Hi5.model.Enum.CommentType;
 import com.app.Hi5.model.Enum.ReportReason;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -135,4 +137,22 @@ public class ReportService {
         }).collect(Collectors.toList());
     }
 
+    public void deleteAllReports(String relevantId, ReportType type) {
+        List<Report> reports = reportRepository.findByRelevantIdAndType(relevantId, type);
+        switch (type) {
+            case POST -> reports.forEach(report -> postRepository.findById(new ObjectId(relevantId)).ifPresent(post -> {
+                post.getReportedUsersIds().clear();
+                postRepository.save(post);
+            }));
+            case REEL -> reports.forEach(report -> reelRepository.findById(new ObjectId(relevantId)).ifPresent(reel -> {
+                reel.getReportedUsersIds().clear();
+                reelRepository.save(reel);
+            }));
+            case COMMENT -> reports.forEach(report -> commentRepository.findById(new ObjectId(relevantId)).ifPresent(comment -> {
+                comment.getReportedUsersIds().clear();
+                commentRepository.save(comment);
+            }));
+        }
+        reportRepository.deleteAll(reports);
+    }
 }

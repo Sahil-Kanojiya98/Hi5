@@ -13,10 +13,7 @@ import com.app.Hi5.model.Enum.ReportType;
 import com.app.Hi5.model.Post;
 import com.app.Hi5.model.Reel;
 import com.app.Hi5.model.User;
-import com.app.Hi5.repository.CommentRepository;
-import com.app.Hi5.repository.PostRepository;
-import com.app.Hi5.repository.ReelRepository;
-import com.app.Hi5.repository.UserRepository;
+import com.app.Hi5.repository.*;
 import com.app.Hi5.security.UserDetailsImpl;
 import com.app.Hi5.service.*;
 import com.app.Hi5.utility.FileStorage;
@@ -112,6 +109,16 @@ public class ModerationController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public List<ReportedCommentResponse> getReportedComments(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
         return reportService.getReportedCommentsForModeration(page, size);
+    }
+
+    @DeleteMapping("/content/report")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public String deleteAllReports(@RequestParam("reportType") ReportType type, @RequestParam("relevantId") String relevantId) {
+        if (!ObjectId.isValid(relevantId)) {
+            throw new ValidationException("Invalid id");
+        }
+        reportService.deleteAllReports(relevantId,type);
+        return "all reports deleted";
     }
 
     @DeleteMapping("/content")

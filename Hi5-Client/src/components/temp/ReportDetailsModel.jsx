@@ -3,12 +3,15 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../services/axios.config";
 import ReportDetail from "./ReportDetail";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import { deleteAllReports } from "../../services/api";
 
 const ReportDetailsModel = ({
     isOpen,
     onClose,
     type,
     relevantId,
+    removeEntity,
 }) => {
     useEffect(() => {
         document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -50,6 +53,26 @@ const ReportDetailsModel = ({
         fetchReportDetail();
     }, [relevantId, type])
 
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const openDeleteModal = () => setIsDeleteModalOpen(true);
+    const closeDeleteModal = () => setIsDeleteModalOpen(false);
+    const confirmDelete = async () => {
+        setIsDeleting(true);
+        try {
+            await deleteAllReports(relevantId, type);
+            console.log("Reports deleted: " + relevantId);
+        } catch (error) {
+            console.error("Error deleting reports: ", error);
+        } finally {
+            setIsDeleting(false);
+            closeDeleteModal();
+            onClose();
+            removeEntity(relevantId);
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -87,7 +110,28 @@ const ReportDetailsModel = ({
                     </p>
                 </div>)}
                 {error && <p className="font-semibold text-red-500 text-sm">{error}</p>}
+
+                {!isDeleting && reportDetails.length > 0 && (
+                    <div className="flex justify-end mt-4">
+                        <button
+                            onClick={openDeleteModal}
+                            className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md font-medium text-white transition duration-200"
+                        >
+                            Delete All Reports
+                        </button>
+                    </div>
+                )}
+
             </div>
+
+            <DeleteConfirmationModal
+                isOpen={isDeleteModalOpen}
+                closeModal={closeDeleteModal}
+                confirmDelete={confirmDelete}
+                isDeleting={isDeleting}
+                type="REPORTS"
+            />
+
         </div>
     );
 };
@@ -97,6 +141,7 @@ ReportDetailsModel.propTypes = {
     onClose: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     relevantId: PropTypes.string.isRequired,
+    removeEntity: PropTypes.func.isRequired,
 };
 
 export default ReportDetailsModel;

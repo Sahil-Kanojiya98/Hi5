@@ -1,13 +1,16 @@
 import PropTypes from "prop-types";
 import TimeAgo from "./TimeAgo";
-import { CommentOutlined, CommentsDisabled, DeleteOutlineOutlined, FavoriteBorderSharp, ReportGmailerrorred } from "@mui/icons-material";
+import { Block, CommentOutlined, CommentsDisabled, DeleteOutlineOutlined, FavoriteBorderSharp, ReportGmailerrorred } from "@mui/icons-material";
 import { useState } from "react";
 import ReportDetailsModel from "./ReportDetailsModel";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import { deleteEntity } from "../../services/api";
+import { banUserAccount, deleteEntity, unbanUserAccount } from "../../services/api";
+import UnbanConfirmationModal from "./UnbanConfirmationModal";
+import BanConfirmationModal from "./BanConfirmationModal";
+import toast from "react-hot-toast";
 
 
-const ReportedComment = ({ comment, removeComment }) => {
+const ReportedComment = ({ comment, removeComment, updateBanUntill }) => {
 
     const [isReportDetailsOpen, setIsReportDetailsOpen] = useState(false);
     const openReportDetailsModel = () => setIsReportDetailsOpen(true);
@@ -30,6 +33,65 @@ const ReportedComment = ({ comment, removeComment }) => {
             closeDeleteModal();
         }
     };
+
+    const isBanned = new Date(comment?.banUntil) > new Date();
+
+    const getRemainingBanDays = () => {
+        const banUntilDate = new Date(comment?.banUntil);
+        const currentDate = new Date();
+        const remainingTime = banUntilDate - currentDate;
+        const remainingDays = Math.ceil(remainingTime / (1000 * 3600 * 24));
+        return remainingDays > 0 ? remainingDays : 0;
+    };
+
+    const [isBanModalOpen, setIsBanModalOpen] = useState(false);
+    const [isBanning, setIsBanning] = useState(false);
+    const openBanModel = () => setIsBanModalOpen(true);
+    const closeBanModal = () => setIsBanModalOpen(false);
+    const confirmBan = async (date) => {
+        const selectedDate = new Date(date);
+        const currentDate = new Date();
+        if (selectedDate < currentDate) {
+            toast.error("The ban date cannot be in the past. Please choose a future date.");
+            return;
+        }
+        setIsBanning(true);
+        try {
+            await banUserAccount(comment?.userId, new Date(date).toISOString());
+            console.log("Account ban: " + comment?.userId);
+            updateBanUntill(comment.userId, selectedDate.toISOString())
+        } catch (error) {
+            if (error?.response?.data?.message) {
+                toast.error(error?.response?.data?.message);
+            }
+            console.error("Error ban : ", error);
+        } finally {
+            setIsBanning(false);
+            closeBanModal();
+        }
+    };
+
+    const [isUnbanModalOpen, setIsUnbanModalOpen] = useState(false);
+    const [isUnbanning, setIsUnbanning] = useState(false);
+    const openUnbanModel = () => setIsUnbanModalOpen(true);
+    const closeUnbanModal = () => setIsUnbanModalOpen(false);
+    const confirmUnban = async () => {
+        setIsUnbanning(true);
+        try {
+            await unbanUserAccount(comment?.userId);
+            console.log("Account Unban: " + comment?.userId);
+            updateBanUntill(comment.userId, new Date(new Date() - 1).toISOString())
+        } catch (error) {
+            if (error?.response?.data?.message) {
+                toast.error(error?.response?.data?.message);
+            }
+            console.error("Error ban : ", error);
+        } finally {
+            setIsUnbanning(false);
+            closeUnbanModal();
+        }
+    };
+
 
     return (
         <>
@@ -67,7 +129,7 @@ const ReportedComment = ({ comment, removeComment }) => {
                         </p>
                     </div>
 
-                    <div className="flex justify-between items-center text-gray-500">
+                    <div className="flex flex-col justify-between items-center gap-2 text-gray-500">
                         <div className="flex items-center space-x-5 ml-2 w-full">
                             <button
                                 className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
@@ -89,6 +151,33 @@ const ReportedComment = ({ comment, removeComment }) => {
                                 </span>
                             </button>
                         </div>
+
+                        {!isBanned ? (
+                            <div className="flex justify-end items-center w-full">
+                                <button
+                                    onClick={openBanModel}
+                                    className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 shadow-md px-2 min-[410px]:px-4 py-2 rounded-full font-medium text-white text-sm hover:scale-105 transition-all duration-300 transform"
+                                >
+                                    <Block className="w-5 h-5" />
+                                    <span className="inline">Ban</span>
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex justify-between items-center w-full">
+                                <p className="mt-1 text-gray-500 text-sm whitespace-nowrap">
+                                    {getRemainingBanDays()} days remaining.
+                                </p>
+                                <button
+                                    onClick={openUnbanModel}
+                                    className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 shadow-md px-2 min-[410px]:px-4 py-2 rounded-full font-medium text-white text-sm hover:scale-105 transition-all duration-300 transform"
+                                >
+                                    <Block className="w-5 h-5" />
+                                    <span className="inline">Unban</span>
+                                </button>
+                            </div>
+                        )}
+
+
                     </div>
                 </div>
 
@@ -266,6 +355,22 @@ const ReportedComment = ({ comment, removeComment }) => {
                     isDeleting={isDeleting}
                     type="COMMENT"
                 />
+                {isBanned && (
+                    <UnbanConfirmationModal
+                        isOpen={isUnbanModalOpen}
+                        closeModal={closeUnbanModal}
+                        confirmUnban={confirmUnban}
+                        isUnbanning={isUnbanning}
+                    />
+                )}
+                {!isBanned && (
+                    <BanConfirmationModal
+                        isOpen={isBanModalOpen}
+                        closeModal={closeBanModal}
+                        confirmBan={confirmBan}
+                        isBanning={isBanning}
+                    />
+                )}
             </div>
         </>
     )
@@ -316,9 +421,10 @@ ReportedComment.propTypes = {
             profilePictureUrl: PropTypes.string.isRequired,
         }),
         totalReportsCount: PropTypes.number.isRequired,
+        banUntil: PropTypes.string.isRequired,
     }).isRequired,
     removeComment: PropTypes.func.isRequired,
+    updateBanUntill: PropTypes.func.isRequired,
 };
-
 
 export default ReportedComment;

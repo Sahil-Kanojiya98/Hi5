@@ -51,12 +51,12 @@ public class ReelController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<ReelResponse> getUserPosts(@PathVariable("userId") String userId, @RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public List<ReelResponse> getUserReels(@PathVariable("userId") String userId, @RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return reelService.findUserReels(userId, size, page, userDetails.getUser());
     }
 
     @GetMapping("/saved")
-    public List<ReelResponse> getUserPosts(@RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public List<ReelResponse> getUserSavedReels(@RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return reelService.findUserSavedReels(size, page, userDetails.getUser());
     }
 

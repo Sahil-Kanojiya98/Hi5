@@ -216,6 +216,15 @@ const deleteEntity = async (relevantId, reportType) => {
   });
 };
 
+const deleteAllReports = async (relevantId, type) => {
+  return axiosInstance.delete(`/moderate/content/report`, {
+    params: {
+      relevantId: relevantId,
+      reportType: type,
+    },
+  });
+};
+
 export {
   checkEmail,
   checkUsername,
@@ -262,4 +271,5 @@ export {
   getMyStorys,
   getFollowingUsersStorys,
   deleteStory,
+  deleteAllReports,
 };

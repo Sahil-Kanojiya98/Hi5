@@ -95,6 +95,11 @@ const DeleteConfirmationModal = ({
                 Are you sure you want to delete this account?
               </p>
             )}
+            {type === "REPORTS" && (
+              <p className="mb-6 text-gray-700 dark:text-gray-300">
+                Are you sure you want to delete all reports?
+              </p>
+            )}
             <div className="flex justify-end gap-4">
               <button
                 onClick={closeModal}

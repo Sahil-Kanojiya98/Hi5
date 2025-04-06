@@ -10,7 +10,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +43,8 @@ public interface ReportRepository extends MongoRepository<Report, ObjectId> {
             "{ $limit: ?4 }"
     })
     List<UserReportResult> findUsersByTypeRelevantAndReason(ReportType type, String relevantId, ReportReason reason, int skip, int limit);
+
+    List<Report> findByRelevantIdAndType(String relevantId, ReportType type);
 
     @Data
     @NoArgsConstructor

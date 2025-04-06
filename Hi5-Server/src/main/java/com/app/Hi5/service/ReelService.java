@@ -114,17 +114,31 @@ public class ReelService {
             }
             return null;
         }).orElseThrow(() -> new EntityNotFoundException("Reel not found."));
-    }
+    }   
 
     public List<ReelResponse> findUserReels(String userId, Integer size, Integer page, User user) {
-        Page<Reel> reels = reelRepository.findByUserIdInOrderByCreatedAtDesc(Set.of(userId), PageRequest.of(page, size));
-        return reels.getContent().stream().map(reel -> {
-            User reelUser = userRepository.findById(new ObjectId(reel.getUserId())).orElseThrow(() -> new EntityNotFoundException("User not found."));
-            if (!reel.getIsPrivate()) {
+        if (!ObjectId.isValid(userId)) {
+            throw new ValidationException("userId not valid");
+        }
+        if (userId.equals(user.getId().toHexString()) || user.getFollowingUserIds().contains(userId)) {
+            Page<Reel> reels = reelRepository.findByUserIdInOrderByCreatedAtDesc(Set.of(userId), PageRequest.of(page, size));
+            return reels.getContent().stream().map(reel -> {
+                User reelUser = userRepository.findById(new ObjectId(reel.getUserId())).orElseThrow(() -> new EntityNotFoundException("User not found."));
+                if (reelUser == null) {
+                    return null;
+                }
                 return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(reel.getIsPrivate()).isCommentsDisabled(reel.getIsCommentsDisabled()).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestReceivedUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
-            }
-            return null;
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+        } else {
+            Page<Reel> reels = reelRepository.findByUserIdInAndIsPrivateFalseOrderByCreatedAtDesc(Set.of(userId), PageRequest.of(page, size));
+            return reels.getContent().stream().map(reel -> {
+                User reelUser = userRepository.findById(new ObjectId(reel.getUserId())).orElseThrow(() -> new EntityNotFoundException("User not found."));
+                if (reelUser == null) {
+                    return null;
+                }
+                return ReelResponse.builder().id(reel.getId().toHexString()).description(reel.getDescription()).videoUrl(reel.getVideoUrl()).createdAt(reel.getCreatedAt()).likesCount(reel.getLikedUserIds().size()).commentsCount(reel.getCommentIds().size()).likeStatus(reel.getLikedUserIds().contains(user.getId().toHexString()) ? LikeStatus.LIKED : LikeStatus.NOT_LIKED).reportStatus(reel.getReportedUsersIds().contains(user.getId().toHexString()) ? ReportStatus.REPORTED : ReportStatus.NOT_REPORTED).saveStatus(reel.getSavedUserIds().contains(user.getId().toHexString()) ? SaveStatus.SAVED : SaveStatus.NOT_SAVED).isPrivate(reel.getIsPrivate()).isCommentsDisabled(reel.getIsCommentsDisabled()).userId(reel.getUserId()).username(reelUser.getUsername()).fullname(reelUser.getFullname()).profilePictureUrl(reelUser.getProfileImageUrl()).followStatus(reelUser.getFollowerUserIds().contains(user.getId().toHexString()) ? FollowStatus.FOLLOWED : (reelUser.getFollowRequestReceivedUserIds().contains(user.getId().toHexString()) ? FollowStatus.REQUEST_SENT : FollowStatus.NOT_FOLLOWED)).build();
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+        }
     }
 
 //    public List<ReelResponse> findUserSavedReels(Integer size, Integer page, User user) {

@@ -59,7 +59,7 @@ const ReportedPost = ({ post, removePost, updateBanUntill }) => {
         try {
             await banUserAccount(post?.userId, new Date(date).toISOString());
             console.log("Account ban: " + post?.userId);
-            updateBanUntill(post.id, new Date(date).toISOString())
+            updateBanUntill(post.userId, selectedDate.toISOString())
         } catch (error) {
             if (error?.response?.data?.message) {
                 toast.error(error?.response?.data?.message);
@@ -80,7 +80,7 @@ const ReportedPost = ({ post, removePost, updateBanUntill }) => {
         try {
             await unbanUserAccount(post?.userId);
             console.log("Account Unban: " + post?.userId);
-            updateBanUntill(post.userId, new Date(new Date(post?.banUntil) - 1).toISOString())
+            updateBanUntill(post.userId, new Date(new Date() - 1).toISOString())
         } catch (error) {
             if (error?.response?.data?.message) {
                 toast.error(error?.response?.data?.message);
@@ -147,7 +147,7 @@ const ReportedPost = ({ post, removePost, updateBanUntill }) => {
                 </div>
             )}
 
-            <div className="flex flex-col justify-between items-center text-gray-500">
+            <div className="flex flex-col justify-between items-center gap-2 text-gray-500">
                 <div className="flex items-center space-x-5 ml-2 w-full">
                     <button
                         className="group flex items-center space-x-2 hover:scale-110 transition duration-200 transform"
@@ -197,7 +197,7 @@ const ReportedPost = ({ post, removePost, updateBanUntill }) => {
                             className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 shadow-md px-2 min-[410px]:px-4 py-2 rounded-full font-medium text-white text-sm hover:scale-105 transition-all duration-300 transform"
                         >
                             <Block className="w-5 h-5" />
-                            <span className="hidden md:inline">Ban</span>
+                            <span className="inline">Ban</span>
                         </button>
                     </div>
                 ) : (
@@ -210,15 +210,20 @@ const ReportedPost = ({ post, removePost, updateBanUntill }) => {
                             className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 shadow-md px-2 min-[410px]:px-4 py-2 rounded-full font-medium text-white text-sm hover:scale-105 transition-all duration-300 transform"
                         >
                             <Block className="w-5 h-5" />
-                            <span className="hidden md:inline">Unban</span>
+                            <span className="inline">Unban</span>
                         </button>
                     </div>
                 )}
 
             </div>
-            {
-                isReportDetailsOpen && <ReportDetailsModel isOpen={isReportDetailsOpen} onClose={closeReportDetailsModel} type="POST" relevantId={post.id} />
-            }
+            {isReportDetailsOpen && (
+                <ReportDetailsModel
+                    isOpen={isReportDetailsOpen}
+                    onClose={closeReportDetailsModel}
+                    type="POST" relevantId={post.id}
+                    removeEntity={removePost}
+                />
+            )}
             <DeleteConfirmationModal
                 isOpen={isDeleteModalOpen}
                 closeModal={closeDeleteModal}
@@ -226,26 +231,22 @@ const ReportedPost = ({ post, removePost, updateBanUntill }) => {
                 isDeleting={isDeleting}
                 type="POST"
             />
-            {
-                isBanned && (
-                    <UnbanConfirmationModal
-                        isOpen={isUnbanModalOpen}
-                        closeModal={closeUnbanModal}
-                        confirmUnban={confirmUnban}
-                        isUnbanning={isUnbanning}
-                    />
-                )
-            }
-            {
-                !isBanned && (
-                    <BanConfirmationModal
-                        isOpen={isBanModalOpen}
-                        closeModal={closeBanModal}
-                        confirmBan={confirmBan}
-                        isBanning={isBanning}
-                    />
-                )
-            }
+            {isBanned && (
+                <UnbanConfirmationModal
+                    isOpen={isUnbanModalOpen}
+                    closeModal={closeUnbanModal}
+                    confirmUnban={confirmUnban}
+                    isUnbanning={isUnbanning}
+                />
+            )}
+            {!isBanned && (
+                <BanConfirmationModal
+                    isOpen={isBanModalOpen}
+                    closeModal={closeBanModal}
+                    confirmBan={confirmBan}
+                    isBanning={isBanning}
+                />
+            )}
         </div>
     )
 }

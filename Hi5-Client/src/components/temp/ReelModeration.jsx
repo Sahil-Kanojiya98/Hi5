@@ -76,13 +76,29 @@ const ReelModeration = () => {
         });
     };
 
+    const updateBanUntill = (userId, banUntil) => {
+        setReels((prevReels) => {
+            console.log(prevReels)
+            const newReels = prevReels.map((reel) =>
+                reel.userId === userId ? { ...reel, banUntil } : reel
+            )
+            console.log(newReels);
+            return newReels;
+        });
+    };
+
     return (
         <>
             <div className="pt-2 w-full overflow-y-auto hide-scrollbar">
                 {!isLoading && reels.length > 0 && (
                     <>
                         {reels.map((reel) => (
-                            <ReportedReel key={reel.id} reel={reel} removeReel={removeReel} />
+                            <ReportedReel
+                                key={reel.id}
+                                reel={reel}
+                                removeReel={removeReel}
+                                updateBanUntill={updateBanUntill}
+                            />
                         ))}
 
                         {isLoading && error === null && (
