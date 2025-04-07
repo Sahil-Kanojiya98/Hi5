@@ -1,7 +1,7 @@
 // import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import Preloader from "./components/common/preloader/Preloader.jsx";
+import Preloader from "./components/preloader/Preloader.jsx";
 import { Suspense } from "react";
 import StoreProvider from "./components/providers/StoreProvider.jsx";
 import ThemeProvider from "./components/providers/ThemeProvider.jsx";

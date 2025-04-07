@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import Preloader from "../components/common/preloader/Preloader";
+import Preloader from "../components/preloader/Preloader";
 
 const GuestGuard = ({ children }) => {
   console.log("GuestGuard");

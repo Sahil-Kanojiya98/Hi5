@@ -1,9 +1,9 @@
 import MainLayout from "../components/layout/MainLayout"
 import { useEffect, useState } from "react";
 import { createModeratorAccount, getModerators } from "../services/api";
-import ModeratorSearchCard from "../components/temp/ModeratorSearchCard";
+import ModeratorSearchCard from "../components/moderation/moderatorControl/ModeratorSearchCard";
 import { PersonAdd } from "@mui/icons-material";
-import NewModeratorCreateModal from "../components/temp/NewModeratorCreateModal";
+import NewModeratorCreateModal from "../components/moderation/moderatorControl/NewModeratorCreateModal";
 import * as Yup from "yup";
 
 const ModeratorControlPage = () => {

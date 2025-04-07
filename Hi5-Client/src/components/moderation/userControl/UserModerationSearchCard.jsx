@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import { Block, Delete } from '@mui/icons-material';
-import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
+import DeleteConfirmationModal from "../../modal/DeleteConfirmationModal";
 import { useState } from "react";
-import BanConfirmationModal from "./BanConfirmationModal";
-import { banUserAccount, deleteUserAccount, unbanUserAccount } from "../../services/api";
+import { banUserAccount, deleteUserAccount, unbanUserAccount } from "../../../services/api";
 import toast from "react-hot-toast";
-import UnbanConfirmationModal from "./UnbanConfirmationModal";
+import BanConfirmationModal from "../modal/BanConfirmationModal";
+import UnbanConfirmationModal from "../modal/UnbanConfirmationModal";
 
 const UserModerationSearchCard = ({ user, changeUserBanUntill }) => {
 

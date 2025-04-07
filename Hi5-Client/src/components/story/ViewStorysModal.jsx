@@ -8,7 +8,7 @@ import {
 } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import { useState, useEffect, useCallback } from "react";
-import { getStory, likeEntity, unlikeEntity } from "../../../services/api";
+import { getStory, likeEntity, unlikeEntity } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
 const ViewStorysModal = ({ isOpen, closeModal, newStoryUser }) => {

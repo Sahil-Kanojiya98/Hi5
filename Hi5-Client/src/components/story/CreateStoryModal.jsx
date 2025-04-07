@@ -4,13 +4,13 @@ import {
     ChevronRight,
     Close,
 } from "@mui/icons-material";
-import DeleteConfirmationModal from "../../temp/DeleteConfirmationModal";
-import axiosInstance from "../../../services/axios.config";
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
+import axiosInstance from "../../services/axios.config";
 import {
     deleteStory,
     getMyStorys,
-} from "../../../services/api";
-import { StoryCreatedToast as displayStoryCreatedToast } from "../../providers/ToastProvider.jsx";
+} from "../../services/api";
+import { StoryCreatedToast as displayStoryCreatedToast } from "../providers/ToastProvider.jsx";
 import PropTypes from "prop-types";
 import MyStory from "./MyStory.jsx";
 

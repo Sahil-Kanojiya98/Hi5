@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import BarChartOne from "../components/temp/BarChartOne";
-import LineChartOne from "../components/temp/LineChartOne";
+import BarChartOne from "../components/chart/BarChartOne";
+import LineChartOne from "../components/chart/LineChartOne";
 import MainLayout from "../components/layout/MainLayout";
 import { DashboardRounded } from "@mui/icons-material";
 import axiosInstance from "../services/axios.config";

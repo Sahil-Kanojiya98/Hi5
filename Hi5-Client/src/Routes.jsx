@@ -10,7 +10,7 @@ import SignUpOAuth2Handler from "./components/auth/SignUpOAuth2Handler";
 import LoginOAuth2Handler from "./components/auth/LoginOAuth2Handler";
 import ForgotPasswordPage from "./views/ForgotPasswordPage";
 import OAuth2Error from "./components/auth/OAuth2Error";
-import NotFound from "./components/temp/NotFound";
+import NotFound from "./components/common/NotFound";
 import HomePage from "./views/HomePage";
 import ReelsPage from "./views/ReelsPage";
 import SearchPage from "./views/SearchPage";

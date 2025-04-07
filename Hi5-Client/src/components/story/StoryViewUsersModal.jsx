@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Link } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
-import TimeAgo from "../../temp/TimeAgo";
-import axiosInstance from "../../../services/axios.config";
+import TimeAgo from "../common/TimeAgo";
+import axiosInstance from "../../services/axios.config";
 
 const StoryViewUsersModal = ({ isOpen, closeModal, type, storyId }) => {
   useEffect(() => {

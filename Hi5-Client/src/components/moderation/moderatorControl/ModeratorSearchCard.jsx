@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import { Delete } from '@mui/icons-material';
-import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
+import DeleteConfirmationModal from "../../modal/DeleteConfirmationModal";
 import { useState } from "react";
-import { deleteModeratorAccount } from "../../services/api";
+import { deleteModeratorAccount } from "../../../services/api";
 
 const ModeratorSearchCard = ({ index, user, removeModerator }) => {
 

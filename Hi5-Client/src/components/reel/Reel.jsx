@@ -21,9 +21,9 @@ import {
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import TimeAgo from "../temp/TimeAgo";
-import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
-import ReportConfirmationModal from "../temp/ReportConfirmationModal";
+import TimeAgo from "../common/TimeAgo";
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
+import ReportConfirmationModal from "../modal/ReportConfirmationModal";
 import {
   deleteReel,
   follow,
@@ -36,7 +36,7 @@ import {
 } from "../../services/api";
 import CommentModel from "../comment/CommentModel";
 import { useSelector } from "react-redux";
-import ViewLikedUsersModel from "../temp/ViewLikedUsersModel";
+import ViewLikedUsersModel from "../profile/ViewLikedUsersModel";
 
 const Reel = ({
   reel,

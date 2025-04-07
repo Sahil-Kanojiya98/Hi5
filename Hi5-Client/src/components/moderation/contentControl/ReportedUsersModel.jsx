@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
-import axiosInstance from "../../services/axios.config";
+import axiosInstance from "../../../services/axios.config";
 import { CloseRounded } from "@mui/icons-material";
 import InfiniteScroll from "react-infinite-scroll-component";
 

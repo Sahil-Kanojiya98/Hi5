@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axiosInstance from "../../../services/axios.config";
+import axiosInstance from "../../../../services/axios.config";
 
 const RightPanel = () => {
   const [users, setUsers] = useState([]);

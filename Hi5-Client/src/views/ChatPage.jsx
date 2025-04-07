@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useWebSocket } from "../socket/WebSocketProvider";
 import ChatBox from "../components/chat/ChatBox";
 import { MoreVertRounded } from "@mui/icons-material";
-import DeleteConfirmationModal from "../components/temp/DeleteConfirmationModal";
+import DeleteConfirmationModal from "../components/modal/DeleteConfirmationModal";
 
 const ChatPage = () => {
   const myId = useSelector((state) => state?.user?.profile?.id);
@@ -116,7 +116,7 @@ const ChatPage = () => {
 
   return (
     <MainLayout>
-      <div className="flex justify-center md:ml-[6dvw] lg:ml-[20dvw] xl:ml-[19dvw] 2xl:ml-[10dvw] w-full md:max-w-3xl lg:max-w-3xl xl:max-w-5xl h-full">
+      <div className="flex justify-center md:ml-[6dvw] lg:ml-[20dvw] 2xl:ml-[10dvw] xl:ml-[19dvw] w-full md:max-w-3xl lg:max-w-3xl xl:max-w-5xl h-full">
         <div className="flex justify-center space-x-1 lg:space-x-3 my-0 md:my-4 px-4 w-full">
           <div className="flex flex-1 mt-16 md:mt-0 mb-12 md:mb-0 w-full md:max-w-[250px] lg:max-w-xs">
             <div className="flex flex-col bg-white dark:bg-black shadow-md p-4 rounded-lg w-full">

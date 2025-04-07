@@ -28,8 +28,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { setUser } from "../redux/slices/userSlice";
-import RequestsModel from "../components/temp/RequestsModel";
-import ConnectionsModel from "../components/temp/ConnectionsModel";
+import RequestsModel from "../components/profile/RequestsModel";
+import ConnectionsModel from "../components/profile/ConnectionsModel";
 import ProfileTabs from "../components/profile/ProfileTabs";
 
 const ProfilePage = () => {

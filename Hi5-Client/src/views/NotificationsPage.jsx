@@ -10,8 +10,8 @@ import {
 import MainLayout from "../components/layout/MainLayout";
 import { useCallback, useEffect, useRef, useState } from "react";
 import axiosInstance from "../services/axios.config";
-import DeleteConfirmationModal from "../components/temp/DeleteConfirmationModal";
-import TimeAgo from "../components/temp/TimeAgo";
+import DeleteConfirmationModal from "../components/modal/DeleteConfirmationModal";
+import TimeAgo from "../components/common/TimeAgo";
 import { useWebSocket } from "../socket/WebSocketProvider";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";

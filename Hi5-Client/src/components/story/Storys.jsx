@@ -3,9 +3,9 @@ import {
   CameraAlt,
 } from "@mui/icons-material";
 import CreateStoryModal from "./CreateStoryModal.jsx";
-import { getNewStoryUsers } from "../../../services/api.js";
+import { getNewStoryUsers } from "../../services/api.js";
 import Story from "./Story.jsx";
-import StorySkeleton from "../../skeletons/StorySkeleton.jsx";
+import StorySkeleton from "../skeletons/StorySkeleton.jsx";
 
 const Stories = () => {
 

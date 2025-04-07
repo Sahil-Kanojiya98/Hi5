@@ -34,8 +34,8 @@ import {
 import logo from "../assets/images/logo/hi5.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/slices/themeSlice";
-import TimeAgo from "../components/temp/TimeAgo";
-import ReportConfirmationModal from "../components/temp/ReportConfirmationModal";
+import TimeAgo from "../components/common/TimeAgo";
+import ReportConfirmationModal from "../components/modal/ReportConfirmationModal";
 import CommentModel from "../components/comment/CommentModel";
 
 const SharedMediaPage = () => {

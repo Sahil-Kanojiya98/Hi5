@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import logo from "../../../assets/images/logo/Hi5.svg";
+import logo from "../../../../assets/images/logo/Hi5.svg";
 import { Link } from "react-router-dom";
-import { toggleTheme } from "../../../redux/slices/themeSlice";
+import { toggleTheme } from "../../../../redux/slices/themeSlice";
 import { DarkMode, LightMode } from "@mui/icons-material";
-import useLogout from "../../../hooks/useLogout";
+import useLogout from "../../../../hooks/useLogout";
 
 const MobileHeader = () => {
   const user = useSelector((state) => state.user.profile);
@@ -38,7 +38,7 @@ const MobileHeader = () => {
           {(user?.role === "MODERATOR" || user?.role === "ADMIN") && (
             <div className="flex gap-2">
               <button
-                className="flex justify-center items-center bg-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 dark:bg-gray-800 p-2 rounded-md transition-all duration-300 cursor-pointer"
+                className="flex justify-center items-center bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 p-2 rounded-md transition-all duration-300 cursor-pointer"
                 onClick={changeThemeClickHandler}
                 aria-label="Toggle theme"
               >
@@ -50,7 +50,7 @@ const MobileHeader = () => {
               </button>
 
               <button
-                className="bg-red-500 hover:bg-red-600 dark:hover:bg-red-800 dark:bg-red-700 px-4 py-2 rounded-md font-medium text-white transition-all duration-300"
+                className="bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 px-4 py-2 rounded-md font-medium text-white transition-all duration-300"
                 onClick={logout}
               >
                 Logout

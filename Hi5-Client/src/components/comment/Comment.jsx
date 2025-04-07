@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import TimeAgo from "../temp/TimeAgo";
+import TimeAgo from "../common/TimeAgo";
 import {
   FavoriteSharp as LikedIcon,
   FavoriteBorderSharp as UnlikedIcon,
@@ -15,8 +15,8 @@ import {
   reportEntity,
   unlikeEntity,
 } from "../../services/api";
-import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
-import ReportConfirmationModal from "../temp/ReportConfirmationModal";
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
+import ReportConfirmationModal from "../modal/ReportConfirmationModal";
 import { Link } from "react-router-dom";
 
 const Comment = ({ comment, removeComment, isMyProfileEntity }) => {

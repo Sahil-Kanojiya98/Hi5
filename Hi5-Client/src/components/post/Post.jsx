@@ -9,9 +9,9 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import ReportIcon from "@mui/icons-material/Report";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import DeleteConfirmationModal from "../temp/DeleteConfirmationModal";
-import ReportConfirmationModal from "../temp/ReportConfirmationModal";
-import TimeAgo from "../temp/TimeAgo";
+import DeleteConfirmationModal from "../modal/DeleteConfirmationModal";
+import ReportConfirmationModal from "../modal/ReportConfirmationModal";
+import TimeAgo from "../common/TimeAgo";
 import CommentModel from "../comment/CommentModel";
 import {
   deletePost,
@@ -24,7 +24,7 @@ import {
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { CommentsDisabled, PersonOutline } from "@mui/icons-material";
-import ViewLikedUsersModel from "../temp/ViewLikedUsersModel";
+import ViewLikedUsersModel from "../profile/ViewLikedUsersModel";
 
 const Post = ({ post, removePost, isMyProfilePosts }) => {
   const user = useSelector((state) => state.user.profile);

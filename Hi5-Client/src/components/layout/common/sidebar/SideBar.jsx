@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../../assets/images/logo/Hi5.svg";
+import logo from "../../../../assets/images/logo/Hi5.svg";
 import SidebarItem from "./SidebarItem";
-import useLogout from "../../../hooks/useLogout";
+import useLogout from "../../../../hooks/useLogout";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AddCircleRounded,
@@ -18,7 +18,7 @@ import {
   LightMode,
   DarkMode,
 } from "@mui/icons-material";
-import { toggleTheme } from "../../../redux/slices/themeSlice";
+import { toggleTheme } from "../../../../redux/slices/themeSlice";
 
 const Sidebar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

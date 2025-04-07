@@ -3,7 +3,7 @@ import { Search } from "@mui/icons-material";
 import { useSearchParams } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 import { searchUsersByKeyword } from "../services/api";
-import UserSearchCard from "../components/temp/UserSearchCard";
+import UserSearchCard from "../components/userSearch/UserSearchCard";
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();

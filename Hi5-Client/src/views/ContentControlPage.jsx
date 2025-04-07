@@ -1,8 +1,8 @@
 import { useState } from "react";
 import MainLayout from "../components/layout/MainLayout";
-import PostModeration from "../components/temp/PostModeration";
-import ReelModeration from "../components/temp/ReelModeration";
-import CommentModeration from "../components/temp/CommentModeration";
+import PostModeration from "../components/moderation/contentControl/PostModeration";
+import ReelModeration from "../components/moderation/contentControl/ReelModeration";
+import CommentModeration from "../components/moderation/contentControl/CommentModeration";
 
 const ContentControlPage = () => {
 

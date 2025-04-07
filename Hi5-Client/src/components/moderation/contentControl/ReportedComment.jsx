@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
-import TimeAgo from "./TimeAgo";
+import TimeAgo from "../../common/TimeAgo";
 import { Block, CommentOutlined, CommentsDisabled, DeleteOutlineOutlined, FavoriteBorderSharp, ReportGmailerrorred } from "@mui/icons-material";
 import { useState } from "react";
 import ReportDetailsModel from "./ReportDetailsModel";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import { banUserAccount, deleteEntity, unbanUserAccount } from "../../services/api";
-import UnbanConfirmationModal from "./UnbanConfirmationModal";
-import BanConfirmationModal from "./BanConfirmationModal";
+import DeleteConfirmationModal from "../../modal/DeleteConfirmationModal";
+import { banUserAccount, deleteEntity, unbanUserAccount } from "../../../services/api";
+import UnbanConfirmationModal from "../modal/UnbanConfirmationModal";
+import BanConfirmationModal from "../modal/BanConfirmationModal";
 import toast from "react-hot-toast";
 
 

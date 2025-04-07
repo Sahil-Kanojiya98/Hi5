@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import axiosInstance from "../../services/axios.config";
-import ReportedPost from "./ReportedPost";
+import axiosInstance from "../../../services/axios.config";
+import ReportedComment from "./ReportedComment";
 
-const PostModeration = () => {
+const CommentModeration = () => {
 
-    const [posts, setPosts] = useState([]);
+    const [comments, setComments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(0);
     const [error, setError] = useState(null);
 
-    const fetchPosts = useCallback(async () => {
+    const fetchComments = useCallback(async () => {
         try {
-            const response = await axiosInstance.get("/moderate/content/post", {
+            const response = await axiosInstance.get("/moderate/content/comment", {
                 params: {
                     page,
                     size: 10,
@@ -22,7 +22,7 @@ const PostModeration = () => {
             if (response.data.length === 0) {
                 setHasMore(false);
             } else {
-                setPosts((prevPosts) => [...prevPosts, ...response.data]);
+                setComments((prevComments) => [...prevComments, ...response.data]);
             }
         } catch (err) {
             setError(err.message);
@@ -32,7 +32,7 @@ const PostModeration = () => {
     }, [page])
 
     useEffect(() => {
-        setPosts([]);
+        setComments([]);
         setPage(0);
         setHasMore(true);
         setError(null);
@@ -40,8 +40,8 @@ const PostModeration = () => {
     }, []);
 
     useEffect(() => {
-        fetchPosts();
-    }, [page, fetchPosts]);
+        fetchComments();
+    }, [page, fetchComments]);
 
     const loadMorePosts = useCallback(() => {
         if (!isLoading && hasMore) {
@@ -67,36 +67,36 @@ const PostModeration = () => {
         };
     }, [loadMorePosts]);
 
-    const removePost = (postId) => {
-        setPosts((prevPosts) => {
-            console.log(prevPosts);
-            const newPosts = prevPosts.filter((post) => post.id !== postId);
-            console.log(newPosts);
-            return newPosts;
+    const removeComment = (commentId) => {
+        setComments((prevComments) => {
+            console.log(prevComments);
+            const newComments = prevComments.filter((post) => post.id !== commentId);
+            console.log(newComments);
+            return newComments;
         });
     };
 
     const updateBanUntill = (userId, banUntil) => {
-        setPosts((prevPosts) => {
-            console.log(prevPosts)
-            const newPosts = prevPosts.map((post) =>
-                post.userId === userId ? { ...post, banUntil } : post
+        setComments((prevComments) => {
+            console.log(prevComments)
+            const newComments = prevComments.map((comment) =>
+                comment.userId === userId ? { ...comment, banUntil } : comment
             )
-            console.log(newPosts);
-            return newPosts;
+            console.log(newComments);
+            return newComments;
         });
     };
 
     return (
         <>
             <div className="pt-2 w-full overflow-y-auto hide-scrollbar">
-                {!isLoading && posts.length > 0 && (
+                {!isLoading && comments.length > 0 && (
                     <>
-                        {posts.map((post) => (
-                            <ReportedPost
-                                key={post.id}
-                                post={post}
-                                removePost={removePost}
+                        {comments.map((comment) => (
+                            <ReportedComment
+                                key={comment.id}
+                                comment={comment}
+                                removeComment={removeComment}
                                 updateBanUntill={updateBanUntill}
                             />
                         ))}
@@ -133,4 +133,4 @@ const PostModeration = () => {
     )
 }
 
-export default PostModeration;
+export default CommentModeration;

@@ -4,7 +4,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import axiosInstance from "../../services/axios.config";
 import { Link } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
-import TimeAgo from "./TimeAgo";
+import TimeAgo from "../common/TimeAgo";
 
 const ViewLikedUsersModel = ({ isOpen, closeModal, type, relevantId }) => {
   useEffect(() => {

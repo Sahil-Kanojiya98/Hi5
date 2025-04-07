@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import axiosInstance from "../../services/axios.config";
+import axiosInstance from "../../../services/axios.config";
 import ReportedReel from "./ReportedReel";
 
 const ReelModeration = () => {

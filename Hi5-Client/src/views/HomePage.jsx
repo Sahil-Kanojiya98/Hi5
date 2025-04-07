@@ -1,7 +1,7 @@
 import CreatePost from "../components/post/CreatePost";
 import MainLayout from "../components/layout/MainLayout";
-import RightPanel from "../components/common/panel/RightPanel";
-import Storys from "../components/common/story/Storys";
+import RightPanel from "../components/layout/common/panel/RightPanel";
+import Storys from "../components/story/Storys";
 import Posts from "../components/post/Posts";
 import { useState } from "react";
 

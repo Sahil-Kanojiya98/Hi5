@@ -3,7 +3,7 @@ import MainLayout from "../components/layout/MainLayout";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { searchUsersByKeywordForModeration } from "../services/api";
 import { Search } from "@mui/icons-material";
-import UserModerationSearchCard from "../components/temp/UserModerationSearchCard";
+import UserModerationSearchCard from "../components/moderation/userControl/UserModerationSearchCard";
 
 const UserControlPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();

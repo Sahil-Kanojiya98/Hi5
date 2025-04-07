@@ -1,10 +1,10 @@
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import axiosInstance from "../../services/axios.config";
+import axiosInstance from "../../../services/axios.config";
 import ReportDetail from "./ReportDetail";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import { deleteAllReports } from "../../services/api";
+import DeleteConfirmationModal from "../../modal/DeleteConfirmationModal";
+import { deleteAllReports } from "../../../services/api";
 
 const ReportDetailsModel = ({
     isOpen,
