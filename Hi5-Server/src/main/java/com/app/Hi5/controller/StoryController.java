@@ -1,7 +1,6 @@
 package com.app.Hi5.controller;
 
-import com.app.Hi5.dto.response.MyStoryResponse;
-import com.app.Hi5.dto.response.UserStorysResponse;
+import com.app.Hi5.dto.response.*;
 import com.app.Hi5.security.UserDetailsImpl;
 import com.app.Hi5.service.StoryService;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +42,25 @@ public class StoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserStorysResponse>> getMyFolloingsActiveStorys(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<UserStorysResponse> response = storyService.getMyFollowingsActiveStories(userDetails.getUser());
+    public ResponseEntity<List<NewStoryUserResponse>> getNewStoryUsers(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<NewStoryUserResponse> response = storyService.getNewStoryUsers(userDetails.getUser());
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{userId}/{index}")
+    public ResponseEntity<StoryResponse> getMyFolloingsActiveStorys(@PathVariable("userId") String userId, @PathVariable("index") Integer index, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        StoryResponse response = storyService.getMyFollowingsActiveStories(userId, index, userDetails.getUser());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/like/{storyId}")
+    public List<LikedUserCardResponse> getLikedUsers(@PathVariable("storyId") String storyId, @RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return storyService.findLikedUsers(storyId, size, page, userDetails.getUser());
+    }
+
+    @GetMapping("/user/views/{storyId}")
+    public List<ViewedUserCardResponse> getViewers(@PathVariable("storyId") String storyId, @RequestParam("size") Integer size, @RequestParam("page") Integer page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return storyService.findViewedUsers(storyId, size, page, userDetails.getUser());
     }
 
 }

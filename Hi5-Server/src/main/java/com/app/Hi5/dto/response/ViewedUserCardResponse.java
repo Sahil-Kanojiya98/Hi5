@@ -5,17 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserStorysResponse {
+public class ViewedUserCardResponse {
 
     private String id;
+    private String username;
     private String fullname;
     private String profilePictureUrl;
-    private List<StoryResponse> storys;
 
 }

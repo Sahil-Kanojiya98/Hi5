@@ -178,9 +178,15 @@ const unfollow = async (userId) => {
 const getMyStorys = async () => {
   return axiosInstance.get("/story/my");
 };
-const getFollowingUsersStorys = async () => {
+
+const getNewStoryUsers = async () => {
   return axiosInstance.get("/story");
 };
+
+const getStory = async (userId, index) => {
+  return axiosInstance.get(`/story/user/${userId}/${index}`);
+};
+
 const deleteStory = async (storyId) => {
   return axiosInstance.delete(`/story/${encodeURIComponent(storyId)}`);
 };
@@ -269,7 +275,8 @@ export {
   deleteModeratorAccount,
   deleteEntity,
   getMyStorys,
-  getFollowingUsersStorys,
+  getStory,
   deleteStory,
   deleteAllReports,
+  getNewStoryUsers,
 };

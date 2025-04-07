@@ -3,6 +3,8 @@ import logo from "../assets/images/logo/Hi5.svg";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import useForgotPassword from "../hooks/useForgotPassword";
+import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const validationSchemas = [
   Yup.object({
@@ -57,6 +59,8 @@ const ForgotPasswordPage = () => {
     password: "",
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const getValidationSchema = () => {
     if (step == 0) {
       return selectedTab === "email"
@@ -88,9 +92,8 @@ const ForgotPasswordPage = () => {
         >
           {({ errors, touched }) => (
             <Form
-              className={`space-y-6 transition-opacity duration-500 ${
-                isLoading ? "opacity-50" : "opacity-100"
-              }`}
+              className={`space-y-6 transition-opacity duration-500 ${isLoading ? "opacity-50" : "opacity-100"
+                }`}
             >
               {/* Email/Username & Password Form Step */}
               {step === 0 && (
@@ -99,11 +102,10 @@ const ForgotPasswordPage = () => {
                     <button
                       type="reset"
                       disabled={isLoading}
-                      className={`p-2 text-sm font-medium transition-all duration-300 ${
-                        selectedTab === "email"
+                      className={`p-2 text-sm font-medium transition-all duration-300 ${selectedTab === "email"
                           ? "text-blue-600 border-b-2 border-blue-600"
                           : "text-gray-600 border-b-2 border-white hover:border-gray-200"
-                      }`}
+                        }`}
                       onClick={() => setSelectedTab("email")}
                     >
                       Email
@@ -111,11 +113,10 @@ const ForgotPasswordPage = () => {
                     <button
                       type="reset"
                       disabled={isLoading}
-                      className={`p-2 text-sm font-medium transition-all duration-300 ${
-                        selectedTab === "username"
+                      className={`p-2 text-sm font-medium transition-all duration-300 ${selectedTab === "username"
                           ? "text-blue-600 border-b-2 border-blue-600"
                           : "text-gray-600 border-b-2 border-white hover:border-gray-200"
-                      }`}
+                        }`}
                       onClick={() => setSelectedTab("username")}
                     >
                       Username
@@ -203,6 +204,7 @@ const ForgotPasswordPage = () => {
                       </p>
                     )}
                   </div>
+                  
                   <div>
                     <label
                       htmlFor="password"
@@ -210,20 +212,32 @@ const ForgotPasswordPage = () => {
                     >
                       Password
                     </label>
-                    <Field
-                      name="password"
-                      type="password"
-                      id="password"
-                      placeholder="••••••••"
-                      className="dark:bg-gray-700 mt-2 p-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 w-full dark:text-white"
-                      disabled={isLoading}
-                    />
+                    <div className="flex justify-between items-center gap-2 dark:bg-gray-700 mt-2 border dark:border-gray-600 rounded-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 w-full dark:text-white">
+                      <Field
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        disabled={isLoading}
+                        className="bg-transparent p-2 focus:outline-none w-full"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="p-2 focus:outline-none text-blue-600 hover:text-blue-800"
+                        disabled={isLoading}
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </button>
+                    </div>
                     {touched.password && errors.password && (
                       <p className="mt-2 ml-1 text-red-700 text-sm">
                         {errors.password}
                       </p>
                     )}
                   </div>
+
                 </>
               )}
 

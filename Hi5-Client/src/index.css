@@ -61,6 +61,15 @@
   display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
 }
 
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-clear-button {
+  display: none !important;
+}
+
+
+
 /* .invert {
   filter: invert(1);
 } */

@@ -5,6 +5,8 @@ import googleLogo from "../assets/images/logo/google.svg";
 import githubLogo from "../assets/images/logo/github.svg";
 import useLogin from "../hooks/useLogin";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const validationSchemas = [
   Yup.object({
@@ -73,6 +75,8 @@ const LoginPage = () => {
     otp: "",
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleGoogleRedirect = () => {
     console.log("login with google");
     location.href = "http://localhost:8080/oauth2/authorize/google";
@@ -114,9 +118,8 @@ const LoginPage = () => {
         >
           {({ errors, touched }) => (
             <Form
-              className={`space-y-6 transition-opacity duration-500 ${
-                isLoading ? "opacity-50" : "opacity-100"
-              }`}
+              className={`space-y-6 transition-opacity duration-500 ${isLoading ? "opacity-50" : "opacity-100"
+                }`}
             >
               {/* Email/Username & Password Form Step */}
               {step === 0 && (
@@ -125,11 +128,10 @@ const LoginPage = () => {
                     <button
                       type="reset"
                       disabled={isLoading}
-                      className={`p-2 text-sm font-medium transition-all duration-300 ${
-                        selectedTab === "email"
-                          ? "text-blue-600 border-b-2 border-blue-600"
-                          : "text-gray-600 border-b-2 border-white hover:border-gray-200"
-                      }`}
+                      className={`p-2 text-sm font-medium transition-all duration-300 ${selectedTab === "email"
+                        ? "text-blue-600 border-b-2 border-blue-600"
+                        : "text-gray-600 border-b-2 border-white hover:border-gray-200"
+                        }`}
                       onClick={() => setSelectedTab("email")}
                     >
                       Email
@@ -137,11 +139,10 @@ const LoginPage = () => {
                     <button
                       type="reset"
                       disabled={isLoading}
-                      className={`p-2 text-sm font-medium transition-all duration-300 ${
-                        selectedTab === "username"
-                          ? "text-blue-600 border-b-2 border-blue-600"
-                          : "text-gray-600 border-b-2 border-white hover:border-gray-200"
-                      }`}
+                      className={`p-2 text-sm font-medium transition-all duration-300 ${selectedTab === "username"
+                        ? "text-blue-600 border-b-2 border-blue-600"
+                        : "text-gray-600 border-b-2 border-white hover:border-gray-200"
+                        }`}
                       onClick={() => setSelectedTab("username")}
                     >
                       Username
@@ -204,20 +205,32 @@ const LoginPage = () => {
                       >
                         Password
                       </label>
-                      <Field
-                        name="password"
-                        type="password"
-                        id="password"
-                        placeholder="••••••••"
-                        className="dark:bg-gray-700 mt-2 p-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 w-full dark:text-white"
-                        disabled={isLoading}
-                      />
+                      <div className="flex justify-between items-center gap-2 dark:bg-gray-700 mt-2 border dark:border-gray-600 rounded-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 w-full dark:text-white">
+                        <Field
+                          id="password"
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          disabled={isLoading}
+                          className="bg-transparent p-2 focus:outline-none w-full"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          className="p-2 focus:outline-none text-blue-600 hover:text-blue-800"
+                          disabled={isLoading}
+                          tabIndex={-1}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </button>
+                      </div>
                       {touched.password && errors.password && (
                         <p className="mt-2 ml-1 text-red-700 text-sm">
                           {errors.password}
                         </p>
                       )}
                     </div>
+
                   </div>
                 </>
               )}
@@ -313,7 +326,7 @@ const LoginPage = () => {
             <div className="gap-3 grid grid-cols-2 mt-6">
               <button
                 onClick={handleGoogleRedirect}
-                className="inline-flex justify-center bg-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 dark:bg-gray-700 shadow-sm px-4 py-2 rounded-md w-full text-gray-700 dark:text-white"
+                className="inline-flex justify-center bg-gray-300 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 shadow-sm px-4 py-2 rounded-md w-full text-gray-700 dark:text-white"
                 disabled={isLoading}
               >
                 <img className="w-6" src={googleLogo} alt="Google Logo" />
@@ -322,7 +335,7 @@ const LoginPage = () => {
 
               <button
                 onClick={handleGithubRedirect}
-                className="inline-flex justify-center bg-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 dark:bg-gray-700 shadow-sm px-4 py-2 rounded-md w-full text-gray-700 dark:text-white"
+                className="inline-flex justify-center bg-gray-300 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-800 shadow-sm px-4 py-2 rounded-md w-full text-gray-700 dark:text-white"
                 disabled={isLoading}
               >
                 <img className="w-6" src={githubLogo} alt="GitHub Logo" />

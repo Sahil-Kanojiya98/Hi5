@@ -16,6 +16,7 @@ public class StoryResponse {
     private String id;
     private String imageUrl;
     private String videoUrl;
+    private Integer likeCount;
     private LikeStatus likeStatus;
 
 }
