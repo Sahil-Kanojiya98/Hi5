@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "comments")
+@Document(collection = "comment")
 public class Comment {
 
     @Id

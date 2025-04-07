@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "messages")
+@Document(collection = "message")
 public class Message {
 
     @Id

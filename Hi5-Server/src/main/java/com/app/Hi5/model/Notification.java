@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "notifications")
+@Document(collection = "notification")
 public class Notification {
 
     @Id

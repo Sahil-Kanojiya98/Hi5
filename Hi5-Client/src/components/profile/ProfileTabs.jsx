@@ -44,7 +44,7 @@ export default function ProfileTabs({ userId, isMyProfile, profileType }) {
                     <Posts
                       userId={userId}
                       feedType="POSTS"
-                      isMyProfilePosts={true}
+                      isMyProfilePosts={isMyProfile}
                     />
                   )}
                   {activeTab === "SAVED_POSTS" && isMyProfile && (

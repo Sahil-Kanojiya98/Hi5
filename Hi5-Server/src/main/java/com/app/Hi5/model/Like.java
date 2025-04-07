@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "likes")
+@Document(collection = "like")
 public class Like {
 
     @Id

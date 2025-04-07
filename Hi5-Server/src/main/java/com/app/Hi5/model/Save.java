@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "saves")
+@Document(collection = "save")
 public class Save {
 
     @Id
